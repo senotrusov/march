@@ -54,3 +54,5 @@ group :development do
   gem 'slim-rails' # MIT
 end
 
+# TODO: Take a look
+# https://github.com/ctran/annotate_models # Ruby
