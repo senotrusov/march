@@ -33,8 +33,8 @@ INSERT INTO author_identities(id, user_id, document_id, identity)
 UPDATE documents SET author_identity_counter = 1, author_identity_id = 1 WHERE id = 1;
 
 
-INSERT INTO sections(id, document_id, author_identity_id, title)
-     VALUES (1, 1, 1, 'Comments');
+INSERT INTO sections(id, document_id, author_identity_id, line_id, title)
+     VALUES (1, 1, 1, 1, 'Comments');
 
 
 INSERT INTO paragraphs(id, section_id, author_identity_id, line_id, message)

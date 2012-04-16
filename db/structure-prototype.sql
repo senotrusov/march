@@ -92,6 +92,8 @@ CREATE UNIQUE INDEX author_identities_unique_idx  ON author_identities USING btr
 ALTER TABLE documents ADD CONSTRAINT documents_author_identity_id_fk FOREIGN KEY (author_identity_id) REFERENCES author_identities(id);
 
 
+-- That schema does not support section prototypes - every instance is equal.
+-- Permalink points to id, resulting page shows id section entry and all other entries as related data.
 
 CREATE TABLE sections (
   id           bigserial PRIMARY KEY,
@@ -101,6 +103,7 @@ CREATE TABLE sections (
   document_id         bigint NOT NULL references documents(id),
   author_identity_id  bigint NOT NULL references author_identities(id),
   author_addr         inet   NOT NULL DEFAULT '127.0.0.1',
+  line_id             bigint NOT NULL references sections(id),
   
   image        character varying(128),
   title        character varying(256) NOT NULL,
@@ -110,7 +113,7 @@ CREATE TABLE sections (
   is_versioned            boolean NOT NULL DEFAULT false,
   is_sortable             boolean NOT NULL DEFAULT false,
   
-  paragraphs          bigint [],
+  paragraphs          bigint [], -- paragraphs order
   section_version_id  bigint -- references section_versions(id)
 );
 
@@ -138,8 +141,9 @@ CREATE INDEX section_versions_section_id_idx ON section_versions USING btree (se
 ALTER TABLE sections ADD CONSTRAINT sections_section_version_id_fk FOREIGN KEY (section_version_id) REFERENCES section_versions(id);
 
 
--- That schema does not support paragraph prototypes - every instance is equal
--- Permalink points to line_id.
+-- That schema does not support paragraph prototypes - every instance is equal.
+-- Permalink points to id, resulting page shows id paragraph entry and all other entries as related data.
+-- Paragraphs are immutable.
  
 CREATE TABLE paragraphs (
   id           bigserial PRIMARY KEY,

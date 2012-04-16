@@ -233,6 +233,7 @@ CREATE TABLE sections (
     document_id bigint NOT NULL,
     author_identity_id bigint NOT NULL,
     author_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
+    line_id bigint NOT NULL,
     image character varying(128),
     title character varying(256) NOT NULL,
     is_public_writable boolean DEFAULT true NOT NULL,
@@ -577,6 +578,14 @@ ALTER TABLE ONLY sections
 
 ALTER TABLE ONLY sections
     ADD CONSTRAINT sections_document_id_fkey FOREIGN KEY (document_id) REFERENCES documents(id);
+
+
+--
+-- Name: sections_line_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_line_id_fkey FOREIGN KEY (line_id) REFERENCES sections(id);
 
 
 --

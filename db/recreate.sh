@@ -23,6 +23,9 @@ postgres="psql postgres --username postgres --set ON_ERROR_STOP=on"
 
 pgpass=~/.pgpass
 
+
+# Create user and allow it local access to database
+
 if [ "`$postgres -c "SELECT 1 WHERE EXISTS(SELECT * FROM pg_catalog.pg_user WHERE usename = '$user')" --tuples-only --no-align`" != 1 ] ; then
   echo "Please specify password for user $user"
   read password
@@ -32,6 +35,9 @@ if [ "`$postgres -c "SELECT 1 WHERE EXISTS(SELECT * FROM pg_catalog.pg_user WHER
   read confirmation
   echo "localhost:5432:$user:$dbname:$password" >> $pgpass
 fi
+
+
+# Drop and recreate database
 
 $postgres -c "DROP DATABASE IF EXISTS $dbname"
 $postgres -c "CREATE DATABASE $dbname OWNER $user ENCODING 'UTF8'"
@@ -46,4 +52,3 @@ $db < db/structure-prototype.sql
 $db < db/seeds-prototype.sql
 
 pg_dump $dbname --username postgres --schema-only > db/structure.sql
-
