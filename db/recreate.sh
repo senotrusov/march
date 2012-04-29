@@ -18,11 +18,11 @@
 user=march
 dbname=march
 
-db="psql $dbname --username $user --echo-all --set ON_ERROR_STOP=on"
-postgres="psql postgres --username postgres --set ON_ERROR_STOP=on"
-
 pgpass=~/.pgpass
 
+
+db="psql $dbname --host=localhost --username $user --echo-all --set ON_ERROR_STOP=on"
+postgres="sudo -u postgres -i psql postgres --username postgres --set ON_ERROR_STOP=on"
 
 # Create user and allow it local access to database
 
@@ -42,13 +42,13 @@ fi
 $postgres -c "DROP DATABASE IF EXISTS $dbname"
 $postgres -c "CREATE DATABASE $dbname OWNER $user ENCODING 'UTF8'"
 
-
-$db -c "CREATE PROCEDURAL LANGUAGE plpgsql;"
-$db -c "ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO $user;"
+# PostgreSQL 9 has plpgsql already
+# $db -c "CREATE PROCEDURAL LANGUAGE plpgsql;"
+# $db -c "ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO $user;"
 
 # $db < /usr/share/postgresql/8.4/contrib/hstore.sql
 
 $db < db/structure-prototype.sql
 $db < db/seeds-prototype.sql
 
-pg_dump $dbname --username postgres --schema-only > db/structure.sql
+pg_dump $dbname --username $user --host=localhost --schema-only > db/structure.sql
