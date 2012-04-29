@@ -7,7 +7,7 @@
 # Had we said ‘~> 2.2.0’, it would have been equivalent to: [‘>= 2.2.0’, ‘< 2.3.0’].
 # The last digit specifies the level of granularity of version control
 
-source 'https://rubygems.org'
+source 'http://rubygems.org' # TODO: https, http://railsapps.github.com/openssl-certificate-verify-failed.html
 
 gem 'rails', '3.2.2' # MIT
 
