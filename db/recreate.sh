@@ -31,7 +31,7 @@ if [ "`$postgres -c "SELECT 1 WHERE EXISTS(SELECT * FROM pg_catalog.pg_user WHER
   read password
   $postgres -c "CREATE USER $user WITH PASSWORD '$password'"
   
-  echo "WARNING! About to add password to $pgpass! Press RETURN to confirm that action."
+  echo "WARNING! About to add password to $pgpass! Press ENTER to confirm that action."
   read confirmation
   echo "localhost:5432:$user:$dbname:$password" >> $pgpass
 fi
