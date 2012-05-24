@@ -15,7 +15,7 @@
 
 BEGIN;
 
-INSERT INTO users(id)
+INSERT INTO posters(id)
      VALUES (1);
 
 
@@ -23,21 +23,56 @@ INSERT INTO boards(id, slug)
      VALUES (1, 'n');
 
 
-INSERT INTO documents(id, board_id, author_id)
-     VALUES (1, 1, 1);
+INSERT INTO documents(id, poster_id, title, board_id)
+     VALUES (1, 1, 'First document', 1);
 
 
-INSERT INTO author_identities(id, user_id, document_id, identity)
+INSERT INTO poster_identities(id, poster_id, document_id, identity)
      VALUES (1, 1, 1, 1);
      
-UPDATE documents SET author_identity_counter = 1, author_identity_id = 1 WHERE id = 1;
+UPDATE documents SET poster_identity_id = 1, poster_identities_count = 1 WHERE id = 1;
 
 
-INSERT INTO sections(id, document_id, author_identity_id, line_id, title)
-     VALUES (1, 1, 1, 1, 'Comments');
+INSERT INTO sections(id, poster_identity_id, poster_identity_document_id, poster_identity, title, document_id, line_id)
+     VALUES (1, 1, 1, 1, 'Comments', 1, NULL);
+
+INSERT INTO sections(id, poster_identity_id, poster_identity_document_id, poster_identity, title, document_id, line_id)
+     VALUES (2, 1, 1, 1, 'Comments 2', 1, 2);
+
+INSERT INTO sections(id, poster_identity_id, poster_identity_document_id, poster_identity, title, document_id, line_id)
+     VALUES (3, 1, 1, 1, 'Comments 2 INSTANCE 2', 1, 2);
 
 
-INSERT INTO paragraphs(id, section_id, author_identity_id, line_id, message)
-     VALUES (1, 1, 1, 1, 'Hello');
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (1, 1, 1, 1, 'Hello 1', 1, 1);
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (2, 1, 1, 1, 'Hello 1 instance 2', 1, 1);
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (3, 1, 1, 1, 'Hello 1 instance 3', 1, 1);
+
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (4, 1, 1, 1, 'Hello 2', 1, NULL);
+
+
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (5, 1, 1, 1, 'Hello 3', 2, 5);
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (6, 1, 1, 1, 'Hello 3 instance 2', 2, 5);
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (7, 1, 1, 1, 'Hello 3 instance 3', 2, 5);
+
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (8, 1, 1, 1, 'Hello 4', 2, NULL);
+
+
+INSERT INTO paragraphs(id, poster_identity_id, poster_identity_document_id, poster_identity, message, section_id, line_id)
+     VALUES (9, 1, 1, 1, 'Hello 1 instance in another section', 2, 1);
 
 COMMIT;

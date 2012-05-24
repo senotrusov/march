@@ -15,40 +15,70 @@
 #  limitations under the License.
 
 
+# Names
 user=march
 dbname=march
-
+host=localhost
 pgpass=~/.pgpass
 
 
-db="psql $dbname --host=localhost --username $user --echo-all --set ON_ERROR_STOP=on"
+# User interface helpers
+# I use heredoc to avoid double printing the message with sh -x
+# Unfortunately, the indentation in heredoc is somewhat out of place, so I'm a little aggravated the situation
+# and got rid of the padding at all.
+#
+say(){
+cat <<EOT
+$1
+EOT
+}
+
+confirm() {
+cat <<EOT
+$1
+
+Enter 'y' to confirm that action, other input will abort the script execution
+EOT
+
+read confirmation
+if
+test "$confirmation" != "y"
+then
+exit
+fi
+}
+
+
+# Define shortcuts for database connection
+db="psql $dbname --host=$host --username $user --echo-all --set ON_ERROR_STOP=on"
 postgres="sudo -u postgres -i psql postgres --username postgres --set ON_ERROR_STOP=on"
 
-# Create user and allow it local access to database
 
+# Create user and allow it local access to database
 if [ "`$postgres -c "SELECT 1 WHERE EXISTS(SELECT * FROM pg_catalog.pg_user WHERE usename = '$user')" --tuples-only --no-align`" != 1 ] ; then
-  echo "Please specify password for user $user"
-  read password
-  $postgres -c "CREATE USER $user WITH PASSWORD '$password'"
+
+  confirm "This script is about to add user '$user' to database, store user password as plain text in file $pgpass and chmod it to 06000"
   
-  echo "WARNING! About to add password to $pgpass! Press ENTER to confirm that action."
-  read confirmation
-  echo "localhost:5432:$user:$dbname:$password" >> $pgpass
+  say "Please specify password for user $user:"
+  read password
+
+  
+  $postgres -c "CREATE USER $user WITH PASSWORD '$password'"
+
+  echo "$host:5432:$dbname:$user:$password" >> $pgpass
+  chmod 0600 $pgpass
 fi
 
 
 # Drop and recreate database
+confirm "This script is about to delete database $dbname and recreate it"
 
 $postgres -c "DROP DATABASE IF EXISTS $dbname"
 $postgres -c "CREATE DATABASE $dbname OWNER $user ENCODING 'UTF8'"
 
-# PostgreSQL 9 has plpgsql already
-# $db -c "CREATE PROCEDURAL LANGUAGE plpgsql;"
-# $db -c "ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO $user;"
-
-# $db < /usr/share/postgresql/8.4/contrib/hstore.sql
-
 $db < db/structure-prototype.sql
 $db < db/seeds-prototype.sql
 
-pg_dump $dbname --username $user --host=localhost --schema-only > db/structure.sql
+
+# Dump schema to db/structure.sql
+pg_dump $dbname --username $user --host=$host --schema-only > db/structure.sql

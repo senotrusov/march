@@ -52,6 +52,7 @@ gem 'slim' # MIT
 
 group :development do
   gem 'slim-rails' # MIT
+  gem 'awesome_print' # MIT
 end
 
 # TODO: Take a look
