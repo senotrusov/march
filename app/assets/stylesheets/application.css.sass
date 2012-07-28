@@ -1,0 +1,55 @@
+//= require_self
+//= require leaflet
+//= require_directory .
+
+@import 'style'
+
+body
+  margin: 0px
+  font-family: sans-serif
+
+body > header
+  background: $bgcolor
+  color: #fff
+  padding: 8px
+  overflow: hidden
+  
+  a
+    color: #fff
+    padding: 0px 4px
+
+  a:hover
+    color: #000
+    background: #fff
+    
+  ul
+    margin: 0px
+    padding: 0px
+    font-size: 0px
+    
+    li
+      list-style: none
+      display: inline-block
+      padding: 0px 1px
+      font-size: $navigation
+  
+aside.sidebar
+  float: right
+  width: 30%
+  padding: 0px 10px
+
+body > footer
+  clear: both
+  padding-top: 20px
+
+
+@media print
+
+  body > header
+    display: none
+
+  aside.sidebar
+    display: none
+
+  body > footer
+    display: none

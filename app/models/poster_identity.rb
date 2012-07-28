@@ -21,4 +21,10 @@ class PosterIdentity < ActiveRecord::Base
   has_many :sections
   has_many :section_versions
   has_many :paragraphs
+
+  PK_SEQUENCE_NAME = connection.pk_and_sequence_for(table_name).last
+
+  def self.next_id
+    connection.select_value("SELECT nextval('#{PK_SEQUENCE_NAME}');").to_i
+  end
 end

@@ -16,10 +16,23 @@
 class Paragraph < ActiveRecord::Base
   belongs_to :poster_identity
   belongs_to :poster_identity_document, class_name: "Document"
-  belongs_to :section, touch: true
+  belongs_to :section, counter_cache: true, touch: true
 
   # if line_id IS NULL, then paragraph does not have other instances
   has_many :instances, class_name: "Paragraph", foreign_key: "line_id", primary_key: "line_id"
 
   attr_accessible :image, :title, :url, :message
+
+  # TODO
+  def location?
+    rand > 0.7
+  end
+
+  def lat
+    51.833896
+  end
+
+  def lng
+    107.587538
+  end
 end

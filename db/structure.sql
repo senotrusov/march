@@ -73,14 +73,16 @@ CREATE TABLE documents (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     poster_id bigint NOT NULL,
-    poster_identity_id bigint,
+    poster_identity_id bigint NOT NULL,
     poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     image character varying(128),
     title character varying(256),
-    url character varying(2048),
+    url character varying(1024),
     message character varying(1024),
     poster_identities_count integer DEFAULT 0 NOT NULL,
-    board_id bigint NOT NULL
+    board_id bigint NOT NULL,
+    deleted boolean DEFAULT false NOT NULL,
+    deleted_at timestamp with time zone
 );
 
 
@@ -117,11 +119,12 @@ CREATE TABLE paragraphs (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     poster_identity_id bigint NOT NULL,
     poster_identity_document_id bigint NOT NULL,
-    poster_identity integer NOT NULL,
+    poster_identity_document_board_slug text NOT NULL,
+    poster_identity_identity integer NOT NULL,
     poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     image character varying(128),
     title character varying(256),
-    url character varying(2048),
+    url character varying(1024),
     message character varying(1024),
     section_id bigint NOT NULL,
     line_id bigint
@@ -204,6 +207,7 @@ CREATE TABLE posters (
     reset_password_sent_at timestamp with time zone,
     last_sign_in_at timestamp with time zone,
     last_sign_in_addr inet,
+    session_key character varying(64),
     documents_count integer DEFAULT 0 NOT NULL,
     poster_identities_count integer DEFAULT 0 NOT NULL
 );
@@ -251,6 +255,7 @@ CREATE TABLE section_versions (
     image character varying(128),
     title character varying(256) NOT NULL,
     paragraphs bigint[],
+    paragraphs_count integer DEFAULT 0 NOT NULL,
     section_id bigint NOT NULL,
     version integer NOT NULL
 );
@@ -298,6 +303,7 @@ CREATE TABLE sections (
     image character varying(128),
     title character varying(256) NOT NULL,
     paragraphs bigint[],
+    paragraphs_count integer DEFAULT 0 NOT NULL,
     document_id bigint NOT NULL,
     line_id bigint
 );
@@ -488,6 +494,13 @@ CREATE UNIQUE INDEX posters_email_idx ON posters USING btree (email);
 
 
 --
+-- Name: posters_session_key_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
+--
+
+CREATE UNIQUE INDEX posters_session_key_idx ON posters USING btree (session_key);
+
+
+--
 -- Name: section_versions_unique_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
 --
 
@@ -529,7 +542,7 @@ ALTER TABLE ONLY documents
 --
 
 ALTER TABLE ONLY documents
-    ADD CONSTRAINT documents_poster_identity_id_fk FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id);
+    ADD CONSTRAINT documents_poster_identity_id_fk FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

@@ -1,0 +1,79 @@
+= content_for :title do
+  | /#{@board.slug} - #{@document.title}
+
+article.document
+  header
+    .text
+      h1
+        = @document.title
+
+      - if @document.message?
+        .message
+          = @document.message
+
+      - if @document.url?
+        .url
+          = link_to @document.url, @document.url
+
+      .details
+        | Updated 
+        = timeago_tag @document.updated_at
+        = ", #{@document.paragraphs_count} paragraphs, #{@document.poster_identities_count} posters"
+
+    .line
+      - if @document.image?
+        .image
+          = link_to image_tag(@document.image_url(:page), alt: nil), @document.image_url
+
+      - if @document.location?
+        .map data-lat=@document.lat data-lng=@document.lng
+
+  ul.actions
+    li = link_to 'Edit', edit_document_path(@document)
+    li = link_to 'Destroy', @document, :confirm => 'Are you sure?', :method => :delete
+
+  table.sections
+    tbody
+      tr
+      - @document.sections.each do |section|
+        td
+          h2.section_title
+            .section_id = "§#{section.id}"
+            = " #{section.title}"
+
+          - section.paragraphs.each do |paragraph|
+            article.paragraph
+
+              .identity
+                .id
+                  = "¶#{paragraph.id} "
+                
+                - if @document.id != paragraph.poster_identity_document_id
+                  .poster_identity_document_id
+                    = "#{paragraph.poster_identity_document_board_slug}/#{paragraph.poster_identity_document_id}"
+
+                .poster_identity
+                  = "@#{paragraph.poster_identity_identity}"
+                
+
+              - if paragraph.image?
+                = link_to image_tag(paragraph.image_url(:thumb), alt: nil), paragraph.image_url
+
+              - if paragraph.title?
+                h3.title
+                  = paragraph.title
+
+              p.message
+                = paragraph.message
+
+              - if paragraph.location?
+                .map_container
+                  .map data-lat=paragraph.lat data-lng=paragraph.lng
+
+              - if paragraph.url?
+                .url
+                  = link_to paragraph.url, paragraph.url
+
+              .details
+                | Updated 
+                = timeago_tag paragraph.updated_at

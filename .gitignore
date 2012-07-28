@@ -20,3 +20,7 @@
 # Ignore compiled assets
 .sass-cache/
 public/assets/*
+public/uploads/*
+
+# Ignore secret key
+/config/cookie.key

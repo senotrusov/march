@@ -1,0 +1,31 @@
+= content_for :title do
+  | /#{@board.slug}
+
+aside.sidebar
+
+  h1 This week most significant /#{@board.slug}
+  
+  .list
+    = render :partial => "overview", :collection => @documents, :as => :document
+
+
+  h1 This month most significant /#{@board.slug}
+  
+  .list
+    = render :partial => "overview", :collection => @documents, :as => :document
+
+section.document_index
+  header
+    .board
+      = content_for :title
+
+    .details
+      = @board.documents_count
+      |  documents since 
+      = @board.created_at.strftime("%B %Y").downcase
+
+    .actions
+      = link_to "New /#{@board.slug}", new_document_path
+
+  .list
+    = render :partial => "overview", :collection => @documents, :as => :document

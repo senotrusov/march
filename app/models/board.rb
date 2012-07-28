@@ -21,4 +21,6 @@ class Board < ActiveRecord::Base
   validates :slug,
     length: { in: 1..columns_hash['slug'].limit },
     format: { with: /\A[a-zA-Z0-9\-]+\z/, message: "Only characters a-z, A-Z, 0-9 and '-' allowed" }
+
+  scope :ordered, order(ORDER = "slug")
 end

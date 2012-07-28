@@ -1,0 +1,20 @@
+article.document_overview
+
+  - if document.image?
+    = link_to image_tag(document.image_url(:thumb), alt: nil), document_path(document)
+
+  h2.title
+    = link_to document.title, document_path(document)
+
+  - if document.message?
+    p.message
+      = document.message
+
+  - if document.url?
+    .url
+      = link_to document.url, document.url
+
+  .details
+    | Updated 
+    = timeago_tag document.updated_at
+    = ", #{document.paragraphs_count} paragraphs, #{document.poster_identities_count} posters"

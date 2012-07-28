@@ -37,11 +37,14 @@ CREATE TABLE posters (
   last_sign_in_at   timestamp with time zone,
   last_sign_in_addr inet,
 
+  session_key character varying(64),
+
   documents_count         integer NOT NULL default 0,
   poster_identities_count integer NOT NULL default 0
 );
 
 CREATE UNIQUE INDEX posters_email_idx ON posters USING btree (email);
+CREATE UNIQUE INDEX posters_session_key_idx ON posters USING btree (session_key);
 
 
 
@@ -67,17 +70,20 @@ CREATE TABLE documents (
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   poster_id          bigint NOT NULL references posters(id),
-  poster_identity_id bigint,  -- references poster_identities(id),
+  poster_identity_id bigint NOT NULL,  -- references poster_identities(id),
   poster_addr        inet   NOT NULL DEFAULT '127.0.0.1',
 
   image   character varying(128),
   title   character varying(256),
-  url     character varying(2048),
+  url     character varying(1024),
   message character varying(1024),
 
   poster_identities_count integer NOT NULL default 0, -- gapless sequence: update w/lock set + 1
 
-  board_id bigint NOT NULL references boards(id)
+  board_id bigint NOT NULL references boards(id),
+
+  deleted    boolean NOT NULL DEFAULT false,
+  deleted_at timestamp with time zone
 );
 
 CREATE INDEX documents_board_id_idx  ON documents USING btree (board_id);
@@ -99,7 +105,7 @@ CREATE TABLE poster_identities (
 CREATE INDEX        poster_identities_poster_id_idx ON poster_identities USING btree (poster_id);
 CREATE UNIQUE INDEX poster_identities_unique_idx    ON poster_identities USING btree (document_id, identity);
 
-ALTER TABLE documents ADD CONSTRAINT documents_poster_identity_id_fk FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id);
+ALTER TABLE documents ADD CONSTRAINT documents_poster_identity_id_fk FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 -- That schema does not support section prototypes - every instance is equal.
@@ -124,6 +130,8 @@ CREATE TABLE sections (
   image      character varying(128),
   title      character varying(256) NOT NULL,
   paragraphs bigint [], -- paragraphs order
+
+  paragraphs_count integer NOT NULL DEFAULT 0,
 
   document_id bigint NOT NULL references documents(id),
   line_id     bigint references sections(id) -- if line_id IS NULL, then there are no other line elements expected to be there
@@ -153,6 +161,8 @@ CREATE TABLE section_versions (
   title      character varying(256) NOT NULL,
   paragraphs bigint [], -- paragraphs order
 
+  paragraphs_count integer NOT NULL DEFAULT 0,
+
   section_id bigint  NOT NULL references sections(id),
   version    integer NOT NULL
 );
@@ -169,14 +179,15 @@ CREATE TABLE paragraphs (
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  poster_identity_id          bigint  NOT NULL references poster_identities(id),
-  poster_identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  poster_identity             integer NOT NULL,                          -- redundant data
-  poster_addr                 inet    NOT NULL DEFAULT '127.0.0.1',
+  poster_identity_id                  bigint  NOT NULL references poster_identities(id),
+  poster_identity_document_id         bigint  NOT NULL references documents(id), -- redundant data
+  poster_identity_document_board_slug text    NOT NULL,                          -- redundant data
+  poster_identity_identity            integer NOT NULL,                          -- redundant data
+  poster_addr                         inet    NOT NULL DEFAULT '127.0.0.1',
   
   image   character varying(128),
   title   character varying(256),
-  url     character varying(2048),
+  url     character varying(1024),
   message character varying(1024),
   -- quote '[0,10], [20,25]'
 

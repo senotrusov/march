@@ -1,0 +1,23 @@
+doctype 5
+html
+  head
+    title = safe_join([content_for(:title), 'March'].delete_if(&:blank?), ' - ')
+    = stylesheet_link_tag 'application', media: 'all'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+  body
+    header
+      nav
+        ul
+          - @boards.each do |board|
+            li = link_to board.slug, documents_path(board_slug: board.slug)
+
+    - if alert
+      #alert = alert
+      
+    - if notice
+      #notice = notice
+    
+    = yield
+
+    footer

@@ -20,9 +20,40 @@ class Document < ActiveRecord::Base
   has_many :poster_identities
   has_many :sections
 
-  attr_accessible :image, :title, :url, :message
+  attr_accessible :image, :image_cache, :remote_image_url, :remove_image
+  mount_uploader :image, ImageUploader
 
+  attr_accessible :title, :url, :message
+
+  normalize_text :title, :url, :message
+
+  validates :title,   length: { in: 1..columns_hash['title'].limit }
+  validates :url,     length: { in: 0..columns_hash['url'].limit }
+  validates :message, length: { in: 0..columns_hash['message'].limit }
+  
   scope :eager,
     includes(:poster_identities).
     includes(:sections => [:instances, {:paragraphs => :instances}])
+
+  scope :ordered, order(ORDER = "id DESC")
+
+  scope :alive, where(deleted: false)
+
+  def paragraphs_count
+    # TODO: Cache
+    sections.map(&:paragraphs_count).sum
+  end
+
+  # TODO
+  def location?
+    true
+  end
+
+  def lat
+    51.833896
+  end
+
+  def lng
+    107.587538
+  end
 end

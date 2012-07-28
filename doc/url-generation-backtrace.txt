@@ -1,0 +1,6 @@
+actionpack (3.2.5) lib/action_dispatch/routing/url_for.rb:107:in `url_options'
+actionpack (3.2.5) lib/action_controller/metal/url_for.rb:29:in `url_options'
+actionpack (3.2.5) lib/action_view/helpers/url_helper.rb:37:in `url_options'
+actionpack (3.2.5) lib/action_dispatch/routing/url_for.rb:148:in `url_for'
+actionpack (3.2.5) lib/action_view/helpers/url_helper.rb:107:in `url_for'
+actionpack (3.2.5) lib/action_dispatch/routing/route_set.rb:213:in `document_path'
