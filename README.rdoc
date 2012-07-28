@@ -10,13 +10,15 @@ Here be dragons.
 * Ruby core: http://www.ruby-doc.org/core
 * Ruby standard library: http://www.ruby-doc.org/stdlib
 
-* HTML5 differences from HTML4: http://www.w3.org/TR/html5-diff/
+* HTML5 differences from HTML4: http://www.w3.org/TR/html5-diff
 
 
 == Install
 
-sudo apt-get install graphicsmagick # packaged with ubuntu 12.04 version does not yet have 'strip' function
-sudo apt-get install imagemagick
+  # packaged with ubuntu 12.04 version does not yet have 'strip' function
+  sudo apt-get install graphicsmagick
+
+  sudo apt-get install imagemagick
 
 
 == Licence
