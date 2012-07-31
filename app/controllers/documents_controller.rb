@@ -94,7 +94,10 @@ class DocumentsController < ApplicationController
       end
     end
 
-    if all_valid = ((!@sections || (@sections + all_paragraphs).map{|i|i.valid?}.all?) && @document.valid?)
+    validate = [@document]
+    validate.concat(@sections + all_paragraphs) if @sections
+
+    if valid = validate.map{|i| i.valid? }.all?
       Document.transaction do
         require_poster
 
@@ -122,7 +125,7 @@ class DocumentsController < ApplicationController
     end
 
     respond_to do |format|
-      if all_valid
+      if valid
         format.html { redirect_to @document, notice: 'Document was successfully created.' }
       else
         format.html { render action: "new" }
