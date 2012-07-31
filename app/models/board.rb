@@ -13,14 +13,20 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
 
+
 class Board < ActiveRecord::Base
+  # Associations
   has_many :documents
 
+
+  # Attributes
   attr_accessible :slug
 
   validates :slug,
     length: { in: 1..columns_hash['slug'].limit },
     format: { with: /\A[a-zA-Z0-9\-]+\z/, message: "Only characters a-z, A-Z, 0-9 and '-' allowed" }
 
+
+  # Scopes
   scope :ordered, order(ORDER = "slug")
 end

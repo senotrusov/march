@@ -1,5 +1,5 @@
 
-# reload!; Document.all.select{|m|m.image.present?}.each {|m| m.image.recreate_versions!}.length
+# reload!; [Document, Section, Paragraph].each {|c| c.all.select{|m|m.image.present?}.each {|m| m.image.recreate_versions!} }; nil
 # WARNING! recreate_versions! will recreate base image from itself thus the checksum will be changed.
 
 class ImageUploader < CarrierWave::Uploader::Base
@@ -20,17 +20,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   process :strip
   process :resize_to_limit => [2000, 2000]
 
-  version :thumb do
-    process :resize_to_fill => [80, 80]
-  end
-
-  version :minithumb do
-    process :resize_to_fill => [50, 50]
-  end
-
-  version :page do
-    process :resize_to_fit => [250, 250]
-  end
+  version(:normal) { process :resize_to_fit  => [250, 250] }
+  version(:small)  { process :resize_to_fill => [150, 150] }
+  version(:mini)   { process :resize_to_fill => [80, 80] }
+  version(:tiny)   { process :resize_to_fill => [50, 50] }
 
   # Add a white list of extensions which are allowed to be uploaded.
   def extension_white_list

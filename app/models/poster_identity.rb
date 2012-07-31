@@ -13,7 +13,9 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
 
+
 class PosterIdentity < ActiveRecord::Base
+  # Associations
   belongs_to :poster, counter_cache: true
   belongs_to :document, counter_cache: true
 
@@ -22,8 +24,8 @@ class PosterIdentity < ActiveRecord::Base
   has_many :section_versions
   has_many :paragraphs
 
-  PK_SEQUENCE_NAME = connection.pk_and_sequence_for(table_name).last
 
+  PK_SEQUENCE_NAME = connection.pk_and_sequence_for(table_name).last
   def self.next_id
     connection.select_value("SELECT nextval('#{PK_SEQUENCE_NAME}');").to_i
   end

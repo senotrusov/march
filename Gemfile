@@ -25,6 +25,7 @@ group :assets do
   gem 'therubyracer' # MIT
 
   gem 'uglifier' # MIT
+  gem 'font-awesome-sass-rails' # The font and SCSS from Font Awesome are under CC-BY-3.0, others are under MIT license.
 end
 
 
@@ -74,3 +75,4 @@ gem 'mini_magick' # MIT
 
 # Additional processing support for MiniMagick and RMagick.
 gem 'carrierwave-processing' # MIT
+

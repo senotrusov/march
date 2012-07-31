@@ -23,7 +23,7 @@ article.document
     .line
       - if @document.image?
         .image
-          = link_to image_tag(@document.image_url(:page), alt: nil), @document.image_url
+          = link_to image_tag(@document.image_url(:normal), alt: nil), @document.image_url
 
       - if @document.location?
         .map data-lat=@document.lat data-lng=@document.lng
@@ -37,9 +37,14 @@ article.document
       tr
       - @document.sections.each do |section|
         td
-          h2.section_title
-            .section_id = "§#{section.id}"
-            = " #{section.title}"
+          .section_header
+            
+            - if section.image?
+              = link_to image_tag(section.image_url(:small), alt: nil), section.image_url
+
+            h2
+              .id = "§#{section.id}"
+              = " #{section.title}"
 
           - section.paragraphs.each do |paragraph|
             article.paragraph
@@ -57,7 +62,7 @@ article.document
                 
 
               - if paragraph.image?
-                = link_to image_tag(paragraph.image_url(:thumb), alt: nil), paragraph.image_url
+                = link_to image_tag(paragraph.image_url(:mini), alt: nil), paragraph.image_url
 
               - if paragraph.title?
                 h3.title

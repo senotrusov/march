@@ -119,14 +119,12 @@ CREATE TABLE sections (
 
   poster_identity_id          bigint  NOT NULL references poster_identities(id),
   poster_identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  poster_identity             integer NOT NULL,                          -- redundant data
+  poster_identity_identity    integer NOT NULL,                          -- redundant data
   poster_addr                 inet    NOT NULL DEFAULT '127.0.0.1',
 
-  is_versioned            boolean NOT NULL DEFAULT false,
-  is_sortable             boolean NOT NULL DEFAULT false,
-  is_public_writable      boolean NOT NULL DEFAULT true,
-  is_contributor_writable boolean NOT NULL DEFAULT false,
-  
+  public_writable      boolean DEFAULT true NOT NULL,
+  contributor_writable boolean DEFAULT true NOT NULL,
+
   image      character varying(128),
   title      character varying(256) NOT NULL,
   paragraphs bigint [], -- paragraphs order
@@ -149,13 +147,11 @@ CREATE TABLE section_versions (
 
   poster_identity_id          bigint  NOT NULL references poster_identities(id),
   poster_identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  poster_identity             integer NOT NULL,                          -- redundant data
+  poster_identity_identity    integer NOT NULL,                          -- redundant data
   poster_addr                 inet    NOT NULL DEFAULT '127.0.0.1',
 
-  is_versioned            boolean NOT NULL DEFAULT false,
-  is_sortable             boolean NOT NULL DEFAULT false,
-  is_public_writable      boolean NOT NULL DEFAULT true,
-  is_contributor_writable boolean NOT NULL DEFAULT false,
+  public_writable      boolean DEFAULT true NOT NULL,
+  contributor_writable boolean DEFAULT true NOT NULL,
 
   image      character varying(128),
   title      character varying(256) NOT NULL,

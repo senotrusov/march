@@ -13,17 +13,31 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
 
+
 class Paragraph < ActiveRecord::Base
+  # Associations
   belongs_to :poster_identity
   belongs_to :poster_identity_document, class_name: "Document"
-  belongs_to :section, counter_cache: true, touch: true
+  belongs_to :section
+  has_many :instances, class_name: "Paragraph", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then paragraph does not have other instances
 
-  # if line_id IS NULL, then paragraph does not have other instances
-  has_many :instances, class_name: "Paragraph", foreign_key: "line_id", primary_key: "line_id"
 
-  attr_accessible :image, :title, :url, :message
+  # Image
+  attr_accessible :image, :image_cache, :remote_image_url, :remove_image
+  mount_uploader :image, ImageUploader
 
-  # TODO
+
+  # Text attributes
+  attr_accessible :title, :url, :message
+
+  normalize_text :title, :url, :message
+
+  validates :title,   length: { in: 0..columns_hash['title'].limit }
+  validates :url,     length: { in: 0..columns_hash['url'].limit }
+  validates :message, length: { in: 0..columns_hash['message'].limit }
+
+
+  # Location
   def location?
     rand > 0.7
   end
@@ -34,5 +48,15 @@ class Paragraph < ActiveRecord::Base
 
   def lng
     107.587538
+  end
+
+
+  # Helpers
+  def assign_poster_identity identity, addr
+    self.poster_identity                     = identity
+    self.poster_identity_document            = identity.document
+    self.poster_identity_document_board_slug = identity.document.board.slug
+    self.poster_identity_identity            = identity.identity
+    self.poster_addr                         = addr
   end
 end

@@ -8,8 +8,15 @@ en:
     models:
     attributes:
       document:
-        id: ID
-        url: URL
+        remote_image_url: Image remote URL
+        url: Hyperlink
+
+      section:
+        remote_image_url: Image remote URL
+
+      paragraph:
+        remote_image_url: Image remote URL
+        url: Hyperlink
 
 
   errors:

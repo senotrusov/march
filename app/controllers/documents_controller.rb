@@ -57,6 +57,7 @@ class DocumentsController < ApplicationController
   # GET /documents/new.json
   def new
     @document = Document.new
+    @document.sections.build title: 'Comments'
 
     respond_to do |format|
       format.html
@@ -73,15 +74,34 @@ class DocumentsController < ApplicationController
   # POST /documents
   # POST /documents.json
   def create
-    Document.transaction do
-      @document = Document.new params[:document]
+    raise "Document must be submitted" unless params[:document].kind_of?(Hash)
 
-      if @document.valid?
+    @sections = params[:document].delete(:sections)
+    raise "Sections (if submitted) must be in Array form" unless @sections.kind_of?(Array) || @sections.nil?
+
+    @document = Document.new params[:document]
+
+    all_paragraphs = []
+
+    @sections = @sections && @sections.map do |s|
+      paragraphs = s.delete(:paragraphs)
+      raise "Paragraphs (if submitted) must be in Array form" unless paragraphs.kind_of?(Array) || paragraphs.nil?
+
+      s.checkbox! :public_writable, :contributor_writable
+
+      Section.new(s).tap do |section|
+        paragraphs && all_paragraphs.concat(paragraphs.map{|p|section.paragraphs.build(p)})
+      end
+    end
+
+    if all_valid = ((!@sections || (@sections + all_paragraphs).map{|i|i.valid?}.all?) && @document.valid?)
+      Document.transaction do
         require_poster
 
         @document.poster = @poster
         @document.poster_identity_id = PosterIdentity.next_id
         @document.poster_addr = request.remote_ip
+
         @document.board = @board
 
         @document.save!
@@ -92,16 +112,23 @@ class DocumentsController < ApplicationController
           poster_addr: request.remote_ip,
           document:    @document,
           identity:    1}, without_protection: true)
+
+        if @sections
+          (@sections + all_paragraphs).each {|i| i.assign_poster_identity @document.poster_identity, request.remote_ip }
+          @sections.each {|s| s.document = @document; s.save! }
+        end
+
       end
     end
 
     respond_to do |format|
-      if @document.valid?
+      if all_valid
         format.html { redirect_to @document, notice: 'Document was successfully created.' }
       else
         format.html { render action: "new" }
       end
     end
+
   end
 
   # PUT /documents/1

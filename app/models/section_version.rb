@@ -13,15 +13,10 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
 
+
 class SectionVersion < ActiveRecord::Base
+  # Associations
   belongs_to :poster_identity
   belongs_to :poster_identity_document, class_name: "Document"
   belongs_to :section
-
-  attr_accessible :is_versioned,
-                  :is_sortable,
-                  :is_public_writable,
-                  :is_contributor_writable
-
-  attr_accessible :image, :title
 end

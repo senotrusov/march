@@ -1,7 +1,7 @@
 article.document_overview
 
   - if document.image?
-    = link_to image_tag(document.image_url(:thumb), alt: nil), document_path(document)
+    = link_to image_tag(document.image_url(:mini), alt: nil), document_path(document)
 
   h2.title
     = link_to document.title, document_path(document)

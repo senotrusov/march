@@ -1,4 +1,16 @@
+
 = form_for @document do |f|
+
+  - content_for :templates do
+
+    #section_template
+      = render :partial => 'sections/form', locals: { form: f, section: (section = Section.new) }
+
+    #paragraph_template
+      = f.fields_for :sections, section, :index => "" do |section_fields|
+        = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: Paragraph.new }
+
+
   h1 = content_for :title
   
   - if @document.errors.any?
@@ -7,44 +19,47 @@
       ul
         - @document.errors.full_messages.each do |message|
           li = message
+  
+  .field
+    - if @document.image?
+      p
+        = image_tag @document.image_url(:normal), alt: nil
+        = f.hidden_field :image_cache
 
-  table.fields
+      p
+        = f.check_box :remove_image
+        = f.label :remove_image
 
-    tr.field
-      td = f.label :image
-      td
-        - if @document.image?
-          p
-            = image_tag @document.image_url(:page), alt: nil
-            = f.hidden_field :image_cache
-  
-          p
-            = f.check_box :remove_image
-            = f.label :remove_image
+    - else
+        = f.label :remote_image_url
+        = f.text_field :remote_image_url
 
-        - else
-          p
-            = f.label :remote_image_url
-            = f.text_field :remote_image_url
+        label or local image file to upload
+        = f.file_field :image
 
-          p
-            div or upload local file
-            = f.file_field :image
-  
-    tr.field
-      td = f.label :title
-      td = f.text_field :title
-  
-    tr.field
-      td = f.label :url
-      td = f.text_field :url
-  
-    tr.field
-      td = f.label :message
-      td = f.text_area :message
+  .field
+    = f.label :title
+    = f.text_field :title
 
-    tr.field
-      td
-      td.actions = f.submit 'Save'
-  
-  
+  .field
+    = f.label :url
+    = f.text_field :url
+
+  .field
+    = f.label :message
+    = f.text_area :message
+
+  .sections
+    - (@sections || @document.sections).each do |section|
+      = render :partial => 'sections/form', locals: { form: f, section: section }
+
+  .add_form_template data-template="#section_template"
+    i.icon-plus-sign
+    | Add § section
+
+  .field
+    = f.submit 'Publish'
+
+
+.templates
+  = content_for :templates

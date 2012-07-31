@@ -1,0 +1,57 @@
+
+= form.fields_for :sections, section, :index => "" do |f|
+  .section
+    h2
+      | § section
+      .buttons
+        .delete_form_item data-selector=".section"
+          i.icon-remove-sign
+
+    - if section.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(section.errors.count, "error")} prohibited this section from being saved:"
+        ul
+          - section.errors.full_messages.each do |message|
+            li = message
+    
+    .radio_deck
+      = f.label :access
+
+      div
+        = f.check_box :public_writable, {}, "1", nil
+        = f.label :public_writable
+
+        br
+
+        = f.check_box :contributor_writable, {}, "1", nil
+        = f.label :contributor_writable
+
+    .field
+      - if section.image?
+        p
+          = image_tag section.image_url(:normal), alt: nil
+          = f.hidden_field :image_cache
+
+        p
+          = f.check_box :remove_image, {}, "1", nil
+          = f.label :remove_image
+
+      - else
+          = f.label :remote_image_url
+          = f.text_field :remote_image_url
+
+          label or local image file to upload
+          = f.file_field :image
+
+    .field
+      = f.label :title
+      = f.text_field :title
+    
+
+    .paragraphs
+      - section.paragraphs.each do |paragraph|
+        = render :partial => 'paragraphs/form', locals: { form: f, paragraph: paragraph }
+
+    .add_form_template data-template="#paragraph_template"
+      i.icon-plus-sign
+      | Add ¶ paragraph

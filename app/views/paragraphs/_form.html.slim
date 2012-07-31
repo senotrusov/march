@@ -1,0 +1,45 @@
+
+= form.fields_for :paragraphs, paragraph, :index => "" do |f|
+  .paragraph
+    h3
+      | ¶ paragraph
+      .buttons
+        .delete_form_item data-selector=".paragraph"
+          i.icon-remove-sign
+
+    - if paragraph.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(paragraph.errors.count, "error")} prohibited this paragraph from being saved:"
+        ul
+          - paragraph.errors.full_messages.each do |message|
+            li = message
+    
+    .field
+      - if paragraph.image?
+        p
+          = image_tag paragraph.image_url(:normal), alt: nil
+          = f.hidden_field :image_cache
+
+        p
+          = f.check_box :remove_image, {}, "1", nil
+          = f.label :remove_image
+
+      - else
+          = f.label :remote_image_url
+          = f.text_field :remote_image_url
+
+          label or local image file to upload
+          = f.file_field :image
+
+    .field
+      = f.label :title
+      = f.text_field :title
+
+    .field
+      = f.label :url
+      = f.text_field :url
+
+    .field
+      = f.label :message
+      = f.text_area :message
+

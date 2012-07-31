@@ -13,7 +13,9 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
 
+
 class Poster < ActiveRecord::Base
+  # Associations
   has_many :documents
   has_many :poster_identities
 end
