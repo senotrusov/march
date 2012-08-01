@@ -68,6 +68,8 @@ class DocumentsController < ApplicationController
   def edit
     @document = Document.alive.find(params[:id])
 
+    @skip_sections = true
+
     return forbidden unless @poster && @poster.id == @document.poster_id
   end
 

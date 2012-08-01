@@ -1,14 +1,15 @@
 
 = form_for @document do |f|
 
-  - content_for :templates do
+  - unless @skip_sections
+    - content_for :templates do
 
-    #section_template
-      = render :partial => 'sections/form', locals: { form: f, section: (section = Section.new) }
+      #section_template
+        = render :partial => 'sections/form', locals: { form: f, section: (section = Section.new) }
 
-    #paragraph_template
-      = f.fields_for :sections, section, :index => "" do |section_fields|
-        = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: Paragraph.new }
+      #paragraph_template
+        = f.fields_for :sections, section, :index => "" do |section_fields|
+          = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: Paragraph.new }
 
 
   h1 = content_for :title
@@ -49,17 +50,19 @@
     = f.label :message
     = f.text_area :message
 
-  .sections
-    - (@sections || @document.sections).each do |section|
-      = render :partial => 'sections/form', locals: { form: f, section: section }
+  - unless @skip_sections
+    .sections
+      - (@sections || @document.sections).each do |section|
+        = render :partial => 'sections/form', locals: { form: f, section: section }
 
-  .add_form_template data-template="#section_template"
-    i.icon-plus-sign
-    | Add § section
+    .add_form_template data-template="#section_template"
+      i.icon-plus-sign
+      | Add § section
 
   .field
-    = f.submit 'Publish'
+    = f.submit @document.new_record? ? 'Publish' : 'Save'
 
 
-.templates
-  = content_for :templates
+- if content_for? :templates
+  .templates
+    = content_for :templates
