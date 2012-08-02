@@ -1,0 +1,38 @@
+#!/bin/sh -ex
+
+#  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+
+host=${1:-localhost}
+user=${2:-march}
+db=${3:-march_dev}
+
+
+# Define psql arguments
+psql="psql --host=$host --username $user --echo-all --set ON_ERROR_STOP=on"
+
+
+# Recreate database
+$psql -d postgres -c "DROP DATABASE IF EXISTS \"$db\""
+$psql -d postgres -c "CREATE DATABASE \"$db\" OWNER $user ENCODING 'UTF8'"
+
+
+# Populate database
+$psql -d $db < db/structure-prototype.sql
+$psql -d $db < db/seeds-prototype.sql
+
+
+# Dump schema to db/structure.sql
+pg_dump $db --username $user --host=$host --schema-only > db/structure.sql

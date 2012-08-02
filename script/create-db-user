@@ -1,0 +1,42 @@
+#!/bin/sh -ex
+
+#  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+
+host=${1:-localhost}
+user=${2:-march}
+
+pgpass=~/.pgpass
+
+
+# Define psql arguments
+psql="sudo -u postgres -i psql --dbname postgres --username postgres --set ON_ERROR_STOP=on --command"
+
+
+# Read password
+cat <<EOT
+Please specify password for user $user
+EOT
+read password
+
+
+# Create user
+$psql -c "CREATE USER $user WITH PASSWORD '$password'"
+$psql -c "ALTER ROLE $user WITH CREATEDB"
+
+
+# Store the password in ~/.pgpass thus you don't need to specify the password in config/database.yml
+echo "$host:5432:*:$user:$password" >> $pgpass
+chmod 0600 $pgpass
