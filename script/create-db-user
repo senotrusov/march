@@ -22,7 +22,7 @@ pgpass=~/.pgpass
 
 
 # Define psql arguments
-psql="sudo -u postgres -i psql --dbname postgres --username postgres --set ON_ERROR_STOP=on --command"
+psql="sudo -u postgres -i psql --dbname postgres --username postgres --set ON_ERROR_STOP=on"
 
 
 # Read password

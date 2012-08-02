@@ -1,7 +1,7 @@
 development:
   adapter: postgresql
   host: localhost
-  database: march
+  database: march_dev
   username: march
   # password:
   encoding: UTF8
