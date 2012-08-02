@@ -14,7 +14,8 @@ You need to install ruby 1.9 and postgresql first.
     sudo apt-get install graphicsmagick
     sudo apt-get install imagemagick
 
-    # Create db user and store the password in ~/.pgpass thus you don't need to specify the password in config/database.yml
+    # Create db user and store the password in ~/.pgpass
+    # thus you don't need to specify the password in config/database.yml
     script/create-db-user
 
     # Drop database if exists then create new database with structure
