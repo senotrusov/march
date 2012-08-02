@@ -13,10 +13,14 @@ html
             li = link_to board.slug, documents_path(board_slug: board.slug)
 
     - if alert
-      #alert = alert
+      #alert
+        i.icon-warning-sign
+        = alert
       
     - if notice
-      #notice = notice
+      #notice
+        i.icon-hand-right
+        = notice
     
     = yield
 
