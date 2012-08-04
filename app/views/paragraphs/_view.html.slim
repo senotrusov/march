@@ -1,0 +1,35 @@
+article.paragraph
+
+  .identity
+    .id
+      = "¶#{paragraph.id} "
+    
+    - if @document.id != paragraph.poster_identity_document_id
+      .poster_identity_document_id
+        = "#{paragraph.poster_identity_document_board_slug}/#{paragraph.poster_identity_document_id}"
+
+    .poster_identity
+      = "@#{paragraph.poster_identity_identity}"
+    
+
+  - if paragraph.image?
+    = link_to image_tag(paragraph.image_url(:mini), alt: nil), paragraph.image_url
+
+  - if paragraph.title?
+    h3.title
+      = paragraph.title
+
+  p.message
+    = paragraph.message
+
+  - if paragraph.location?
+    .map_container
+      .map data-lat=paragraph.lat data-lng=paragraph.lng
+
+  - if paragraph.url?
+    .url
+      = link_to paragraph.url, paragraph.url
+
+  .details
+    | Updated 
+    = timeago_tag paragraph.updated_at

@@ -1,0 +1,11 @@
+td
+  .section_header
+    
+    - if section.image?
+      = link_to image_tag(section.image_url(:small), alt: nil), section.image_url
+
+    h2
+      .id = "§#{section.id}"
+      = " #{section.title}"
+
+  = render collection: section.paragraphs, partial: 'paragraphs/view', as: 'paragraph'
