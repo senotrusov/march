@@ -4,7 +4,7 @@
 form.new_document, form.edit_document
 
   > h1
-    padding: 0px 15px
+    padding: 0px 20px
 
   label
     display: block
@@ -52,7 +52,7 @@ form.new_document, form.edit_document
   
   .document
     width: 520px
-    padding: 0px 15px
+    padding: 0px 20px
   
   .radio_deck > div, .radio_deck > label
     float: left
@@ -108,10 +108,17 @@ form.new_document, form.edit_document
 
   table.section_frames
     width: 100%
+    border-collapse: collapse
 
     > tbody > tr > td
       vertical-align: top
       padding: 0px 15px
+
+    > tbody > tr > td:first-child
+      padding-left: 20px
+
+    > tbody > tr > td:last-child
+      padding-right: 20px
 
     > tbody > tr > td[data-frame="0"]
       width: 40%
