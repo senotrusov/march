@@ -18,7 +18,7 @@ class Document < ActiveRecord::Base
   # Associations
   belongs_to :poster, counter_cache: true
   belongs_to :poster_identity
-  belongs_to :board, counter_cache: true, touch: true
+  belongs_to :board, counter_cache: true
   has_many :poster_identities
   has_many :sections
 
@@ -36,6 +36,14 @@ class Document < ActiveRecord::Base
   validates :title,   length: { in: 1..columns_hash['title'].limit }
   validates :url,     length: { in: 0..columns_hash['url'].limit }
   validates :message, length: { in: 0..columns_hash['message'].limit }
+
+  
+  # Sections framing
+  serialize :sections_framing, MultiJsonSerializer.new(Array)
+
+  def framed_sections
+    sections_framing.map {|frame| frame.map {|section_id| sections.detect {|section| section.id == section_id }}}
+  end
 
 
   # Scopes

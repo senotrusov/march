@@ -78,6 +78,7 @@ CREATE TABLE documents (
   url     character varying(1024),
   message character varying(1024),
 
+  sections_framing text,
   poster_identities_count integer NOT NULL default 0, -- gapless sequence: update w/lock set + 1
 
   board_id bigint NOT NULL references boards(id),
@@ -127,8 +128,8 @@ CREATE TABLE sections (
 
   image      character varying(128),
   title      character varying(256) NOT NULL,
-  paragraphs bigint [], -- paragraphs order
 
+  paragraphs_order text,
   paragraphs_count integer NOT NULL DEFAULT 0,
 
   document_id bigint NOT NULL references documents(id),

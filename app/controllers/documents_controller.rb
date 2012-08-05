@@ -57,7 +57,7 @@ class DocumentsController < ApplicationController
   # GET /documents/new.json
   def new
     @document = Document.new
-    @document.sections.build title: 'Comments'
+    @sections = [Section.new(title: 'Comments', frame: 0)]
 
     respond_to do |format|
       format.html
@@ -121,9 +121,12 @@ class DocumentsController < ApplicationController
         if @sections
           (@sections + all_paragraphs).each {|i| i.assign_poster_identity @document.poster_identity, request.remote_ip }
           @sections.each {|s| s.document = @document; s.save! }
+
+          @sections.each {|s| (@document.sections_framing[s.frame] ||= []).push(s.id) }
+          @document.save!
         end
 
-      end
+      end # transaction
     end
 
     respond_to do |format|

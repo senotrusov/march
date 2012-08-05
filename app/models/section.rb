@@ -21,7 +21,7 @@ class Section < ActiveRecord::Base
   belongs_to :document
   has_many :instances, class_name: "Section", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then section does not have other instances
   has_many :section_versions
-  has_many :paragraphs
+  has_many :paragraphs, order: 'id'
 
   
   # Image
@@ -37,7 +37,14 @@ class Section < ActiveRecord::Base
   attr_accessible :title
   normalize_text :title
   validates :title, length: { in: 1..columns_hash['title'].limit }
-  
+
+
+  # Frame
+  attr_accessible :frame
+  attr_reader :frame
+  def frame=(value); @frame = value.to_i end
+
+
   # Helpers
   def assign_poster_identity identity, addr
     self.poster_identity          = identity

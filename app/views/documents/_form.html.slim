@@ -14,50 +14,56 @@
 
   h1 = content_for :title
   
-  - if @document.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
-      ul
-        - @document.errors.full_messages.each do |message|
-          li = message
-  
-  .field
-    - if @document.image?
-      p
-        = image_tag @document.image_url(:normal), alt: nil
-        = f.hidden_field :image_cache
+  .document
+    - if @document.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
+        ul
+          - @document.errors.full_messages.each do |message|
+            li = message
+    
+    .field
+      - if @document.image?
+        p
+          = image_tag @document.image_url(:normal), alt: nil
+          = f.hidden_field :image_cache
 
-      p
-        = f.check_box :remove_image
-        = f.label :remove_image
+        p
+          = f.check_box :remove_image
+          = f.label :remove_image
 
-    - else
-        = f.label :remote_image_url
-        = f.text_field :remote_image_url
+      - else
+          = f.label :remote_image_url
+          = f.text_field :remote_image_url
 
-        label or local image file to upload
-        = f.file_field :image
+          label or local image file to upload
+          = f.file_field :image
 
-  .field
-    = f.label :title
-    = f.text_field :title
+    .field
+      = f.label :title
+      = f.text_field :title
 
-  .field
-    = f.label :url
-    = f.text_field :url
+    .field
+      = f.label :url
+      = f.text_field :url
 
-  .field
-    = f.label :message
-    = f.text_area :message
+    .field
+      = f.label :message
+      = f.text_area :message
 
   - unless @skip_sections
-    .sections
-      - (@sections || @document.sections).each do |section|
-        = render :partial => 'sections/form', locals: { form: f, section: section }
+    table.section_frames
+      tbody
+        tr
+          - 3.times do |frame|
+            td.frame data-frame=frame
+              .sections
+                - @sections && @sections.select{|s| s.frame == frame}.each do |section|
+                  = render :partial => 'sections/form', locals: { form: f, section: section }
 
-    .add_form_template data-template="#section_template"
-      i.icon-plus-sign
-      | Add § section
+              .add_form_template data-template="#section_template"
+                i.icon-plus-sign
+                | Add § section
 
   .field
     = f.submit @document.new_record? ? 'Publish' : 'Save'

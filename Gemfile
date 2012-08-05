@@ -76,3 +76,5 @@ gem 'mini_magick' # MIT
 # Additional processing support for MiniMagick and RMagick.
 gem 'carrierwave-processing' # MIT
 
+# JSON
+gem 'oj' # 3-clause BSD

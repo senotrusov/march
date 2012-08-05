@@ -79,6 +79,7 @@ CREATE TABLE documents (
     title character varying(256),
     url character varying(1024),
     message character varying(1024),
+    sections_framing text,
     poster_identities_count integer DEFAULT 0 NOT NULL,
     board_id bigint NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
@@ -298,7 +299,7 @@ CREATE TABLE sections (
     contributor_writable boolean DEFAULT true NOT NULL,
     image character varying(128),
     title character varying(256) NOT NULL,
-    paragraphs bigint[],
+    paragraphs_order text,
     paragraphs_count integer DEFAULT 0 NOT NULL,
     document_id bigint NOT NULL,
     line_id bigint

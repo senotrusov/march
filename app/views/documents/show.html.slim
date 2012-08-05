@@ -32,7 +32,10 @@ article.document
     li = link_to 'Edit', edit_document_path(@document)
     li = link_to 'Destroy', @document, :confirm => 'Are you sure?', :method => :delete
 
-  table.sections
+  table.section_frames
     tbody
       tr
-        = render collection: @document.sections, partial: 'sections/view', as: 'section'
+        - @document.framed_sections.each_with_index do |sections, frame|
+          td.frame data-frame=frame
+            .sections
+              = render collection: sections, partial: 'sections/view', as: 'section'
