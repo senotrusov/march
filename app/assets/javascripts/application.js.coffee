@@ -16,3 +16,18 @@
 #= require rails-timeago
 #= require leaflet-src
 #= require_tree .
+
+String.prototype.truncate = (min, max) ->
+  string = $.trim(this).replace(/[\s]+/, ' ')
+
+  if string.length <= min
+    return string
+
+  else
+    truncated = string.match(/// ^.{0,#{min}}[\S]* ///)[0]
+
+    if truncated.length > max
+      return string.substr(0, max) + '&hellip;'
+      
+    else
+      return $.trim(truncated) + '&hellip;'

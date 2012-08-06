@@ -143,31 +143,53 @@ form.new_document, form.edit_document
     i
       padding-right: 5px
 
-  .section > .abstract
+  .section > .abstract,
+  .paragraph > .abstract,
     display: none
 
   .sortable
 
     .add_form_template,
     .section > h2,
+    .section > #error_explanation,
     .section > .radio_deck,
-    .section > .field
+    .section > .field,
+    .paragraph > h3,
+    .paragraph > #error_explanation,
+    .paragraph > .field
       display: none
 
-    .section > .abstract
+    .section > .abstract,
+    .paragraph > .abstract
       cursor: default
-      display: inline-block
+      display: block
       padding: 5px 10px
-      margin: 10px 0px
-      background: $section
       color: #fff
-      font-weight: bold
+
+    .section > .abstract
+      margin: 10px 0px 0px 0px
+      background: $section
       font-size: $h3
+      font-weight: bold
+
+    .paragraph > .abstract
+      margin: 10px 0px
+      background: $paragraph
+      font-size: $base
 
     .sections
       margin: 20px 0px
       padding: 15px 20px
-      background: $grey
+      background: $pearl
 
     .section
+      padding-top: 0px
+      margin-bottom: 0px
+
+    .paragraphs
+      margin: 0px 0px 20px 0px
+      padding: 15px 20px
+      background: $grey
+
+    .paragraph
       padding-top: 0px
