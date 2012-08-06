@@ -8,14 +8,11 @@ en:
     models:
     attributes:
       document:
-        remote_image_url: Image remote URL
         url: Hyperlink
 
       section:
-        remote_image_url: Image remote URL
 
       paragraph:
-        remote_image_url: Image remote URL
         url: Hyperlink
 
 

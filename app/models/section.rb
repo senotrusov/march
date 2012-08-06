@@ -25,7 +25,7 @@ class Section < ActiveRecord::Base
 
   
   # Image
-  attr_accessible :image, :image_cache, :remote_image_url, :remove_image
+  attr_accessible :image, :image_cache, :remove_image
   mount_uploader :image, ImageUploader
 
   
