@@ -24,7 +24,8 @@ $(document).ready ->
 
 
   $('.sort_button').click ->
-    $(this).nextAll('.section_frames').each ->
+    button = $(this)
+    button.nextAll('.section_frames').each ->
       frames = $(this)
 
       if frames.is('.sortable')
@@ -34,6 +35,8 @@ $(document).ready ->
           sections.sortable 'destroy'
 
         frames.removeClass('sortable')
+
+        button.children('.title').text('Sort')
 
       else
         frames.addClass('sortable')
@@ -52,5 +55,10 @@ $(document).ready ->
               section.children('.abstract').each ->
                 $(this).text("§ #{title}")
 
-          
           sections.sortable()
+        
+        .each ->
+          sections = $(this)
+          sections.sortable('option', 'connectWith', frames.find('.sections').not(sections))
+        
+        button.children('.title').text('Done sorting')
