@@ -45,7 +45,7 @@ class Paragraph < ActiveRecord::Base
 
   # Location
   def location?
-    rand > 0.7
+    (id % 6) == 0
   end
 
   def lat

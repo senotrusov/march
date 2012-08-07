@@ -35,7 +35,7 @@ form.new_document, form.edit_document
   input[type="submit"]
     font-size: $base
     padding: 5px 15px 5px 15px
-    margin: 10px 15px
+    margin: 50px 20px
 
   input[type="text"], input[type="file"], textarea
     margin: 0px 0px 10px 0px
@@ -93,7 +93,7 @@ form.new_document, form.edit_document
   td.frame > .sections
     > .section
       clear: both
-      padding-top: 30px
+      margin-bottom: 30px
 
       > h2
         background: $section
@@ -122,6 +122,9 @@ form.new_document, form.edit_document
               div
                 cursor: default
 
+      > .buttons
+        margin: 30px 0px
+        text-align: right
 
 
   // Sortable
@@ -131,11 +134,13 @@ form.new_document, form.edit_document
 
   .sortable
 
-    .add_form_template,
+    .frame > .buttons,
     .section > h2,
     .section > .error_explanation,
     .section > .radio_deck,
     .section > .field,
+    .section > .prototype,
+    .section > .buttons,
     .paragraph > h3,
     .paragraph > .error_explanation,
     .paragraph > .field,
@@ -167,17 +172,14 @@ form.new_document, form.edit_document
         background: $pearl
 
         > .section
-          padding-top: 0px
-          margin-bottom: 0px
 
           > .paragraphs
-            margin: 0px 0px 20px 0px
+            margin: 0px
             padding: 15px 20px
             background: $grey
 
             > .paragraph
-              padding-top: 0px
-
+              padding: 0px
 
 
 
@@ -208,46 +210,36 @@ form.new_document, form.edit_document
   
 
   // Buttons
-  .sort_button
-    background: $bgcolor
+  .button
     display: inline-block
     padding: 5px 10px
     color: #fff
-    margin: 20px 0px 0px 20px
     cursor: default
-    float: left
-    clear: both
 
     i
       padding-right: 5px
 
-  .paste-prototype-id
-    width: 60px
-    text-align: center
+    .title
+      display: inline-block
+
+  
+  .button.sort
     background: $bgcolor
-    display: inline-block
-    padding: 5px 10px
+    margin: 20px
+
+    float: left
+
+  .button.paste-prototype-id
+    background: $bgcolor
     margin-left: 5px
-    color: #fff
-    cursor: default
 
-    i
-      padding-right: 5px
+    width: 70px
+    text-align: center
 
-  .add_form_template
+  .button.add_form_template[data-append-to=".sections"]
     background: $section
-    display: inline-block
-    padding: 5px 10px
-    color: #fff
-    margin: 30px 0px
-    cursor: default
-    float: left
-    clear: both
+    margin: 10px 0px
 
-    i
-      padding-right: 5px
-
-  .section > .add_form_template
+  .button.add_form_template[data-append-to=".paragraphs"]
     background: $paragraph
-    float: right
     margin: 10px 0px

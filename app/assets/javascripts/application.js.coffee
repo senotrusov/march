@@ -17,7 +17,7 @@
 #= require leaflet-src
 #= require_tree .
 
-String.prototype.truncate = (min, max) ->
+String.prototype.truncate = (min = 30, max = 35) ->
   string = $.trim(this).replace(/[\s]+/g, ' ')
 
   if string.length <= min

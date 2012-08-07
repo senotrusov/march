@@ -1,9 +1,44 @@
+
 nextTick = (func) -> setTimeout func, 0
 
+initMap = ->
+  container = $(this)
+  map = new L.Map this, zoomControl: false
+
+  # NOTE: Do not use tile.openstreetmap.org for production
+  osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  osmAttrib = 'Map data ©OpenStreetMap and contributors'
+
+  osm = new L.TileLayer osmUrl, minZoom: 1, maxZoom: 18, attribution: osmAttrib
+
+  center = new L.LatLng(container.attr('data-lat'), container.attr('data-lng'))
+
+  map.setView center, 16
+  map.addLayer osm
+  map.attributionControl.setPrefix ''
+
+  marker = new L.Marker(center)
+  map.addLayer marker
+
+buildAbstract = (callback) ->
+  abstract = []
+
+  callback(abstract)
+
+  abstract = abstract.join(" ").truncate()
+  abstract = 'Untitled' if abstract.length == 0
+  abstract
+
+
 $(document).ready ->
-  $('.add_form_template').live 'click', ->
+  $('.map').each(initMap)
+
+$(document).ready ->
+  $('.button.add_form_template').live 'click', ->
     button = $(this)
-    $(button.attr 'data-template').children().clone().hide().appendTo(button.siblings(button.attr 'data-append-to')).slideDown('fast')
+    template = $(button.attr 'data-template').children().clone().hide()
+    append_to = button.closest(button.attr 'data-item-type').children(button.attr 'data-append-to')
+    template.appendTo(append_to).slideDown('fast')
 
 
   $('.delete_form_item').live 'click', ->
@@ -21,9 +56,7 @@ $(document).ready ->
       $(this).find('input[name="document[sections][][frame]"]').each -> $(this).val(frame)
 
 
-  $('.sort_button').click ->
-    abstract_min_length = 18
-    abstract_max_length = 22
+  $('.button.sort').click ->
 
     button = $(this)
     button.nextAll('.section_frames').each ->
@@ -45,14 +78,15 @@ $(document).ready ->
           sections = $(this)
         
           # Create abstract for each section
-          sections.find('.section').each ->
+          sections.children('.section').each ->
             section = $(this)
-            
-            section.find('input[name="document[sections][][title]"]').each ->
-              abstract = $(this).val().truncate(abstract_min_length, abstract_max_length)
-              abstract = 'Untitled' if abstract.length == 0
 
-              section.children('.abstract').each -> $(this).html("§ #{abstract}")
+            abstract = buildAbstract (abstract) ->
+
+              section.find('input[name="document[sections][][title]"]').each -> abstract.push $(this).val()
+              section.find('> .prototype > section > .header > h2 > .title').each -> abstract.push $(this).text()
+
+            section.children('.abstract').each -> $(this).html("§ #{abstract}")
 
           sections.sortable()
         
@@ -65,16 +99,21 @@ $(document).ready ->
           paragraphs = $(this)
         
           # Create abstract for each paragraph
-          paragraphs.find('.paragraph').each ->
+          paragraphs.children('.paragraph').each ->
             paragraph = $(this)
-            abstract = []
 
-            paragraph.find(   'input[name="document[sections][][paragraphs][][title]"]').each   -> abstract.push $(this).val()
-            paragraph.find('textarea[name="document[sections][][paragraphs][][message]"]').each -> abstract.push $(this).val()
-            paragraph.find(   'input[name="document[sections][][paragraphs][][url]"]').each     -> abstract.push $(this).val()
+            abstract = buildAbstract (abstract) ->
+              input = (field) -> "[name=\"document[sections][][paragraphs][][#{field}]\"]"
 
-            abstract = abstract.join(" ").truncate(abstract_min_length, abstract_max_length)
-            abstract = 'Untitled' if abstract.length == 0
+              push = -> abstract.push $(this).val()
+              paragraph.find(input 'title').each(push)
+              paragraph.find(input 'message').each(push)
+              paragraph.find(input 'url').each(push)
+
+              push = -> abstract.push $(this).text()
+              paragraph.find('> .prototype .title').each(push)
+              paragraph.find('> .prototype .message').each(push)
+              paragraph.find('> .prototype .url a').each(push)
 
             paragraph.children('.abstract').each -> $(this).html("¶ #{abstract}")
 
@@ -87,11 +126,11 @@ $(document).ready ->
         button.children('.title').text('Done sorting')
 
 
-  $('.section .id, .paragraph .id').live 'click', ->
+  $('section .id, article.paragraph .id').live 'click', ->
     document.cookie = "prototype_id=#{$(this).text()}; path=/"
 
   
-  $('.paste-prototype-id').live 'click', ->
+  $('.button.paste-prototype-id').live 'click', ->
     if match = document.cookie.match(/prototype_id=(.+);?/)
       prototype_id = match[1]
       $(this).closest('.field').find('input').val(prototype_id).trigger('change')
@@ -110,7 +149,7 @@ $(document).ready ->
 
         $.get(url = "#{input.attr('data-prototype-source')}/#{prototype_id}")
           .success (data, statusText, jqXHR) ->
-            placeholder.html(data)
+            placeholder.html(data).find('.map').each(initMap)
 
           .error (jqXHR, statusText, error) ->
             placeholder.html(

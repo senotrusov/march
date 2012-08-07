@@ -45,6 +45,12 @@ class Section < ActiveRecord::Base
   def frame=(value); @frame = value.to_i end
 
 
+  # Instance
+  attr_accessible :prototype_id
+  attr_reader :prototype_id
+  def prototype_id=(value); @prototype_id = value.kind_of?(String) && value.gsub(/\D/, '') end
+
+
   # Helpers
   def assign_poster_identity identity, addr
     self.poster_identity          = identity

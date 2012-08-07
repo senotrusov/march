@@ -1,6 +1,7 @@
 
 = form.fields_for :paragraphs, paragraph, :index => "" do |f|
   .paragraph
+
     .abstract
     
     h3
@@ -23,9 +24,9 @@
           tr
             td.field
               = f.text_field :prototype_id, 'data-prototype-source' => paragraphs_path, 'data-item-type' => '.paragraph'
-            td.button
-              .paste-prototype-id
+            td
+              .button.paste-prototype-id
                 i.icon-link
-                | Paste
+                .title Paste
 
     .prototype

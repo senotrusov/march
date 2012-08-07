@@ -1,4 +1,4 @@
-.section
+section
 
   .header
     - if section.image?
@@ -6,6 +6,6 @@
 
     h2
       .id = "§#{section.id}"
-      = " #{section.title}"
+      .title = section.title
 
   = render collection: section.paragraphs, partial: 'paragraphs/view', as: 'paragraph'
