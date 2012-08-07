@@ -12,7 +12,7 @@
           i.icon-remove-sign
 
     - if section.errors.any?
-      #error_explanation
+      .error_explanation
         h2 = "#{pluralize(section.errors.count, "error")} prohibited this section from being saved:"
         ul
           - section.errors.full_messages.each do |message|
@@ -53,6 +53,10 @@
       - section.paragraphs.each do |paragraph|
         = render :partial => 'paragraphs/form', locals: { form: f, paragraph: paragraph }
 
-    .add_form_template data-template="#paragraph_template"
+    .add_form_template data-template="#paragraph_template" data-append-to=".paragraphs"
       i.icon-plus-sign
       | Add ¶ paragraph
+
+    .add_form_template data-template="#paragraph_instance_template" data-append-to=".paragraphs"
+      i.icon-copy
+      | Add ¶ paragraph instance

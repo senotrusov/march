@@ -1,0 +1,31 @@
+
+= form.fields_for :paragraphs, paragraph, :index => "" do |f|
+  .paragraph
+    .abstract
+    
+    h3
+      | ¶ paragraph
+      .buttons
+        .delete_form_item data-selector=".paragraph"
+          i.icon-remove-sign
+
+    - if paragraph.errors.any?
+      .error_explanation
+        h2 = "#{pluralize(paragraph.errors.count, "error")} prohibited this paragraph from being saved:"
+        ul
+          - paragraph.errors.full_messages.each do |message|
+            li = message
+    
+    .field
+      = f.label :prototype_id
+      table.field_with_button
+        tbody
+          tr
+            td.field
+              = f.text_field :prototype_id, 'data-prototype-source' => paragraphs_path, 'data-item-type' => '.paragraph'
+            td.button
+              .paste-prototype-id
+                i.icon-link
+                | Paste
+
+    .prototype

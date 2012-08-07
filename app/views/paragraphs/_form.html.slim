@@ -1,6 +1,7 @@
 
 = form.fields_for :paragraphs, paragraph, :index => "" do |f|
   .paragraph
+    = f.hidden_field :prototype_id
 
     .abstract
     
@@ -11,7 +12,7 @@
           i.icon-remove-sign
 
     - if paragraph.errors.any?
-      #error_explanation
+      .error_explanation
         h2 = "#{pluralize(paragraph.errors.count, "error")} prohibited this paragraph from being saved:"
         ul
           - paragraph.errors.full_messages.each do |message|

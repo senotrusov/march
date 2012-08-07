@@ -1,8 +1,9 @@
+nextTick = (func) -> setTimeout func, 0
 
 $(document).ready ->
   $('.add_form_template').live 'click', ->
     button = $(this)
-    $(button.attr 'data-template').children().clone().hide().appendTo(button.prev()).slideDown('fast')
+    $(button.attr 'data-template').children().clone().hide().appendTo(button.siblings(button.attr 'data-append-to')).slideDown('fast')
 
 
   $('.delete_form_item').live 'click', ->
@@ -84,3 +85,33 @@ $(document).ready ->
           paragraphs.sortable('option', 'connectWith', frames.find('.paragraphs').not(paragraphs))
 
         button.children('.title').text('Done sorting')
+
+
+  $('.section .id, .paragraph .id').live 'click', ->
+    document.cookie = "prototype_id=#{$(this).text()}; path=/"
+
+  
+  $('.paste-prototype-id').live 'click', ->
+    if match = document.cookie.match(/prototype_id=(.+);?/)
+      prototype_id = match[1]
+      $(this).closest('.field').find('input').val(prototype_id).trigger('change')
+
+  
+  $('input[data-prototype-source]').live 'keyup paste cut change', ->
+    input = $(this)
+
+    nextTick ->
+      prototype_id = input.val().replace(/\D/g, '')
+      
+      if input.attr(state = 'data-value-change-handled') != prototype_id
+        input.attr state, prototype_id
+
+        placeholder = input.closest(input.attr('data-item-type')).children('.prototype')
+
+        $.get(url = "#{input.attr('data-prototype-source')}/#{prototype_id}")
+          .success (data, statusText, jqXHR) ->
+            placeholder.html(data)
+
+          .error (jqXHR, statusText, error) ->
+            placeholder.html(
+              "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{url}</div>")

@@ -1,37 +1,5 @@
 
 class DocumentsController < ApplicationController
-  before_filter do
-    @boards = Board.ordered
-    @board = @boards.detect {|board| board.slug == params[:board_slug]}
-    
-    unless @board
-      respond_to do |format|
-        format.html { render text: "Board not found", status: :not_found }
-      end
-    end
-
-    if session[:poster]
-      @poster = Poster.find_by_session_key(session[:poster])
-    end
-  end
-
-  def require_poster
-    unless @poster
-      @poster = Poster.create!({
-        sign_up_addr:      request.remote_ip,
-        last_sign_in_at:   Time.zone.now,
-        last_sign_in_addr: request.remote_ip,
-        session_key:       Digest::SHA2.hexdigest("#{Time.now.to_f}#{rand}")}, without_protection: true)
-
-      session[:poster] = @poster.session_key
-    end
-  end
-
-  def default_url_options options = nil
-    { board_slug: @board.slug }
-  end
-
-
   # GET /documents
   # GET /documents.json
   def index

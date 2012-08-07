@@ -18,7 +18,7 @@
 #= require_tree .
 
 String.prototype.truncate = (min, max) ->
-  string = $.trim(this).replace(/[\s]+/, ' ')
+  string = $.trim(this).replace(/[\s]+/g, ' ')
 
   if string.length <= min
     return string

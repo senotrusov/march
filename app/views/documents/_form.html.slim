@@ -11,12 +11,16 @@
         = f.fields_for :sections, section, :index => "" do |section_fields|
           = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: Paragraph.new }
 
+      #paragraph_instance_template
+        = f.fields_for :sections, section, :index => "" do |section_fields|
+          = render :partial => 'paragraphs/instance_form', locals: { form: section_fields, paragraph: Paragraph.new }
+
 
   h1 = content_for :title
   
   .document
     - if @document.errors.any?
-      #error_explanation
+      .error_explanation
         h2 = "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
         ul
           - @document.errors.full_messages.each do |message|
@@ -62,7 +66,7 @@
                 - @sections && @sections.select{|s| s.frame == frame}.each do |section|
                   = render :partial => 'sections/form', locals: { form: f, section: section }
 
-              .add_form_template data-template="#section_template"
+              .add_form_template data-template="#section_template" data-append-to=".sections"
                 i.icon-plus-sign
                 | Add § section
 
