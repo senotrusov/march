@@ -16,7 +16,7 @@
 
 class PosterIdentity < ActiveRecord::Base
   # Associations
-  belongs_to :poster, counter_cache: true
+  belongs_to :poster
   belongs_to :document, counter_cache: true
 
   has_many :documents

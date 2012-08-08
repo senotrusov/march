@@ -16,9 +16,9 @@
 
 class Document < ActiveRecord::Base
   # Associations
-  belongs_to :poster, counter_cache: true
+  belongs_to :poster
   belongs_to :poster_identity
-  belongs_to :board, counter_cache: true
+  belongs_to :board
   has_many :poster_identities
   has_many :sections
 

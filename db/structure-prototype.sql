@@ -37,10 +37,7 @@ CREATE TABLE posters (
   last_sign_in_at   timestamp with time zone,
   last_sign_in_addr inet,
 
-  session_key character varying(64),
-
-  documents_count         integer NOT NULL default 0,
-  poster_identities_count integer NOT NULL default 0
+  session_key character varying(64)
 );
 
 CREATE UNIQUE INDEX posters_email_idx ON posters USING btree (email);
@@ -54,9 +51,7 @@ CREATE TABLE boards (
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  slug character varying(64) NOT NULL,
-
-  documents_count integer NOT NULL default 0
+  slug character varying(64) NOT NULL
 );
 
 CREATE UNIQUE INDEX boards_slug_idx ON boards USING btree (slug);
@@ -78,7 +73,7 @@ CREATE TABLE documents (
   url     character varying(1024),
   message character varying(1024),
 
-  sections_framing text,
+  sections_framing text, -- json
   poster_identities_count integer NOT NULL default 0, -- gapless sequence: update w/lock set + 1
 
   board_id bigint NOT NULL references boards(id),
@@ -129,8 +124,7 @@ CREATE TABLE sections (
   image      character varying(128),
   title      character varying(256) NOT NULL,
 
-  paragraphs_order text,
-  paragraphs_count integer NOT NULL DEFAULT 0,
+  paragraphs_order text, -- json
 
   document_id bigint NOT NULL references documents(id),
   line_id     bigint references sections(id) -- if line_id IS NULL, then there are no other line elements expected to be there
