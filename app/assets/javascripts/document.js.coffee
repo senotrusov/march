@@ -84,7 +84,7 @@ $(document).ready ->
             abstract = buildAbstract (abstract) ->
 
               section.find('input[name="document[sections][][title]"]').each -> abstract.push $(this).val()
-              section.find('> .prototype > section > .header > h2 > .title').each -> abstract.push $(this).text()
+              section.find('> .prototype > section.section > .header > h2 > .title').each -> abstract.push $(this).text()
 
             section.children('.abstract').each -> $(this).html("§ #{abstract}")
 
@@ -126,7 +126,7 @@ $(document).ready ->
         button.children('.title').text('Done sorting')
 
 
-  $('section .id, article.paragraph .id').live 'click', ->
+  $('section.section .id, article.paragraph .id').live 'click', ->
     document.cookie = "prototype_id=#{$(this).text()}; path=/"
 
   
