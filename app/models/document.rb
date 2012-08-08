@@ -68,11 +68,4 @@ class Document < ActiveRecord::Base
   def lng
     107.587538
   end
-
-
-  # Helpers
-  def paragraphs_count
-    # TODO: Cache
-    sections.map(&:paragraphs_count).sum
-  end
 end
