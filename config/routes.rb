@@ -31,5 +31,5 @@ March::Application.routes.draw do
     end
   end
 
-  root :to => 'welcome#index'
+  root :to => redirect("/a")
 end
