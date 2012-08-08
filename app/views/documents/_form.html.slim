@@ -4,19 +4,22 @@
   - unless @skip_sections
     - content_for :templates do
 
+      - section = Section.new
+      - paragraph = Paragraph.new
+
       #section_template
-        = render :partial => 'sections/form', locals: { form: f, section: (section = Section.new) }
+        = render :partial => 'sections/form', locals: { form: f, section: section }
 
       #section_instance_template
-        = render :partial => 'sections/instance_form', locals: { form: f, section: (section = Section.new) }
+        = render :partial => 'sections/instance_form', locals: { form: f, section: section }
 
       #paragraph_template
         = f.fields_for :sections, section, :index => "" do |section_fields|
-          = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: Paragraph.new }
+          = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: paragraph }
 
       #paragraph_instance_template
         = f.fields_for :sections, section, :index => "" do |section_fields|
-          = render :partial => 'paragraphs/instance_form', locals: { form: section_fields, paragraph: Paragraph.new }
+          = render :partial => 'paragraphs/instance_form', locals: { form: section_fields, paragraph: paragraph }
 
 
   h1 = content_for :title
