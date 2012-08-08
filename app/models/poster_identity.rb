@@ -21,7 +21,6 @@ class PosterIdentity < ActiveRecord::Base
 
   has_many :documents
   has_many :sections
-  has_many :section_versions
   has_many :paragraphs
 
 

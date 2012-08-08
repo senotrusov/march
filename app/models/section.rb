@@ -20,7 +20,6 @@ class Section < ActiveRecord::Base
   belongs_to :poster_identity_document, class_name: "Document"
   belongs_to :document
   has_many :instances, class_name: "Section", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then section does not have other instances
-  has_many :section_versions
   has_many :paragraphs, order: 'id'
 
   

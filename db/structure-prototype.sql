@@ -140,33 +140,6 @@ CREATE INDEX sections_document_id_idx ON sections USING btree (document_id);
 CREATE INDEX sections_line_id_idx     ON sections USING btree (line_id);
 
 
-CREATE TABLE section_versions (
-  id bigserial PRIMARY KEY,
-
-  created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-  poster_identity_id          bigint  NOT NULL references poster_identities(id),
-  poster_identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  poster_identity_identity    integer NOT NULL,                          -- redundant data
-  poster_addr                 inet    NOT NULL DEFAULT '127.0.0.1',
-
-  public_writable      boolean DEFAULT true NOT NULL,
-  contributor_writable boolean DEFAULT true NOT NULL,
-
-  image      character varying(128),
-  title      character varying(256) NOT NULL,
-  paragraphs bigint [], -- paragraphs order
-
-  paragraphs_count integer NOT NULL DEFAULT 0,
-
-  section_id bigint  NOT NULL references sections(id),
-  version    integer NOT NULL
-);
-
-CREATE UNIQUE INDEX section_versions_unique_idx ON section_versions USING btree (section_id, version); -- version in index?
-
-
 -- Permalink forms from paragraphs.id, resulting a page which shows paragraph with that id
 -- Other paragraphs with a line_id = paragraphs.id shown as a related data
  
