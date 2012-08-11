@@ -44,47 +44,39 @@ class DocumentsController < ApplicationController
   # POST /documents
   # POST /documents.json
   def create
-    raise "Document must be submitted" unless params[:document].kind_of?(Hash)
-
-    @sections = params[:document].delete(:sections)
-    raise "Sections (if submitted) must be in Array form" unless @sections.kind_of?(Array) || @sections.nil?
-
-    @document = Document.new params[:document]
+    params.require_hash :document
 
     all_paragraphs = []
 
-    @sections = @sections && @sections.map do |s|
-      paragraphs = s.delete(:paragraphs)
-      raise "Paragraphs (if submitted) must be in Array form" unless paragraphs.kind_of?(Array) || paragraphs.nil?
+    if @sections = params[:document].extract_array(:sections)
+      @sections.map! do |s|
+        paragraphs = s.extract_array(:paragraphs)
+        s.checkbox! :public_writable, :contributor_writable
 
-      s.checkbox! :public_writable, :contributor_writable
-
-      Section.new(s).tap do |section|
-        paragraphs && all_paragraphs.concat(paragraphs.map{|p|section.paragraphs.build(p)})
+        Section.new(s).tap do |section|
+          paragraphs && all_paragraphs.concat(paragraphs.map{|p|section.paragraphs.build(p)})
+        end
       end
     end
+
+    @document = Document.new params[:document]
 
     validate = [@document]
     validate.concat(@sections + all_paragraphs) if @sections
 
     if valid = validate.map{|i| i.valid? }.all?
       Document.transaction do
+        
         require_poster
 
         @document.poster = @poster
         @document.identity_id = Identity.next_id
         @document.poster_addr = request.remote_ip
-
         @document.board = @board
 
         @document.save!
 
-        @document.identity = Identity.create!({
-          id:          @document.identity_id,
-          poster:      @poster,
-          poster_addr: request.remote_ip,
-          document:    @document,
-          name:    1}, without_protection: true)
+        @document.identity = Identity.create_for_document!(@document)
 
         if @sections
           (@sections + all_paragraphs).each {|i| i.assign_identity @document.identity, request.remote_ip }

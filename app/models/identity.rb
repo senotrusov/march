@@ -17,7 +17,7 @@
 class Identity < ActiveRecord::Base
   # Associations
   belongs_to :poster
-  belongs_to :document, counter_cache: true
+  belongs_to :document
 
   has_many :documents
   has_many :sections
@@ -38,5 +38,15 @@ class Identity < ActiveRecord::Base
       self.identity_name       = identity.name
       self.poster_addr         = addr
     end
+  end
+
+  def self.create_for_document!(document, poster = nil, poster_addr = nil)
+    document.update_column(:identities_count, document.identities_count + 1) if poster
+
+    create!({ id:          poster ? nil : document.identity_id,
+              poster:      poster || document.poster,
+              poster_addr: poster_addr || document.poster_addr,
+              document:    document,
+              name:        document.identities_count}, without_protection: true)
   end
 end

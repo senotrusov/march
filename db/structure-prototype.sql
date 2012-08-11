@@ -74,7 +74,7 @@ CREATE TABLE documents (
   message character varying(1024),
 
   sections_framing text, -- json
-  identities_count integer NOT NULL default 0, -- gapless sequence: update w/lock set + 1
+  identities_count integer NOT NULL default 1, -- gapless sequence: update w/lock set + 1
 
   board_id bigint NOT NULL references boards(id),
 
