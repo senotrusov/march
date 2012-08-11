@@ -17,5 +17,5 @@
 class Poster < ActiveRecord::Base
   # Associations
   has_many :documents
-  has_many :poster_identities
+  has_many :identities
 end

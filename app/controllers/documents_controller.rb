@@ -72,22 +72,23 @@ class DocumentsController < ApplicationController
         require_poster
 
         @document.poster = @poster
-        @document.poster_identity_id = PosterIdentity.next_id
+        @document.identity_id = Identity.next_id
         @document.poster_addr = request.remote_ip
 
         @document.board = @board
 
         @document.save!
 
-        @document.poster_identity = PosterIdentity.create!({
-          id:          @document.poster_identity_id,
+        @document.identity = Identity.create!({
+          id:          @document.identity_id,
           poster:      @poster,
           poster_addr: request.remote_ip,
           document:    @document,
-          identity:    1}, without_protection: true)
+          name:    1}, without_protection: true)
 
         if @sections
-          (@sections + all_paragraphs).each {|i| i.assign_poster_identity @document.poster_identity, request.remote_ip }
+          (@sections + all_paragraphs).each {|i| i.assign_identity @document.identity, request.remote_ip }
+
           @sections.each {|s| s.document = @document; s.save! }
 
           @sections.each {|s| (@document.sections_framing[s.frame] ||= []).push(s.id) }

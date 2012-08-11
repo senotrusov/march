@@ -14,7 +14,7 @@
  # limitations under the License.
 
 
-class PosterIdentity < ActiveRecord::Base
+class Identity < ActiveRecord::Base
   # Associations
   belongs_to :poster
   belongs_to :document, counter_cache: true
@@ -24,8 +24,19 @@ class PosterIdentity < ActiveRecord::Base
   has_many :paragraphs
 
 
-  PK_SEQUENCE_NAME = connection.pk_and_sequence_for(table_name).last
+  NEXTVAL = "SELECT nextval('#{connection.pk_and_sequence_for(table_name).last}');"
   def self.next_id
-    connection.select_value("SELECT nextval('#{PK_SEQUENCE_NAME}');").to_i
+    connection.select_value(NEXTVAL).to_i
+  end
+  
+
+  module Cache
+    def assign_identity identity, addr
+      self.identity            = identity
+      self.identity_document   = identity.document
+      self.identity_board_slug = identity.document.board.slug
+      self.identity_name       = identity.name
+      self.poster_addr         = addr
+    end
   end
 end

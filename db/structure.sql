@@ -72,14 +72,14 @@ CREATE TABLE documents (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     poster_id bigint NOT NULL,
-    poster_identity_id bigint NOT NULL,
+    identity_id bigint NOT NULL,
     poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     image character varying(128),
     title character varying(256),
     url character varying(1024),
     message character varying(1024),
     sections_framing text,
-    poster_identities_count integer DEFAULT 0 NOT NULL,
+    identities_count integer DEFAULT 0 NOT NULL,
     board_id bigint NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
     deleted_at timestamp with time zone
@@ -110,6 +110,44 @@ ALTER SEQUENCE documents_id_seq OWNED BY documents.id;
 
 
 --
+-- Name: identities; Type: TABLE; Schema: public; Owner: march; Tablespace: 
+--
+
+CREATE TABLE identities (
+    id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    poster_id bigint NOT NULL,
+    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
+    document_id bigint NOT NULL,
+    name integer NOT NULL
+);
+
+
+ALTER TABLE public.identities OWNER TO march;
+
+--
+-- Name: identities_id_seq; Type: SEQUENCE; Schema: public; Owner: march
+--
+
+CREATE SEQUENCE identities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.identities_id_seq OWNER TO march;
+
+--
+-- Name: identities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: march
+--
+
+ALTER SEQUENCE identities_id_seq OWNED BY identities.id;
+
+
+--
 -- Name: paragraphs; Type: TABLE; Schema: public; Owner: march; Tablespace: 
 --
 
@@ -117,10 +155,10 @@ CREATE TABLE paragraphs (
     id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    poster_identity_id bigint NOT NULL,
-    poster_identity_document_id bigint NOT NULL,
-    poster_identity_document_board_slug text NOT NULL,
-    poster_identity_identity integer NOT NULL,
+    identity_id bigint NOT NULL,
+    identity_document_id bigint NOT NULL,
+    identity_board_slug text NOT NULL,
+    identity_name integer NOT NULL,
     poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     image character varying(128),
     title character varying(256),
@@ -152,44 +190,6 @@ ALTER TABLE public.paragraphs_id_seq OWNER TO march;
 --
 
 ALTER SEQUENCE paragraphs_id_seq OWNED BY paragraphs.id;
-
-
---
--- Name: poster_identities; Type: TABLE; Schema: public; Owner: march; Tablespace: 
---
-
-CREATE TABLE poster_identities (
-    id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    poster_id bigint NOT NULL,
-    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
-    document_id bigint NOT NULL,
-    identity integer NOT NULL
-);
-
-
-ALTER TABLE public.poster_identities OWNER TO march;
-
---
--- Name: poster_identities_id_seq; Type: SEQUENCE; Schema: public; Owner: march
---
-
-CREATE SEQUENCE poster_identities_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.poster_identities_id_seq OWNER TO march;
-
---
--- Name: poster_identities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: march
---
-
-ALTER SEQUENCE poster_identities_id_seq OWNED BY poster_identities.id;
 
 
 --
@@ -242,9 +242,10 @@ CREATE TABLE sections (
     id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    poster_identity_id bigint NOT NULL,
-    poster_identity_document_id bigint NOT NULL,
-    poster_identity_identity integer NOT NULL,
+    identity_id bigint NOT NULL,
+    identity_document_id bigint NOT NULL,
+    identity_board_slug text NOT NULL,
+    identity_name integer NOT NULL,
     poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     public_writable boolean DEFAULT true NOT NULL,
     contributor_writable boolean DEFAULT true NOT NULL,
@@ -297,14 +298,14 @@ ALTER TABLE ONLY documents ALTER COLUMN id SET DEFAULT nextval('documents_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: march
 --
 
-ALTER TABLE ONLY paragraphs ALTER COLUMN id SET DEFAULT nextval('paragraphs_id_seq'::regclass);
+ALTER TABLE ONLY identities ALTER COLUMN id SET DEFAULT nextval('identities_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: march
 --
 
-ALTER TABLE ONLY poster_identities ALTER COLUMN id SET DEFAULT nextval('poster_identities_id_seq'::regclass);
+ALTER TABLE ONLY paragraphs ALTER COLUMN id SET DEFAULT nextval('paragraphs_id_seq'::regclass);
 
 
 --
@@ -338,19 +339,19 @@ ALTER TABLE ONLY documents
 
 
 --
+-- Name: identities_pkey; Type: CONSTRAINT; Schema: public; Owner: march; Tablespace: 
+--
+
+ALTER TABLE ONLY identities
+    ADD CONSTRAINT identities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: paragraphs_pkey; Type: CONSTRAINT; Schema: public; Owner: march; Tablespace: 
 --
 
 ALTER TABLE ONLY paragraphs
     ADD CONSTRAINT paragraphs_pkey PRIMARY KEY (id);
-
-
---
--- Name: poster_identities_pkey; Type: CONSTRAINT; Schema: public; Owner: march; Tablespace: 
---
-
-ALTER TABLE ONLY poster_identities
-    ADD CONSTRAINT poster_identities_pkey PRIMARY KEY (id);
 
 
 --
@@ -391,6 +392,20 @@ CREATE INDEX documents_poster_id_idx ON documents USING btree (poster_id);
 
 
 --
+-- Name: identities_poster_id_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
+--
+
+CREATE INDEX identities_poster_id_idx ON identities USING btree (poster_id);
+
+
+--
+-- Name: identities_unique_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
+--
+
+CREATE UNIQUE INDEX identities_unique_idx ON identities USING btree (document_id, name);
+
+
+--
 -- Name: paragraphs_line_id_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
 --
 
@@ -402,20 +417,6 @@ CREATE INDEX paragraphs_line_id_idx ON paragraphs USING btree (line_id);
 --
 
 CREATE INDEX paragraphs_section_id_idx ON paragraphs USING btree (section_id);
-
-
---
--- Name: poster_identities_poster_id_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
---
-
-CREATE INDEX poster_identities_poster_id_idx ON poster_identities USING btree (poster_id);
-
-
---
--- Name: poster_identities_unique_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
---
-
-CREATE UNIQUE INDEX poster_identities_unique_idx ON poster_identities USING btree (document_id, identity);
 
 
 --
@@ -455,6 +456,14 @@ ALTER TABLE ONLY documents
 
 
 --
+-- Name: documents_identity_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY documents
+    ADD CONSTRAINT documents_identity_id_fk FOREIGN KEY (identity_id) REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: documents_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
@@ -463,11 +472,35 @@ ALTER TABLE ONLY documents
 
 
 --
--- Name: documents_poster_identity_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: march
+-- Name: identities_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
-ALTER TABLE ONLY documents
-    ADD CONSTRAINT documents_poster_identity_id_fk FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY identities
+    ADD CONSTRAINT identities_document_id_fkey FOREIGN KEY (document_id) REFERENCES documents(id);
+
+
+--
+-- Name: identities_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY identities
+    ADD CONSTRAINT identities_poster_id_fkey FOREIGN KEY (poster_id) REFERENCES posters(id);
+
+
+--
+-- Name: paragraphs_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_identity_document_id_fkey FOREIGN KEY (identity_document_id) REFERENCES documents(id);
+
+
+--
+-- Name: paragraphs_identity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES identities(id);
 
 
 --
@@ -479,43 +512,11 @@ ALTER TABLE ONLY paragraphs
 
 
 --
--- Name: paragraphs_poster_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY paragraphs
-    ADD CONSTRAINT paragraphs_poster_identity_document_id_fkey FOREIGN KEY (poster_identity_document_id) REFERENCES documents(id);
-
-
---
--- Name: paragraphs_poster_identity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY paragraphs
-    ADD CONSTRAINT paragraphs_poster_identity_id_fkey FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id);
-
-
---
 -- Name: paragraphs_section_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
 ALTER TABLE ONLY paragraphs
     ADD CONSTRAINT paragraphs_section_id_fkey FOREIGN KEY (section_id) REFERENCES sections(id);
-
-
---
--- Name: poster_identities_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY poster_identities
-    ADD CONSTRAINT poster_identities_document_id_fkey FOREIGN KEY (document_id) REFERENCES documents(id);
-
-
---
--- Name: poster_identities_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY poster_identities
-    ADD CONSTRAINT poster_identities_poster_id_fkey FOREIGN KEY (poster_id) REFERENCES posters(id);
 
 
 --
@@ -527,27 +528,27 @@ ALTER TABLE ONLY sections
 
 
 --
+-- Name: sections_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_identity_document_id_fkey FOREIGN KEY (identity_document_id) REFERENCES documents(id);
+
+
+--
+-- Name: sections_identity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES identities(id);
+
+
+--
 -- Name: sections_line_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
 ALTER TABLE ONLY sections
     ADD CONSTRAINT sections_line_id_fkey FOREIGN KEY (line_id) REFERENCES sections(id);
-
-
---
--- Name: sections_poster_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY sections
-    ADD CONSTRAINT sections_poster_identity_document_id_fkey FOREIGN KEY (poster_identity_document_id) REFERENCES documents(id);
-
-
---
--- Name: sections_poster_identity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY sections
-    ADD CONSTRAINT sections_poster_identity_id_fkey FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id);
 
 
 --

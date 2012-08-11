@@ -18,7 +18,7 @@ article.document
       .details
         | Updated 
         = timeago_tag @document.updated_at
-        = ", #{@document.poster_identities_count} posters"
+        = ", #{@document.identities_count} posters"
 
     .line
       - if @document.image?

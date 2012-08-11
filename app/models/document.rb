@@ -17,9 +17,9 @@
 class Document < ActiveRecord::Base
   # Associations
   belongs_to :poster
-  belongs_to :poster_identity
+  belongs_to :identity
   belongs_to :board
-  has_many :poster_identities
+  has_many :identities
   has_many :sections
 
 
@@ -48,7 +48,7 @@ class Document < ActiveRecord::Base
 
   # Scopes
   scope :eager,
-    includes(:poster_identities).
+    includes(:identities).
     includes(:sections => [:instances, {:paragraphs => :instances}])
 
   scope :ordered, order(ORDER = "id DESC")

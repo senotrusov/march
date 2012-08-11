@@ -3,12 +3,12 @@ article.paragraph
   .identity
     .id = "¶#{paragraph.id}"
     
-    - unless @document && @document.id == paragraph.poster_identity_document_id
-      .poster_identity_document_id
-        = "#{paragraph.poster_identity_document_board_slug}/#{paragraph.poster_identity_document_id}"
+    - unless @document && @document.id == paragraph.identity_document_id
+      .identity_document_id
+        = "#{paragraph.identity_board_slug}/#{paragraph.identity_document_id}"
 
-    .poster_identity
-      = "@#{paragraph.poster_identity_identity}"
+    .identity_name
+      = "@#{paragraph.identity_name}"
     
 
   - if paragraph.image?

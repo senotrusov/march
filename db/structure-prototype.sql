@@ -64,9 +64,9 @@ CREATE TABLE documents (
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  poster_id          bigint NOT NULL references posters(id),
-  poster_identity_id bigint NOT NULL,  -- references poster_identities(id),
-  poster_addr        inet   NOT NULL DEFAULT '127.0.0.1',
+  poster_id   bigint NOT NULL references posters(id),
+  identity_id bigint NOT NULL,  -- references identities(id),
+  poster_addr inet   NOT NULL DEFAULT '127.0.0.1',
 
   image   character varying(128),
   title   character varying(256),
@@ -74,7 +74,7 @@ CREATE TABLE documents (
   message character varying(1024),
 
   sections_framing text, -- json
-  poster_identities_count integer NOT NULL default 0, -- gapless sequence: update w/lock set + 1
+  identities_count integer NOT NULL default 0, -- gapless sequence: update w/lock set + 1
 
   board_id bigint NOT NULL references boards(id),
 
@@ -86,7 +86,7 @@ CREATE INDEX documents_board_id_idx  ON documents USING btree (board_id);
 CREATE INDEX documents_poster_id_idx ON documents USING btree (poster_id);
 
 
-CREATE TABLE poster_identities (
+CREATE TABLE identities (
   id bigserial PRIMARY KEY,
 
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -95,13 +95,13 @@ CREATE TABLE poster_identities (
   poster_id   bigint  NOT NULL references posters(id),
   poster_addr inet    NOT NULL DEFAULT '127.0.0.1',
   document_id bigint  NOT NULL references documents(id),
-  identity    integer NOT NULL
+  name        integer NOT NULL
 );
 
-CREATE INDEX        poster_identities_poster_id_idx ON poster_identities USING btree (poster_id);
-CREATE UNIQUE INDEX poster_identities_unique_idx    ON poster_identities USING btree (document_id, identity);
+CREATE INDEX        identities_poster_id_idx ON identities USING btree (poster_id);
+CREATE UNIQUE INDEX identities_unique_idx    ON identities USING btree (document_id, name);
 
-ALTER TABLE documents ADD CONSTRAINT documents_poster_identity_id_fk FOREIGN KEY (poster_identity_id) REFERENCES poster_identities(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE documents ADD CONSTRAINT documents_identity_id_fk FOREIGN KEY (identity_id) REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 -- That schema does not support section prototypes - every instance is equal.
@@ -113,10 +113,11 @@ CREATE TABLE sections (
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  poster_identity_id          bigint  NOT NULL references poster_identities(id),
-  poster_identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  poster_identity_identity    integer NOT NULL,                          -- redundant data
-  poster_addr                 inet    NOT NULL DEFAULT '127.0.0.1',
+  identity_id          bigint  NOT NULL references identities(id),
+  identity_document_id bigint  NOT NULL references documents(id), -- redundant data
+  identity_board_slug  text    NOT NULL,                          -- redundant data
+  identity_name        integer NOT NULL,                          -- redundant data
+  poster_addr          inet    NOT NULL DEFAULT '127.0.0.1',
 
   public_writable      boolean DEFAULT true NOT NULL,
   contributor_writable boolean DEFAULT true NOT NULL,
@@ -143,11 +144,11 @@ CREATE TABLE paragraphs (
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  poster_identity_id                  bigint  NOT NULL references poster_identities(id),
-  poster_identity_document_id         bigint  NOT NULL references documents(id), -- redundant data
-  poster_identity_document_board_slug text    NOT NULL,                          -- redundant data
-  poster_identity_identity            integer NOT NULL,                          -- redundant data
-  poster_addr                         inet    NOT NULL DEFAULT '127.0.0.1',
+  identity_id          bigint  NOT NULL references identities(id),
+  identity_document_id bigint  NOT NULL references documents(id), -- redundant data
+  identity_board_slug  text    NOT NULL,                          -- redundant data
+  identity_name        integer NOT NULL,                          -- redundant data
+  poster_addr          inet    NOT NULL DEFAULT '127.0.0.1',
   
   image   character varying(128),
   title   character varying(256),

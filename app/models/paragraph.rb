@@ -16,8 +16,8 @@
 
 class Paragraph < ActiveRecord::Base
   # Associations
-  belongs_to :poster_identity
-  belongs_to :poster_identity_document, class_name: "Document"
+  belongs_to :identity
+  belongs_to :identity_document, class_name: "Document"
   belongs_to :section
   has_many :instances, class_name: "Paragraph", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then paragraph does not have other instances
 
@@ -57,12 +57,6 @@ class Paragraph < ActiveRecord::Base
   end
 
 
-  # Helpers
-  def assign_poster_identity identity, addr
-    self.poster_identity                     = identity
-    self.poster_identity_document            = identity.document
-    self.poster_identity_document_board_slug = identity.document.board.slug
-    self.poster_identity_identity            = identity.identity
-    self.poster_addr                         = addr
-  end
+  # Cache
+  include Identity::Cache
 end
