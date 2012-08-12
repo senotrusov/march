@@ -41,6 +41,7 @@ class Identity < ActiveRecord::Base
   end
 
   def self.create_for_document!(document, poster = nil, poster_addr = nil)
+    
     document.update_column(:identities_count, document.identities_count + 1) if poster
 
     create!({ id:          poster ? nil : document.identity_id,
