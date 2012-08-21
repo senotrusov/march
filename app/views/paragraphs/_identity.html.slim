@@ -1,0 +1,10 @@
+.identity
+
+  .id = "¶#{object.id}"
+
+  .identity_name
+    = "#{object.identity_name}@"
+
+  - unless @document && @document.id == object.identity_document_id
+    .identity_document_id
+      = "#{object.identity_board_slug}/#{object.identity_document_id}"

@@ -69,17 +69,17 @@ ALTER SEQUENCE boards_id_seq OWNED BY boards.id;
 
 CREATE TABLE documents (
     id bigint NOT NULL,
+    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     poster_id bigint NOT NULL,
     identity_id bigint NOT NULL,
-    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     image character varying(128),
     title character varying(256),
     url character varying(1024),
     message character varying(1024),
     sections_framing text,
-    identities_count integer DEFAULT 0 NOT NULL,
+    identities_count integer DEFAULT 1 NOT NULL,
     board_id bigint NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
     deleted_at timestamp with time zone
@@ -115,10 +115,10 @@ ALTER SEQUENCE documents_id_seq OWNED BY documents.id;
 
 CREATE TABLE identities (
     id bigint NOT NULL,
+    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     poster_id bigint NOT NULL,
-    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     document_id bigint NOT NULL,
     name integer NOT NULL
 );
@@ -153,13 +153,19 @@ ALTER SEQUENCE identities_id_seq OWNED BY identities.id;
 
 CREATE TABLE paragraphs (
     id bigint NOT NULL,
+    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     identity_id bigint NOT NULL,
-    identity_document_id bigint NOT NULL,
-    identity_board_slug text NOT NULL,
     identity_name integer NOT NULL,
-    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
+    identity_board_slug text NOT NULL,
+    identity_document_id bigint NOT NULL,
+    proto_created_at timestamp with time zone,
+    proto_updated_at timestamp with time zone,
+    proto_identity_id bigint,
+    proto_identity_name integer,
+    proto_identity_board_slug text,
+    proto_identity_document_id bigint,
     image character varying(128),
     title character varying(256),
     url character varying(1024),
@@ -240,13 +246,19 @@ ALTER SEQUENCE posters_id_seq OWNED BY posters.id;
 
 CREATE TABLE sections (
     id bigint NOT NULL,
+    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     identity_id bigint NOT NULL,
-    identity_document_id bigint NOT NULL,
-    identity_board_slug text NOT NULL,
     identity_name integer NOT NULL,
-    poster_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
+    identity_board_slug text NOT NULL,
+    identity_document_id bigint NOT NULL,
+    proto_created_at timestamp with time zone,
+    proto_updated_at timestamp with time zone,
+    proto_identity_id bigint,
+    proto_identity_name integer,
+    proto_identity_board_slug text,
+    proto_identity_document_id bigint,
     public_writable boolean DEFAULT true NOT NULL,
     contributor_writable boolean DEFAULT true NOT NULL,
     image character varying(128),
@@ -512,6 +524,22 @@ ALTER TABLE ONLY paragraphs
 
 
 --
+-- Name: paragraphs_proto_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_proto_identity_document_id_fkey FOREIGN KEY (proto_identity_document_id) REFERENCES documents(id);
+
+
+--
+-- Name: paragraphs_proto_identity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_proto_identity_id_fkey FOREIGN KEY (proto_identity_id) REFERENCES identities(id);
+
+
+--
 -- Name: paragraphs_section_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
@@ -549,6 +577,22 @@ ALTER TABLE ONLY sections
 
 ALTER TABLE ONLY sections
     ADD CONSTRAINT sections_line_id_fkey FOREIGN KEY (line_id) REFERENCES sections(id);
+
+
+--
+-- Name: sections_proto_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_proto_identity_document_id_fkey FOREIGN KEY (proto_identity_document_id) REFERENCES documents(id);
+
+
+--
+-- Name: sections_proto_identity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_proto_identity_id_fkey FOREIGN KEY (proto_identity_id) REFERENCES identities(id);
 
 
 --

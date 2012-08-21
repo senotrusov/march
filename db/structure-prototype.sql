@@ -61,12 +61,13 @@ CREATE UNIQUE INDEX boards_slug_idx ON boards USING btree (slug);
 CREATE TABLE documents (
   id bigserial PRIMARY KEY,
 
-  created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  poster_addr inet NOT NULL DEFAULT '127.0.0.1',
+
+  created_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   poster_id   bigint NOT NULL references posters(id),
   identity_id bigint NOT NULL,  -- references identities(id),
-  poster_addr inet   NOT NULL DEFAULT '127.0.0.1',
 
   image   character varying(128),
   title   character varying(256),
@@ -89,11 +90,12 @@ CREATE INDEX documents_poster_id_idx ON documents USING btree (poster_id);
 CREATE TABLE identities (
   id bigserial PRIMARY KEY,
 
-  created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  poster_addr inet NOT NULL DEFAULT '127.0.0.1',
+
+  created_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   poster_id   bigint  NOT NULL references posters(id),
-  poster_addr inet    NOT NULL DEFAULT '127.0.0.1',
   document_id bigint  NOT NULL references documents(id),
   name        integer NOT NULL
 );
@@ -110,14 +112,23 @@ ALTER TABLE documents ADD CONSTRAINT documents_identity_id_fk FOREIGN KEY (ident
 CREATE TABLE sections (
   id bigserial PRIMARY KEY,
 
+  poster_addr inet NOT NULL DEFAULT '127.0.0.1',
+
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   identity_id          bigint  NOT NULL references identities(id),
-  identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  identity_board_slug  text    NOT NULL,                          -- redundant data
   identity_name        integer NOT NULL,                          -- redundant data
-  poster_addr          inet    NOT NULL DEFAULT '127.0.0.1',
+  identity_board_slug  text    NOT NULL,                          -- redundant data
+  identity_document_id bigint  NOT NULL references documents(id), -- redundant data
+
+  proto_created_at timestamp with time zone,
+  proto_updated_at timestamp with time zone,
+
+  proto_identity_id          bigint references identities(id),
+  proto_identity_name        integer,                          -- redundant data
+  proto_identity_board_slug  text,                             -- redundant data
+  proto_identity_document_id bigint references documents(id), -- redundant data
 
   public_writable      boolean DEFAULT true NOT NULL,
   contributor_writable boolean DEFAULT true NOT NULL,
@@ -141,20 +152,29 @@ CREATE INDEX sections_line_id_idx     ON sections USING btree (line_id);
 CREATE TABLE paragraphs (
   id bigserial PRIMARY KEY,
 
+  poster_addr inet NOT NULL DEFAULT '127.0.0.1',
+  
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   identity_id          bigint  NOT NULL references identities(id),
-  identity_document_id bigint  NOT NULL references documents(id), -- redundant data
-  identity_board_slug  text    NOT NULL,                          -- redundant data
   identity_name        integer NOT NULL,                          -- redundant data
-  poster_addr          inet    NOT NULL DEFAULT '127.0.0.1',
+  identity_board_slug  text    NOT NULL,                          -- redundant data
+  identity_document_id bigint  NOT NULL references documents(id), -- redundant data
+
+  
+  proto_created_at timestamp with time zone,
+  proto_updated_at timestamp with time zone,
+
+  proto_identity_id          bigint references identities(id),
+  proto_identity_name        integer,                          -- redundant data
+  proto_identity_board_slug  text,                             -- redundant data
+  proto_identity_document_id bigint references documents(id), -- redundant data
   
   image   character varying(128),
   title   character varying(256),
   url     character varying(1024),
   message character varying(1024),
-  -- quote '[0,10], [20,25]'
 
   section_id bigint NOT NULL references sections(id),
   line_id    bigint references paragraphs(id) -- if line_id IS NULL, then there are no other line elements expected to be there

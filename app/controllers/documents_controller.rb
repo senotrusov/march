@@ -61,10 +61,10 @@ class DocumentsController < ApplicationController
 
     @document = Document.new params[:document]
 
-    validate = [@document]
-    validate.concat(@sections + all_paragraphs) if @sections
+    @document.sections = @sections
+    if valid = @document.valid?
+      @document.sections = []
 
-    if valid = validate.map{|i| i.valid? }.all?
       Document.transaction do
         
         require_poster

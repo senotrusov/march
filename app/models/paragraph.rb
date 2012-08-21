@@ -36,12 +36,6 @@ class Paragraph < ActiveRecord::Base
   validates :url,     length: { in: 0..columns_hash['url'].limit }
   validates :message, length: { in: 0..columns_hash['message'].limit }
 
-  
-  # Instance
-  attr_accessible :prototype_id
-  attr_reader :prototype_id
-  def prototype_id=(value); @prototype_id = value.kind_of?(String) && value.gsub(/\D/, '') end
-
 
   # Location
   def location?
@@ -59,4 +53,8 @@ class Paragraph < ActiveRecord::Base
 
   # Cache
   include Identity::Cache
+
+  # Prototyping
+  include Prototyping
+  self.copy_prototype_attrs = %w(title url message)
 end

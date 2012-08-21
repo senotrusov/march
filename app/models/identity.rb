@@ -33,9 +33,9 @@ class Identity < ActiveRecord::Base
   module Cache
     def assign_identity identity, addr
       self.identity            = identity
-      self.identity_document   = identity.document
-      self.identity_board_slug = identity.document.board.slug
       self.identity_name       = identity.name
+      self.identity_board_slug = identity.document.board.slug
+      self.identity_document   = identity.document
       self.poster_addr         = addr
     end
   end

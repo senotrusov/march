@@ -70,7 +70,8 @@
             td.frame data-frame=frame
               .sections
                 - @sections && @sections.select{|s| s.frame == frame}.each do |section|
-                  = render :partial => 'sections/form', locals: { form: f, section: section }
+                  = render :partial => "sections/#{section.prototype_id ? 'instance_form' : 'form'}",
+                      locals: { form: f, section: section }
 
               .buttons
                 .button.add_form_template data-template="#section_template" data-append-to=".sections" data-item-type=".frame"

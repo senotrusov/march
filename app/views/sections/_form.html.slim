@@ -52,7 +52,8 @@
 
     .paragraphs
       - section.paragraphs.each do |paragraph|
-        = render :partial => 'paragraphs/form', locals: { form: f, paragraph: paragraph }
+        = render :partial => "paragraphs/#{paragraph.prototype_id ? 'instance_form' : 'form'}",
+            locals: { form: f, paragraph: paragraph }
 
     .buttons
       .button.add_form_template data-template="#paragraph_template" data-append-to=".paragraphs" data-item-type=".section"

@@ -21,7 +21,7 @@ class Section < ActiveRecord::Base
   belongs_to :document
   has_many :instances, class_name: "Section", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then section does not have other instances
   has_many :paragraphs, order: 'id'
-
+  has_many :line_paragraphs, class_name: "Paragraph", primary_key: "line_id", order: 'id'
   
   # Image
   attr_accessible :image, :image_cache, :remove_image
@@ -44,12 +44,10 @@ class Section < ActiveRecord::Base
   def frame=(value); @frame = value.to_i end
 
 
-  # Instance
-  attr_accessible :prototype_id
-  attr_reader :prototype_id
-  def prototype_id=(value); @prototype_id = value.kind_of?(String) && value.gsub(/\D/, '') end
-
-
   # Cache
   include Identity::Cache
+
+  # Prototyping
+  include Prototyping
+  self.copy_prototype_attrs = %w(public_writable contributor_writable title paragraphs_order)
 end

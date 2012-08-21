@@ -1,18 +1,14 @@
 article.paragraph
 
-  .identity
-    .id = "¶#{paragraph.id}"
-    
-    - unless @document && @document.id == paragraph.identity_document_id
-      .identity_document_id
-        = "#{paragraph.identity_board_slug}/#{paragraph.identity_document_id}"
-
-    .identity_name
-      = "@#{paragraph.identity_name}"
-    
-
   - if paragraph.image?
     = link_to image_tag(paragraph.image_url(:mini), alt: nil), paragraph.image_url
+
+  = render partial: "paragraphs/identity", locals: { object: paragraph.proto_or_self }
+
+  - if paragraph.line_id?
+    .identity.small
+      .identity_name
+        = "#{paragraph.identity_name}@"
 
   - if paragraph.title?
     h3.title
@@ -31,4 +27,4 @@ article.paragraph
 
   .details
     | Updated 
-    = timeago_tag paragraph.updated_at
+    = timeago_tag paragraph.proto_or_self.updated_at
