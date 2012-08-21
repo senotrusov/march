@@ -13,7 +13,7 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Directory where uploaded files will be stored.
   def store_dir
-    "uploads/#{model.class.name.tableize}/#{mounted_as}/#{model.image_identifier[0,3]}/#{model.id}"
+    "uploads/#{model.class.name.tableize}.#{mounted_as}/#{("%03x" % model.id)[-3..-1]}/#{"%x" % model.id}"
   end
 
   # Process uploaded file
