@@ -15,8 +15,8 @@
 #  limitations under the License.
 
 
-host=${1:-localhost}
-user=${2:-march}
+user=${1:-march}
+host=${2:-localhost}
 
 pgpass=~/.pgpass
 

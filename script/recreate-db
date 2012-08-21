@@ -15,9 +15,9 @@
 #  limitations under the License.
 
 
-host=${1:-localhost}
+db=${1:-march_dev}
 user=${2:-march}
-db=${3:-march_dev}
+host=${3:-localhost}
 
 
 # Define psql arguments
