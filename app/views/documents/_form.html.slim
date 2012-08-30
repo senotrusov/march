@@ -33,6 +33,22 @@
             li = message
     
     .field
+      = f.label :location
+      table.field_with_button
+        tbody
+          tr
+            td.field
+              = f.text_field :location, 'data-show-map' => true, 'data-force-locate' => true
+            td
+              .zoom_field
+                i.icon-large.icon-zoom-in
+                = f.text_field :zoom, :readonly => true
+            td
+              .button.locate
+                i.icon-map-marker
+                .title Locate
+
+    .field
       - if @document.image?
         p
           = image_tag @document.image_url(:normal), alt: nil

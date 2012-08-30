@@ -30,3 +30,5 @@
                 .title Paste
 
     .prototype
+      - if paragraph.prototype
+        = render partial: 'paragraphs/view', locals: {paragraph: paragraph.prototype}

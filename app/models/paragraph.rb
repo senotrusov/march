@@ -38,23 +38,14 @@ class Paragraph < ActiveRecord::Base
 
 
   # Location
-  def location?
-    (id % 6) == 0
-  end
-
-  def lat
-    51.833896
-  end
-
-  def lng
-    107.587538
-  end
+  include Geo::Model
 
 
   # Cache
   include Identity::Cache
 
+
   # Prototyping
   include Prototyping
-  self.copy_prototype_attrs = %w(title url message)
+  self.copy_prototype_attrs = %w(title url message lat lng zoom)
 end

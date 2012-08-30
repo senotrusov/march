@@ -37,10 +37,26 @@
       = f.text_field :title
 
     .field
-      = f.label :url
-      = f.text_field :url
-
-    .field
       = f.label :message
       = f.text_area :message
+
+    .field
+      = f.label :location
+      table.field_with_button
+        tbody
+          tr
+            td.field
+              = f.text_field :location, 'data-show-map' => false, 'data-force-locate' => false
+            td
+              .zoom_field
+                i.icon-large.icon-zoom-in
+                = f.text_field :zoom, :readonly => true
+            td
+              .button.locate
+                i.icon-map-marker
+                .title Locate
+
+    .field
+      = f.label :url
+      = f.text_field :url
 

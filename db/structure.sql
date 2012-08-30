@@ -78,6 +78,9 @@ CREATE TABLE documents (
     title character varying(256),
     url character varying(1024),
     message character varying(1024),
+    lat double precision,
+    lng double precision,
+    zoom smallint,
     sections_framing text,
     identities_count integer DEFAULT 1 NOT NULL,
     board_id bigint NOT NULL,
@@ -170,6 +173,9 @@ CREATE TABLE paragraphs (
     title character varying(256),
     url character varying(1024),
     message character varying(1024),
+    lat double precision,
+    lng double precision,
+    zoom smallint,
     section_id bigint NOT NULL,
     line_id bigint
 );

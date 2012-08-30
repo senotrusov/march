@@ -31,3 +31,8 @@ String.prototype.truncate = (min = 30, max = 35) ->
       
     else
       return $.trim(truncated) + '&hellip;'
+
+$(document).ready ->
+  $('#notice, #alert').each ->
+    message = $(this)
+    setTimeout (-> message.slideUp 'fast'), 5000

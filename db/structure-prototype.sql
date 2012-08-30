@@ -74,6 +74,10 @@ CREATE TABLE documents (
   url     character varying(1024),
   message character varying(1024),
 
+  lat  double precision,
+  lng  double precision,
+  zoom smallint,
+
   sections_framing text, -- json
   identities_count integer NOT NULL default 1, -- gapless sequence: update w/lock set + 1
 
@@ -175,6 +179,10 @@ CREATE TABLE paragraphs (
   title   character varying(256),
   url     character varying(1024),
   message character varying(1024),
+
+  lat  double precision,
+  lng  double precision,
+  zoom smallint,
 
   section_id bigint NOT NULL references sections(id),
   line_id    bigint references paragraphs(id) -- if line_id IS NULL, then there are no other line elements expected to be there

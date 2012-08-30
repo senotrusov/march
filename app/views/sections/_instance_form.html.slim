@@ -31,3 +31,5 @@
                 .title Paste
 
     .prototype
+      - if section.prototype
+        = render partial: 'sections/view', locals: {section: section.prototype}

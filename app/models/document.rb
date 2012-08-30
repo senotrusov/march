@@ -57,15 +57,6 @@ class Document < ActiveRecord::Base
 
 
   # Location
-  def location?
-    true
-  end
-
-  def lat
-    51.833896
-  end
-
-  def lng
-    107.587538
-  end
+  include Geo::Model
+  validates :location, presence: true
 end

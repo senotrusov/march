@@ -26,7 +26,7 @@ article.document
           = link_to image_tag(@document.image_url(:normal), alt: nil), @document.image_url
 
       - if @document.location?
-        .map data-lat=@document.lat data-lng=@document.lng
+        .map data-lat=@document.lat data-lng=@document.lng data-zoom=@document.zoom
 
   ul.actions
     li = link_to 'Edit', edit_document_path(@document)

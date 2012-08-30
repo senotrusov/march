@@ -1,0 +1,319 @@
+
+ # Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
+ #
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+ #
+ #     http://www.apache.org/licenses/LICENSE-2.0
+ #
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+
+
+nextTick = (func) -> setTimeout func, 0
+
+
+buildAbstract = (callback) ->
+  abstract = []
+
+  callback(abstract)
+
+  abstract = abstract.join(" ").truncate()
+  abstract = 'Untitled' if abstract.length == 0
+  abstract
+
+
+parseLatLng = (string) ->
+  if match = string.replace(/[^-\d,\.\s]/g , ' ').replace(/\s*[,\.]\s*/g, '.').replace(/-\s*/g, '-').match(/^\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s*$/)
+    if (lat = parseFloat(match[1])) and (lng = parseFloat(match[2]))
+      new L.LatLng lat, lng
+
+
+contructMap = (placeholder, options = {}) ->
+
+  # options.maxBounds = new L.LatLngBounds([-90, -180], [90, 180])
+
+  map = new L.Map placeholder, options
+  osm = new L.TileLayer "<%= Geo.config[:url] %>",
+    minZoom: <%= Geo.config[:min_zoom] %>,
+    maxZoom: <%= Geo.config[:max_zoom] %>,
+    attribution: "<%= Geo.config[:attribution] %>"
+
+  map.addLayer osm
+  map.attributionControl.setPrefix ''
+
+  map
+
+
+# TODO: Remove handler on map deletion? Does that handler prevents deleted map from being garbage collected?
+# TODO: Test on touchscreen devices
+scrollDisabler = (map) ->
+  zoom = map.scrollWheelZoom
+  fade = 0
+
+  $(window).scroll ->
+    fade += 1
+    zoom.disable() if zoom.enabled()
+
+    setTimeout (->
+      fade -= 1
+      zoom.enable() if fade == 0
+      ), 750
+
+
+$.fn.initMap = ->
+  this.each ->
+    container = $(this)
+    center = new L.LatLng(container.attr('data-lat'), container.attr('data-lng'))
+    zoom = container.attr('data-zoom')
+
+    map = contructMap(this, zoomControl: false)
+    map.setView center, zoom
+
+    marker = new L.Marker(center)
+    map.addLayer marker
+
+    scrollDisabler(map)
+
+
+$.fn.initLocationInput = ->
+  this.find('input[name*="[location]"]').each ->
+    input = $(this)
+    zoomInput = input.closest('table').find('input[name*="[zoom]"]')
+    locateButton = input.closest('table').find('.button.locate')
+
+    callCreateMapInput = (forceLocate) ->
+      createMapInput input, zoomInput, locateButton, forceLocate
+
+    forceLocate = (input.attr('data-force-locate') == 'true')
+
+    if input.val().match(/\S/) || input.attr('data-show-map') == 'true'
+      callCreateMapInput(forceLocate)
+    else
+      input.one 'click', -> callCreateMapInput(forceLocate)
+      zoomInput.one 'click', -> callCreateMapInput(forceLocate)
+      locateButton.one 'click', -> callCreateMapInput(true)
+
+  .end()
+
+
+createMapInput = (input, zoomInput, locateButton, forceLocate) ->
+
+  input.add(zoomInput).add(locateButton).off('click')
+
+  container = $('<div/>', 'class': 'map_input').insertBefore(input.closest('table'))
+
+  map = contructMap(container[0], zoomControl: true)
+  marker = L.marker()
+  circle = L.circle(undefined, undefined, fillOpacity: 0.1, clickable: false)
+
+
+  highlightError = ->
+    input.parent().addClass('field_with_errors')
+
+  clearError = ->
+    input.parent().removeClass('field_with_errors')
+
+  setMarker = (latlng) ->
+    marker.setLatLng(latlng)
+    unless map.hasLayer(marker)
+      marker.addTo(map)
+      marker.dragging.enable()
+
+  removeMarker = ->
+    map.removeLayer(marker) if map.hasLayer(marker)
+
+  parseInput = (onInvalidInput = false) ->
+    if latlng = parseLatLng(input.val())
+      map.setView(latlng, parseInt(zoomInput.val()) || (<%= Geo.config[:default_zoom] %>))
+      setMarker(latlng)
+      clearError()
+
+    else if input.val().match(/^\s*$/)
+      removeMarker()
+      clearError()
+      onInvalidInput(true) if onInvalidInput
+
+    else
+      removeMarker()
+      highlightError()
+      onInvalidInput(false) if onInvalidInput
+
+  updateInput = ->
+    if map.hasLayer(marker)
+      location = marker.getLatLng()
+      location = new L.LatLng(location.lat, location.lng) # TODO: report, getLatLng should return wrapped latlng
+
+      # http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
+      input.val("#{location.lat.toFixed(5)} #{location.lng.toFixed(5)}")
+      clearError()
+
+  locate = ->
+    map.locate(setView: true, maxZoom: 16)
+
+
+  input.on 'keyup paste cut change', ->
+    nextTick ->
+      parseInput()
+
+  map.on 'zoomend', ->
+    zoomInput.val(map.getZoom())
+
+  marker.on 'dragend', ->
+    updateInput()
+
+  map.on 'click', (e) ->
+    setMarker(e.latlng)
+    updateInput()
+
+  map.on 'locationfound', (e) ->
+    circle.setLatLng(e.latlng)
+    circle.setRadius(e.accuracy / 2)
+    circle.addTo(map) unless map.hasLayer(circle)
+      
+    setMarker(e.latlng)
+    updateInput()
+
+  locateButton.on 'click', ->
+    locate()
+
+  
+  parseInput (inputIsEmpty) ->
+    if inputIsEmpty && forceLocate
+      locate()
+    else
+      map.fitWorld()
+
+
+$(document).ready ->
+
+  $('.map').initMap()
+
+  $('.button.add_form_template').live 'click', ->
+    button = $(this)
+    template = $(button.attr 'data-template').children().clone().hide()
+    collection = button.closest(button.attr 'data-item-type').children(button.attr 'data-append-to')
+    template.appendTo(collection).initLocationInput().slideDown('fast')
+
+
+  $('.delete_form_item').live 'click', ->
+    button = $(this)
+    button.closest(button.attr 'data-selector').slideUp 'fast', -> $(this).remove()
+
+
+  $('label').live 'click', -> return false # TODO
+
+
+  $('form.new_document, form.edit_document')
+    .submit ->
+      $(this).find('.frame').each ->
+        frame = $(this).attr('data-frame')
+
+        $(this).find('input[name="document[sections][][frame]"]').each -> $(this).val(frame)
+
+    .initLocationInput()
+
+
+  $('.button.sort').click ->
+    button = $(this)
+    button.nextAll('.section_frames').each ->
+      frames = $(this)
+
+      if frames.is('.sortable')
+
+        frames.find('.sections').each -> $(this).sortable 'destroy'
+        frames.find('.paragraphs').each -> $(this).sortable 'destroy'
+
+        frames.removeClass('sortable')
+
+        button.children('.title').text('Sort')
+
+      else
+        frames.addClass('sortable')
+
+        frames.find('.sections').each ->
+          sections = $(this)
+        
+          # Create abstract for each section
+          sections.children('.section').each ->
+            section = $(this)
+
+            abstract = buildAbstract (abstract) ->
+
+              section.find('input[name="document[sections][][title]"]').each -> abstract.push $(this).val()
+              section.find('> .prototype > section.section > .header > h2 > .title').each -> abstract.push $(this).text()
+
+            section.children('.abstract').each -> $(this).html("§ #{abstract}")
+
+          sections.sortable()
+        
+        .each ->
+          sections = $(this)
+          sections.sortable('option', 'connectWith', frames.find('.sections').not(sections))
+        
+
+        frames.find('.paragraphs').each ->
+          paragraphs = $(this)
+        
+          # Create abstract for each paragraph
+          paragraphs.children('.paragraph').each ->
+            paragraph = $(this)
+
+            abstract = buildAbstract (abstract) ->
+              input = (field) -> "[name=\"document[sections][][paragraphs][][#{field}]\"]"
+
+              push = -> abstract.push $(this).val()
+              paragraph.find(input 'title').each(push)
+              paragraph.find(input 'message').each(push)
+              paragraph.find(input 'location').each(push)
+              paragraph.find(input 'url').each(push)
+
+              push = -> abstract.push $(this).text()
+              paragraph.find('> .prototype .title').each(push)
+              paragraph.find('> .prototype .message').each(push)
+              paragraph.find('> .prototype .map').each -> abstract.push("#{$(this).attr('data-lat')} #{$(this).attr('data-lng')}")
+              paragraph.find('> .prototype .url a').each(push)
+
+            paragraph.children('.abstract').each -> $(this).html("¶ #{abstract}")
+
+          paragraphs.sortable()
+        
+        .each ->
+          paragraphs = $(this)
+          paragraphs.sortable('option', 'connectWith', frames.find('.paragraphs').not(paragraphs))
+
+        button.children('.title').text('Done sorting')
+
+
+  $('section.section .id, article.paragraph .id').live 'click', ->
+    document.cookie = "prototype_id=#{$(this).text()}; path=/"
+
+  
+  $('.button.paste-prototype-id').live 'click', ->
+    if match = document.cookie.match(/prototype_id=(.+);?/)
+      prototype_id = match[1]
+      $(this).closest('.field').find('input').val(prototype_id).trigger('change')
+
+  
+  $('input[data-prototype-source]').live 'keyup paste cut change', ->
+    input = $(this)
+
+    nextTick ->
+      prototype_id = input.val().replace(/\D/g, '')
+      
+      if input.attr(state = 'data-value-change-handled') != prototype_id
+        input.attr state, prototype_id
+
+        placeholder = input.closest(input.attr('data-item-type')).children('.prototype')
+
+        $.get(url = "#{input.attr('data-prototype-source')}/#{prototype_id}")
+          .success (data, statusText, jqXHR) ->
+            placeholder.html(data).find('.map').initMap()
+
+          .error (jqXHR, statusText, error) ->
+            placeholder.html(
+              "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{url}</div>")
