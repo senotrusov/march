@@ -33,22 +33,6 @@ parseLatLng = (string) ->
       new L.LatLng lat, lng
 
 
-contructMap = (placeholder, options = {}) ->
-
-  # options.maxBounds = new L.LatLngBounds([-90, -180], [90, 180])
-
-  map = new L.Map placeholder, options
-  osm = new L.TileLayer "<%= Geo.config[:url] %>",
-    minZoom: <%= Geo.config[:min_zoom] %>,
-    maxZoom: <%= Geo.config[:max_zoom] %>,
-    attribution: "<%= Geo.config[:attribution] %>"
-
-  map.addLayer osm
-  map.attributionControl.setPrefix ''
-
-  map
-
-
 # TODO: Remove handler on map deletion? Does that handler prevents deleted map from being garbage collected?
 # TODO: Test on touchscreen devices
 scrollDisabler = (map) ->
@@ -65,6 +49,24 @@ scrollDisabler = (map) ->
       ), 750
 
 
+contructMap = (placeholder, options = {}) ->
+
+  # options.maxBounds = new L.LatLngBounds([-90, -180], [90, 180])
+
+  map = new L.Map placeholder, options
+  osm = new L.TileLayer "<%= Geo.config[:url] %>",
+    minZoom: <%= Geo.config[:min_zoom] %>,
+    maxZoom: <%= Geo.config[:max_zoom] %>,
+    attribution: "<%= Geo.config[:attribution] %>"
+
+  map.addLayer osm
+  map.attributionControl.setPrefix ''
+
+  scrollDisabler(map)
+
+  map
+
+
 $.fn.initMap = ->
   this.each ->
     container = $(this)
@@ -76,8 +78,6 @@ $.fn.initMap = ->
 
     marker = new L.Marker(center)
     map.addLayer marker
-
-    scrollDisabler(map)
 
 
 $.fn.initLocationInput = ->
