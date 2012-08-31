@@ -6,6 +6,11 @@ development:
   attribution: "Map data ©OpenStreetMap and contributors"
 
 production:
+  min_zoom: 1
+  max_zoom: 18
+  default_zoom: 12
+  url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  attribution: "Map data ©OpenStreetMap and contributors"
 
 test:
 
