@@ -2773,6 +2773,7 @@ L.Icon.Default = L.Icon.extend({
 		if (this.options[key]) {
 			return this.options[key];
 		}
+
 		var path = L.Icon.Default.imagePath;
 
 		if (!path) {
@@ -2794,7 +2795,7 @@ L.Icon.Default.imagePath = (function () {
 		matches = src.match(leafletRe);
 
 		if (matches) {
-			return src.split(leafletRe)[0];
+			return src.split(leafletRe)[0] + '/images';
 		}
 	}
 }());
