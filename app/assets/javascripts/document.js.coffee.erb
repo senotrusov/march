@@ -54,8 +54,6 @@ scrollDisabler = (map) ->
 
 contructMap = (placeholder, options = {}) ->
 
-  # options.maxBounds = new L.LatLngBounds([-90, -180], [90, 180])
-
   map = new L.Map placeholder, options
   osm = new L.TileLayer "<%= Geo.config[:url] %>",
     minZoom: <%= Geo.config[:min_zoom] %>,
