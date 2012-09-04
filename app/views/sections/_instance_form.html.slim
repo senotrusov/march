@@ -31,5 +31,5 @@
                 .title Paste
 
     .prototype
-      - if section.prototype
+      - if section.prototype && !section.prototype.deleted?
         = render partial: 'sections/view', locals: {section: section.prototype}

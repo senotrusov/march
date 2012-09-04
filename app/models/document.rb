@@ -53,10 +53,15 @@ class Document < ActiveRecord::Base
 
   scope :ordered, order(ORDER = "id DESC")
 
-  scope :alive, where(deleted: false)
-
-
   # Location
   include Geo::Model
   validates :location, presence: true
+
+
+  # Deletion
+  scope :alive, where(deleted: false)
+
+  def deleted?
+    deleted == true
+  end
 end

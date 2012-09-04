@@ -47,7 +47,14 @@ class Section < ActiveRecord::Base
   # Cache
   include Identity::Cache
 
+
   # Prototyping
   include Prototyping
   self.copy_prototype_attrs = %w(public_writable contributor_writable title paragraphs_order)
+
+
+  # Deletion
+  def deleted?
+    document.deleted?
+  end
 end

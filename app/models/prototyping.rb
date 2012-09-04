@@ -39,7 +39,7 @@ module Prototyping
   end
 
   def is_prototype_exists
-    if @prototype_id && !prototype
+    if @prototype_id && (!prototype || prototype.deleted?)
       errors.add(:prototype_id, "must exist")
     end
   end

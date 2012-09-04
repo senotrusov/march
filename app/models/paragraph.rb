@@ -48,4 +48,10 @@ class Paragraph < ActiveRecord::Base
   # Prototyping
   include Prototyping
   self.copy_prototype_attrs = %w(title url message lat lng zoom)
+
+
+  # Deletion
+  def deleted?
+    section.deleted?
+  end
 end

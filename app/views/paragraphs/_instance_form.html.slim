@@ -30,5 +30,5 @@
                 .title Paste
 
     .prototype
-      - if paragraph.prototype
+      - if paragraph.prototype && !paragraph.prototype.deleted?
         = render partial: 'paragraphs/view', locals: {paragraph: paragraph.prototype}

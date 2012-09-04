@@ -4,11 +4,11 @@ class SectionsController < ApplicationController
     @section = Section.find(params[:id])
 
     respond_to do |format|
-      if @section.document.deleted
-      	not_found
+      if @section.deleted?
+        not_found
       else
-	    format.html { render :layout => !request.xhr? }
-	  end
+        format.html { render :layout => !request.xhr? }
+      end
     end
   end
 end
