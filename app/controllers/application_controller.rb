@@ -2,9 +2,14 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   RESPONSE_403 = File.read(Rails.root+'public'+'403.html')
+  RESPONSE_404 = File.read(Rails.root+'public'+'404.html')
 
   def forbidden
     render :text => RESPONSE_403, :layout => false, :status => 403
+  end
+
+  def not_found
+    render :text => RESPONSE_404, :layout => false, :status => 404
   end
 
   before_filter do
