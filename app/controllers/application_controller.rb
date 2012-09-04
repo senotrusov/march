@@ -42,4 +42,12 @@ class ApplicationController < ActionController::Base
   def default_url_options options = nil
     { board_slug: @board.slug }
   end
+
+  enable_authorization do |exception|
+    forbidden
+  end
+
+  def current_user
+    @poster
+  end
 end

@@ -29,8 +29,11 @@ article.document
         .map data-lat=@document.lat data-lng=@document.lng data-zoom=@document.zoom
 
   ul.actions
-    li = link_to 'Edit', edit_document_path(@document)
-    li = link_to 'Destroy', @document, :confirm => 'Are you sure?', :method => :delete
+    - if can? :edit, @document
+      li = link_to 'Edit', edit_document_path(@document) 
+
+    - if can? :destroy, @document
+      li = link_to 'Destroy', @document, :confirm => 'Are you sure?', :method => :delete
 
   table.section_frames
     tbody

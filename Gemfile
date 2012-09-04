@@ -78,3 +78,6 @@ gem 'carrierwave-processing' # MIT
 
 # JSON
 gem 'oj' # 3-clause BSD
+
+# Authorization
+gem 'cancan', :git => 'git://github.com/ryanb/cancan.git', :branch => '2.0' # MIT

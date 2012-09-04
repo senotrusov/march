@@ -36,9 +36,9 @@ class DocumentsController < ApplicationController
   def edit
     @document = Document.alive.find(params[:id])
 
-    @skip_sections = true
+    authorize! :edit, @document
 
-    return forbidden unless @poster && @poster.id == @document.poster_id
+    @skip_sections = true
   end
 
   # POST /documents
@@ -105,7 +105,7 @@ class DocumentsController < ApplicationController
   def update
     @document = Document.alive.find(params[:id])
 
-    return forbidden unless @poster && @poster.id == @document.poster_id
+    authorize! :update, @document
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
@@ -121,7 +121,7 @@ class DocumentsController < ApplicationController
   def destroy
     @document = Document.alive.find(params[:id])
 
-    return forbidden unless @poster && @poster.id == @document.poster_id
+    authorize! :destroy, @document
 
     @document.deleted = true
     @document.deleted_at = Time.zone.now
