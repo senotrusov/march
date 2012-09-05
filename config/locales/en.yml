@@ -11,6 +11,14 @@ en:
         url: Hyperlink
 
       section:
+        writable_by_values:
+          public: Public writable
+          contributor: Contributor writable
+          document_poster: Document poster only
+
+        sort_by_values:
+          created_at: Sort by newest
+          paragraphs_order: Sort manually
 
       paragraph:
         url: Hyperlink

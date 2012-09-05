@@ -29,9 +29,12 @@ class Section < ActiveRecord::Base
 
   
   # Paragraphs behaviour
-  attr_accessible :public_writable, :contributor_writable
+  attr_accessible :writable_by, :sort_by
 
-  
+  enum :writable_by, %w(public contributor document_poster)
+  enum :sort_by, %w(created_at paragraphs_order)
+
+
   # Text attributes
   attr_accessible :title
   normalize_text :title
@@ -50,7 +53,7 @@ class Section < ActiveRecord::Base
 
   # Prototyping
   include Prototyping
-  self.copy_prototype_attrs = %w(public_writable contributor_writable title paragraphs_order)
+  self.copy_prototype_attrs = %w(writable_by sort_by title paragraphs_order)
 
 
   # Deletion

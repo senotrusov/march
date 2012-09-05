@@ -19,17 +19,11 @@
           - section.errors.full_messages.each do |message|
             li = message
     
-    .radio_deck
-      = f.label :access
+    .field.select_deck
+      = f.select :writable_by, Section.options_for(:writable_by)
 
-      div
-        = f.check_box :public_writable, {}, "1", nil
-        = f.label :public_writable
-
-        br
-
-        = f.check_box :contributor_writable, {}, "1", nil
-        = f.label :contributor_writable
+    .field.select_deck
+      = f.select :sort_by, Section.options_for(:sort_by)
 
     .field
       - if section.image?

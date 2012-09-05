@@ -123,7 +123,7 @@ CREATE TABLE sections (
 
   identity_id          bigint  NOT NULL references identities(id),
   identity_name        integer NOT NULL,                          -- redundant data
-  identity_board_slug  text    NOT NULL,                          -- redundant data
+  identity_board_slug  character varying(64) NOT NULL,            -- redundant data
   identity_document_id bigint  NOT NULL references documents(id), -- redundant data
 
   proto_created_at timestamp with time zone,
@@ -131,11 +131,11 @@ CREATE TABLE sections (
 
   proto_identity_id          bigint references identities(id),
   proto_identity_name        integer,                          -- redundant data
-  proto_identity_board_slug  text,                             -- redundant data
-  proto_identity_document_id bigint references documents(id), -- redundant data
+  proto_identity_board_slug  character varying(64),            -- redundant data
+  proto_identity_document_id bigint references documents(id),  -- redundant data
 
-  public_writable      boolean DEFAULT true NOT NULL,
-  contributor_writable boolean DEFAULT true NOT NULL,
+  writable_by character varying(64) DEFAULT 'public'     NOT NULL, -- public, contributor, document_poster
+  sort_by     character varying(64) DEFAULT 'created_at' NOT NULL, -- created_at, paragraphs_order
 
   image      character varying(128),
   title      character varying(256) NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE paragraphs (
 
   identity_id          bigint  NOT NULL references identities(id),
   identity_name        integer NOT NULL,                          -- redundant data
-  identity_board_slug  text    NOT NULL,                          -- redundant data
+  identity_board_slug  character varying(64) NOT NULL,            -- redundant data
   identity_document_id bigint  NOT NULL references documents(id), -- redundant data
 
   
@@ -171,8 +171,8 @@ CREATE TABLE paragraphs (
   proto_updated_at timestamp with time zone,
 
   proto_identity_id          bigint references identities(id),
-  proto_identity_name        integer,                          -- redundant data
-  proto_identity_board_slug  text,                             -- redundant data
+  proto_identity_name        integer,                         -- redundant data
+  proto_identity_board_slug  character varying(64),           -- redundant data
   proto_identity_document_id bigint references documents(id), -- redundant data
   
   image   character varying(128),
