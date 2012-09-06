@@ -50,8 +50,9 @@ class DocumentsController < ApplicationController
 
     if @sections = params[:document].extract_array(:sections)
       @sections.map! do |s|
+        paragraphs = s.extract_array(:paragraphs)
         Section.new(s).tap do |section|
-          (paragraphs = s.extract_array(:paragraphs)) && all_paragraphs.concat(paragraphs.map{|p|section.paragraphs.build(p)})
+          paragraphs && all_paragraphs.concat(paragraphs.map{|p|section.paragraphs.build(p)})
         end
       end
     end
