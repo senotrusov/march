@@ -17,6 +17,7 @@
 #= require leaflet-src
 #= require_tree .
 
+
 String.prototype.truncate = (min = 30, max = 35) ->
   string = $.trim(this).replace(/[\s]+/g, ' ')
 
@@ -31,6 +32,10 @@ String.prototype.truncate = (min = 30, max = 35) ->
       
     else
       return $.trim(truncated) + '&hellip;'
+
+
+nextTick = (func) -> setTimeout func, 0
+
 
 $(document).ready ->
   $('#notice, #alert').each ->
