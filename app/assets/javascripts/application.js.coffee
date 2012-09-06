@@ -15,6 +15,8 @@
 #= require jquery_ujs
 #= require rails-timeago
 #= require leaflet-src
+#
+#= require_self
 #= require_tree .
 
 
@@ -34,7 +36,8 @@ String.prototype.truncate = (min = 30, max = 35) ->
       return $.trim(truncated) + '&hellip;'
 
 
-nextTick = (func) -> setTimeout func, 0
+# TODO: oninput, onpropertychange
+@nextTick = (func) -> setTimeout func, 0
 
 
 $(document).ready ->
