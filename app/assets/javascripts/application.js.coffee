@@ -43,4 +43,4 @@ String.prototype.truncate = (min = 30, max = 35) ->
 $(document).ready ->
   $('#notice, #alert').each ->
     message = $(this)
-    setTimeout (-> message.slideUp 'fast'), 5000
+    setTimeout (-> message.slideUp 'fast'), 10000
