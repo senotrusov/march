@@ -20,10 +20,11 @@ class Document < ActiveRecord::Base
   belongs_to :identity
   belongs_to :board
   has_many :identities
-  has_many :sections
+  has_many :sections, autosave: false
 
 
   # Image
+  include Upload
   attr_accessible :image, :image_cache, :remove_image
   mount_uploader :image, ImageUploader
 
@@ -39,11 +40,47 @@ class Document < ActiveRecord::Base
 
   
   # Sections framing
-  serialize :sections_framing, MultiJsonSerializer.new(Array)
+  SECTION_FRAMES = 3
+
+  serialize :sections_framing, MultiJsonSerializer.new
+
+  def framed_sections_factory
+    Array.new(SECTION_FRAMES){[]}
+  end
+
+  def clear_framed_sections
+    @framed_sections = framed_sections_factory
+  end
 
   def framed_sections
-    sections_framing.map {|frame| frame.map {|section_id| sections.detect {|section| section.id == section_id }}}
+    @framed_sections ||=
+      sections_framing && sections_framing.map {|frame| frame.map {|section_id| sections.detect {|section| section.id == section_id }}} ||
+      framed_sections_factory
   end
+
+  def push_framed_section section
+    framed_sections[section.frame && (0..SECTION_FRAMES).include?(section.frame) && section.frame || 0].push(section)
+  end
+
+  def framed_section_ids
+    framed_sections.map {|frame| frame.map{|section| section.id}.compact }
+  end
+
+  def map_framed_sections
+    self.sections_framing = framed_section_ids
+  end
+  before_save :map_framed_sections
+
+  def section_framing_changed?
+    sections_framing != framed_section_ids
+  end
+
+  module DirtyExtensions
+    def changed?
+      super || section_framing_changed?
+    end
+  end
+  include DirtyExtensions
 
 
   # Scopes
@@ -53,15 +90,57 @@ class Document < ActiveRecord::Base
 
   scope :ordered, order(ORDER = "id DESC")
 
+
   # Location
   include Geo::Model
   validates :location, presence: true
+
+
+  # Creation
+  module DocumentCreator
+    def new(attributes = {}, options = {}, &block)
+      attributes = (attributes.kind_of?(Hash) ? attributes.dup : {}).with_indifferent_access
+
+      sections = attributes.extract_array(:sections).map {|section| section.is_a?(Section) ? section : Section.new(section) }
+      
+      created = super(attributes, options, &block)
+      
+      created.sections = sections
+
+      sections.each {|section| created.push_framed_section(section) }
+      
+      created
+    end
+  end
+  extend DocumentCreator
 
 
   # Deletion
   scope :alive, where(deleted: false)
 
   def deleted?
+    deleted_mark?
+  end
+
+  def deleted_mark?
     deleted == true
+  end
+
+  def mark_as_deleted
+    self.deleted = true
+    self.deleted_at = Time.zone.now
+  end
+
+  def move_all_images_to_deleted
+    move_image_to_deleted
+    sections.each(&:move_all_images_to_deleted)
+  end
+
+  after_save :move_all_images_to_deleted, if: :deleted_mark?
+
+  
+  # Dirty checks
+  def save_needed?
+    changed? || sections.any? {|section| section.save_needed? } || (image.cached? && !remove_image?) || (remove_image? && !image.cached?)
   end
 end

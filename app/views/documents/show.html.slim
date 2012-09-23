@@ -39,6 +39,7 @@ article.document
     tbody
       tr
         - @document.framed_sections.each_with_index do |sections, frame|
-          td.frame data-frame=frame
-            .sections
-              = render collection: sections, partial: 'sections/view', as: 'section'
+          - if sections.present?
+            td.frame data-frame=frame
+              .sections
+                = render collection: sections, partial: 'sections/view', as: 'section'

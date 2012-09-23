@@ -22,12 +22,14 @@ class HashWithIndifferentAccess
   end
 
   def extract_array key
-    self.delete(key).tap do |result|
-      raise "#{key.to_s.titleize} (if submitted) must be in Array form" unless result.kind_of?(Array) || result.nil?
-    end
+    (result = self.delete(key)).kind_of?(Array) && result || []
   end
 
-  def require_hash key
-    raise "#{key.to_s.titleize} must be submitted" unless self[key].kind_of?(Hash)
+  def required_hash key
+    if (result = self[key]).kind_of?(Hash)
+      result
+    else
+      raise ActiveRecord::RecordNotSaved, "#{key.to_s.titleize} must be submitted"
+    end
   end
 end

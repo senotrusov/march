@@ -17,12 +17,11 @@
 class Paragraph < ActiveRecord::Base
   # Associations
   belongs_to :identity
-  belongs_to :identity_document, class_name: "Document"
+  belongs_to :identity_document, class_name: 'Document'
   belongs_to :section
-  has_many :instances, class_name: "Paragraph", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then paragraph does not have other instances
-
 
   # Image
+  include Upload
   attr_accessible :image, :image_cache, :remove_image
   mount_uploader :image, ImageUploader
 
@@ -36,22 +35,34 @@ class Paragraph < ActiveRecord::Base
   validates :url,     length: { in: 0..columns_hash['url'].limit }
   validates :message, length: { in: 0..columns_hash['message'].limit }
 
-
+  
   # Location
   include Geo::Model
 
 
-  # Cache
+  # Identity cache
   include Identity::Cache
 
 
   # Prototyping
   include Prototyping
-  self.copy_prototype_attrs = %w(title url message lat lng zoom)
+  attr_prototype_copied :title, :url, :message, :lat, :lng, :zoom
 
 
   # Deletion
   def deleted?
-    section.deleted?
+    deleted_mark? || (section.deleted? && !section.any_other_existing_instances?)
   end
+
+  def deleted_mark?
+    deleted == true
+  end
+
+  def mark_as_deleted deleted_by
+    self.deleted = true
+    self.deleted_at = Time.zone.now
+    self.deleted_by = deleted_by
+  end
+
+  after_save :move_image_to_deleted, if: :deleted_mark?
 end

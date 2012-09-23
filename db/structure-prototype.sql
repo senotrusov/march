@@ -143,7 +143,10 @@ CREATE TABLE sections (
   paragraphs_order text, -- json
 
   document_id bigint NOT NULL references documents(id),
-  line_id     bigint references sections(id) -- if line_id IS NULL, then there are no other line elements expected to be there
+  line_id     bigint references sections(id), -- if line_id IS NULL, then there are no other line elements expected to be there
+
+  deleted    boolean NOT NULL DEFAULT false,
+  deleted_at timestamp with time zone
 );
 
 CREATE INDEX sections_document_id_idx ON sections USING btree (document_id);
@@ -185,7 +188,11 @@ CREATE TABLE paragraphs (
   zoom smallint,
 
   section_id bigint NOT NULL references sections(id),
-  line_id    bigint references paragraphs(id) -- if line_id IS NULL, then there are no other line elements expected to be there
+  line_id    bigint references paragraphs(id), -- if line_id IS NULL, then there are no other line elements expected to be there
+
+  deleted    boolean NOT NULL DEFAULT false,
+  deleted_at timestamp with time zone,
+  deleted_by bigint references identities(id)
 );
 
 CREATE INDEX paragraphs_section_id_idx ON paragraphs USING btree (section_id);

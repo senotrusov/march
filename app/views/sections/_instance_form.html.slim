@@ -1,12 +1,14 @@
 
 = form.fields_for :sections, section, :index => "" do |f|
   .section
+    = f.hidden_field :id
     = f.hidden_field :frame
+    = f.hidden_field :is_instance
 
     .abstract
 
     h2
-      | § section
+      | § section instance
       .buttons
         .delete_form_item data-selector=".section"
           i.icon-remove-sign
@@ -18,18 +20,22 @@
           - section.errors.full_messages.each do |message|
             li = message
 
-    .field
-      = f.label :prototype_id
-      table.field_with_button
-        tbody
-          tr
-            td.field
-              = f.text_field :prototype_id, 'data-prototype-source' => sections_path, 'data-item-type' => '.section'
-            td
-              .button.paste-prototype-id
-                i.icon-link
-                .title Paste
+    - if section.new_record?
+      .field
+        = f.label :prototype_id
+        table.field_with_button
+          tbody
+            tr
+              td.field
+                = f.text_field :prototype_id, 'data-prototype-source' => sections_path, 'data-item-type' => '.section'
+              td
+                .button.paste-prototype-id
+                  i.icon-link
+                  .title Paste
 
     .prototype
-      - if section.prototype && !section.prototype.deleted?
-        = render partial: 'sections/view', locals: {section: section.prototype}
+      - if !section.new_record?
+        = render partial: 'sections/view', locals: { section: section }
+        
+      - elsif section.prototype
+        = render partial: 'sections/view', locals: { section: section.prototype }

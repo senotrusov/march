@@ -1,25 +1,23 @@
 
 = form_for @document do |f|
 
-  - unless @skip_sections
-    - content_for :templates do
+  - content_for :templates do
 
-      - section = Section.new
-      - paragraph = Paragraph.new
+    - section = Section.new
 
-      #section_template
-        = render :partial => 'sections/form', locals: { form: f, section: section }
+    #section_template
+      = render :partial => 'sections/form', locals: { form: f, section: section }
 
-      #section_instance_template
-        = render :partial => 'sections/instance_form', locals: { form: f, section: section }
+    #section_instance_template
+      = render :partial => 'sections/instance_form', locals: { form: f, section: Section.new(is_instance: true) }
 
-      #paragraph_template
-        = f.fields_for :sections, section, :index => "" do |section_fields|
-          = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: paragraph }
+    #paragraph_template
+      = f.fields_for :sections, section, :index => "" do |section_fields|
+        = render :partial => 'paragraphs/form', locals: { form: section_fields, paragraph: Paragraph.new }
 
-      #paragraph_instance_template
-        = f.fields_for :sections, section, :index => "" do |section_fields|
-          = render :partial => 'paragraphs/instance_form', locals: { form: section_fields, paragraph: paragraph }
+    #paragraph_instance_template
+      = f.fields_for :sections, section, :index => "" do |section_fields|
+        = render :partial => 'paragraphs/instance_form', locals: { form: section_fields, paragraph: Paragraph.new(is_instance: true) }
 
 
   h1 = content_for :title
@@ -74,32 +72,35 @@
       = f.label :message
       = f.text_area :message
 
-  - unless @skip_sections
-    .button.sort
-      i.icon-sort
-      .title Sort
+  .button.sort
+    i.icon-sort
+    .title Sort
 
-    table.section_frames
-      tbody
-        tr
-          - 3.times do |frame|
-            td.frame data-frame=frame
-              .sections
-                - @sections && @sections.select{|s| s.frame == frame}.each do |section|
-                  = render :partial => "sections/#{section.prototype_id ? 'instance_form' : 'form'}",
-                      locals: { form: f, section: section }
+  table.section_frames
+    tbody
+      tr
+        - @document.framed_sections.each_with_index do |sections, frame|
+          td.frame data-frame=frame
+            .sections
+              - sections.each do |section|
+                = render :partial => "sections/#{section.is_instance ? 'instance_form' : 'form'}",
+                    locals: { form: f, section: section }
 
-              .buttons
-                .button.add_form_template data-template="#section_template" data-append-to=".sections" data-item-type=".frame"
-                  i.icon-plus-sign
-                  .title Add § section
+            .buttons
+              .button.add_form_template data-template="#section_template" data-append-to=".sections" data-item-type=".frame"
+                i.icon-plus-sign
+                .title Add § section
 
-                .button.add_form_template data-template="#section_instance_template" data-append-to=".sections" data-item-type=".frame"
-                  i.icon-copy
-                  .title Instance § section
+              .button.add_form_template data-template="#section_instance_template" data-append-to=".sections" data-item-type=".frame"
+                i.icon-copy
+                .title Instance § section
 
   .field
     = f.submit @document.new_record? ? 'Publish' : 'Save'
+
+    - unless @document.new_record?
+      | or 
+      = link_to 'discard editing', document_path(@document)
 
 
 - if content_for? :templates

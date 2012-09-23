@@ -13,7 +13,11 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Directory where uploaded files will be stored.
   def store_dir
-    "uploads/#{model.class.name.tableize}.#{mounted_as}/#{("%03x" % model.id)[-3..-1]}/#{"%x" % model.id}"
+    if Rails.env.development?
+      "uploads/dev/#{model.class.name.tableize}.#{mounted_as}/#{model.id}"
+    else
+      "uploads/#{model.class.name.tableize}.#{mounted_as}/#{("%03x" % model.id)[-3..-1]}/#{"%x" % model.id}"
+    end
   end
 
   # Process uploaded file

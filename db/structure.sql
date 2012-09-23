@@ -177,7 +177,10 @@ CREATE TABLE paragraphs (
     lng double precision,
     zoom smallint,
     section_id bigint NOT NULL,
-    line_id bigint
+    line_id bigint,
+    deleted boolean DEFAULT false NOT NULL,
+    deleted_at timestamp with time zone,
+    deleted_by bigint
 );
 
 
@@ -271,7 +274,9 @@ CREATE TABLE sections (
     title character varying(256) NOT NULL,
     paragraphs_order text,
     document_id bigint NOT NULL,
-    line_id bigint
+    line_id bigint,
+    deleted boolean DEFAULT false NOT NULL,
+    deleted_at timestamp with time zone
 );
 
 
@@ -503,6 +508,14 @@ ALTER TABLE ONLY identities
 
 ALTER TABLE ONLY identities
     ADD CONSTRAINT identities_poster_id_fkey FOREIGN KEY (poster_id) REFERENCES posters(id);
+
+
+--
+-- Name: paragraphs_deleted_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_deleted_by_fkey FOREIGN KEY (deleted_by) REFERENCES identities(id);
 
 
 --

@@ -33,7 +33,10 @@ March::Application.configure do
   config.assets.compress = false
 
   # Expands the lines which load the assets
-  config.assets.debug = true
+  config.assets.debug = false
+
+  # Disable logging requests for assets
+  config.assets.logger = false
 
   # Pretty html indenting
   # Slim::Engine.set_default_options :pretty => true

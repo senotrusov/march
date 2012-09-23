@@ -3,7 +3,7 @@ class DocumentsController < ApplicationController
   # GET /documents
   # GET /documents.json
   def index
-    # TODO: Do not include sections
+    # TODO: include sections?
     @documents = Document.alive.ordered.where(board_id: @board.id).includes(:sections)
 
     respond_to do |format|
@@ -14,7 +14,7 @@ class DocumentsController < ApplicationController
   # GET /documents/1
   # GET /documents/1.json
   def show
-    @document = Document.alive.find(params[:id])
+    @document = Document.alive.find(params[:id]) # TODO: eager load
 
     respond_to do |format|
       format.html
@@ -24,8 +24,7 @@ class DocumentsController < ApplicationController
   # GET /documents/new
   # GET /documents/new.json
   def new
-    @document = Document.new
-    @sections = [Section.new(title: 'Comments', frame: 0)]
+    @document = Document.new sections: [Section.new(title: 'Comments', frame: 0)]
 
     respond_to do |format|
       format.html
@@ -35,34 +34,16 @@ class DocumentsController < ApplicationController
   # GET /documents/1/edit
   def edit
     @document = Document.alive.find(params[:id])
-
+    
     authorize! :edit, @document
-
-    @skip_sections = true
   end
 
   # POST /documents
   # POST /documents.json
   def create
-    params.require_hash :document
-
-    all_paragraphs = []
-
-    if @sections = params[:document].extract_array(:sections)
-      @sections.map! do |s|
-        paragraphs = s.extract_array(:paragraphs)
-        Section.new(s).tap do |section|
-          paragraphs && all_paragraphs.concat(paragraphs.map{|p|section.paragraphs.build(p)})
-        end
-      end
-    end
-
     @document = Document.new params[:document]
 
-    @document.sections = @sections
-    if valid = @document.valid?
-      @document.sections = []
-
+    if @document.valid?
       Document.transaction do
         
         require_poster
@@ -76,22 +57,22 @@ class DocumentsController < ApplicationController
 
         @document.identity = Identity.create_for_document!(@document)
 
-        if @sections
-          (@sections + all_paragraphs).each {|i| i.assign_identity @document.identity, request.remote_ip }
-
-          @sections.each {|s| s.document = @document; s.save! }
-
-          @sections.each {|s| (@document.sections_framing[s.frame] ||= []).push(s.id) }
-          @document.save!
+        @document.sections.each do |section|
+          section.assign_self_and_paragraphs_identity @document.identity, request.remote_ip
+          section.document = @document
+          section.save!
         end
 
-      end # transaction
-    end
+        @document.save! unless @document.sections.empty?
 
-    respond_to do |format|
-      if valid
+      end # of transaction
+
+      respond_to do |format|
         format.html { redirect_to @document, notice: 'Document was successfully created.' }
-      else
+      end
+
+    else
+      respond_to do |format|
         format.html { render action: "new" }
       end
     end
@@ -101,17 +82,73 @@ class DocumentsController < ApplicationController
   # PUT /documents/1
   # PUT /documents/1.json
   def update
-    @document = Document.alive.find(params[:id])
+    @document = Document.alive.find(params[:id]) # TODO eager load
 
     authorize! :update, @document
 
-    respond_to do |format|
-      if @document.update_attributes(params[:document])
-        format.html { redirect_to @document, notice: 'Document was successfully updated.' }
+    
+    sections = (document_attrs = params.required_hash(:document)).extract_array(:sections)
+
+    @document.assign_attributes document_attrs
+
+
+    section_ids = sections.map {|section_attrs| section_attrs[:id].to_i} - [0]
+    @document.sections.each do |section|
+      section.mark_as_deleted if !section_ids.include?(section.id) && !section.deleted_mark?
+    end
+
+
+    @document.clear_framed_sections
+
+    sections.each do |section_attrs|
+
+      # Determine - is it a new section or not (based on 'id' attribute presence)
+      if (section_id = section_attrs[:id].to_i) > 0
+
+        unless section = @document.sections.detect {|s| s.id == section_id }
+          # Section with submitted id does not exists in document
+          raise(ActiveRecord::RecordNotSaved)
+        end
+
+        next if section.deleted_mark?
+
+        # There are no paragraphs expected to be in section_attrs for existing section
+        section.assign_attributes section_attrs
       else
+        section = @document.sections.build section_attrs
+      end
+
+      @document.push_framed_section section
+    end
+    
+    # TODO: When editing existing records, their validations does not called by @document.valid?
+    # See activerecord-3.2.5/lib/active_record/autosave_association.rb
+    if @document.valid? && (sections_is_valid = @document.sections.all? {|section| section.valid? })
+
+      Document.transaction do
+        @document.sections.each do |section|
+          if section.save_needed?
+            section.assign_self_and_paragraphs_identity(@document.identity, request.remote_ip) if section.new_record?
+            section.save!
+          end
+        end
+        @document.save! if @document.save_needed?
+      end
+
+      respond_to do |format|
+        format.html { redirect_to @document, notice: 'Document was successfully updated.' }
+      end
+
+    else
+      if !sections_is_valid && !@document.errors.added?(:sections, 'is invalid')
+        @document.errors.add(:sections, 'is invalid')
+      end
+
+      respond_to do |format|
         format.html { render action: "edit" }
       end
     end
+
   end
 
   # DELETE /documents/1
@@ -121,8 +158,7 @@ class DocumentsController < ApplicationController
 
     authorize! :destroy, @document
 
-    @document.deleted = true
-    @document.deleted_at = Time.zone.now
+    @document.mark_as_deleted
     @document.save!
 
     respond_to do |format|

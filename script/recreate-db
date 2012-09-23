@@ -36,3 +36,8 @@ $psql -d $db < db/seeds-prototype.sql
 
 # Dump schema to db/structure.sql
 pg_dump $db --username $user --host=$host --schema-only > db/structure.sql
+
+
+# Delete development uploads
+rm -rf public/uploads/dev/*
+rm -rf db/deleted/dev/*

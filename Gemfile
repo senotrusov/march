@@ -33,6 +33,12 @@ end
 group :development do
   # Pretty print
   gem 'awesome_print' # MIT
+
+  # That solves "Could not determine content-length of response body" message appereance in logs
+  gem 'webrick', '>= 1.3.1' # Ruby
+
+  # Debugger, compartible with 1.9.3, https://github.com/cldwalker/debugger
+  gem 'debugger' # 2-clause BSD
 end
 
 

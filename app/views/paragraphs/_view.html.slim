@@ -5,7 +5,7 @@ article.paragraph
 
   = render partial: "paragraphs/identity", locals: { object: paragraph.proto_or_self }
 
-  - if paragraph.line_id?
+  - if paragraph.is_instance
     .identity.small
       .identity_name
         = "#{paragraph.identity_name}@"

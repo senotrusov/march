@@ -1,11 +1,12 @@
 
 = form.fields_for :paragraphs, paragraph, :index => "" do |f|
   .paragraph
+    = f.hidden_field :is_instance
 
     .abstract
     
     h3
-      | ¶ paragraph
+      | ¶ paragraph instance
       .buttons
         .delete_form_item data-selector=".paragraph"
           i.icon-remove-sign
@@ -17,18 +18,22 @@
           - paragraph.errors.full_messages.each do |message|
             li = message
     
-    .field
-      = f.label :prototype_id
-      table.field_with_button
-        tbody
-          tr
-            td.field
-              = f.text_field :prototype_id, 'data-prototype-source' => paragraphs_path, 'data-item-type' => '.paragraph'
-            td
-              .button.paste-prototype-id
-                i.icon-link
-                .title Paste
+    - if paragraph.new_record?
+      .field
+        = f.label :prototype_id
+        table.field_with_button
+          tbody
+            tr
+              td.field
+                = f.text_field :prototype_id, 'data-prototype-source' => paragraphs_path, 'data-item-type' => '.paragraph'
+              td
+                .button.paste-prototype-id
+                  i.icon-link
+                  .title Paste
 
     .prototype
-      - if paragraph.prototype && !paragraph.prototype.deleted?
-        = render partial: 'paragraphs/view', locals: {paragraph: paragraph.prototype}
+      - if !paragraph.new_record?
+        = render partial: 'paragraphs/view', locals: { paragraph: paragraph }
+        
+      - elsif paragraph.prototype
+        = render partial: 'paragraphs/view', locals: { paragraph: paragraph.prototype }

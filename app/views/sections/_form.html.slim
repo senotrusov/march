@@ -1,8 +1,8 @@
 
 = form.fields_for :sections, section, :index => "" do |f|
   .section
+    = f.hidden_field :id
     = f.hidden_field :frame
-    = f.hidden_field :prototype_id
 
     .abstract
 
@@ -20,10 +20,10 @@
             li = message
     
     .field.select_deck
-      = f.select :writable_by, Section.options_for(:writable_by)
+      = f.select :writable_by, section.options_for(:writable_by)
 
     .field.select_deck
-      = f.select :sort_by, Section.options_for(:sort_by)
+      = f.select :sort_by, section.options_for(:sort_by), {}, {:disabled => true}
 
     .field
       - if section.image?
@@ -43,17 +43,22 @@
       = f.label :title
       = f.text_field :title
     
+    - if section.new_record?
+      .paragraphs
+        - section.paragraphs.each do |paragraph|
+          = render :partial => "paragraphs/#{paragraph.is_instance ? 'instance_form' : 'form'}",
+              locals: { form: f, paragraph: paragraph }
 
-    .paragraphs
-      - section.paragraphs.each do |paragraph|
-        = render :partial => "paragraphs/#{paragraph.prototype_id ? 'instance_form' : 'form'}",
-            locals: { form: f, paragraph: paragraph }
+      .buttons
+        .button.add_form_template data-template="#paragraph_template" data-append-to=".paragraphs" data-item-type=".section"
+          i.icon-plus-sign
+          .title Add ¶ paragraph
 
-    .buttons
-      .button.add_form_template data-template="#paragraph_template" data-append-to=".paragraphs" data-item-type=".section"
-        i.icon-plus-sign
-        .title Add ¶ paragraph
+        .button.add_form_template data-template="#paragraph_instance_template" data-append-to=".paragraphs" data-item-type=".section"
+          i.icon-copy
+          .title Instance ¶ paragraph
 
-      .button.add_form_template data-template="#paragraph_instance_template" data-append-to=".paragraphs" data-item-type=".section"
-        i.icon-copy
-        .title Instance ¶ paragraph
+    - else
+      .paragraphs_summary
+        i.icon-info-sign
+        = pluralize(section.paragraphs.length, 'paragraph')

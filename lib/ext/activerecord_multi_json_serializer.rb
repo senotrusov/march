@@ -16,16 +16,11 @@
 require 'multi_json'
 
 class MultiJsonSerializer
-  def initialize default_class
-    @default_class = default_class
-  end
-
   def load serialized
-    return (@default_class.new) unless serialized
-    MultiJson.load(serialized)
+    MultiJson.load(serialized) if serialized
   end
 
   def dump object
-    MultiJson.dump object
+    MultiJson.dump(object) if object
   end
 end

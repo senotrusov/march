@@ -19,11 +19,12 @@ class Section < ActiveRecord::Base
   belongs_to :identity
   belongs_to :identity_document, class_name: "Document"
   belongs_to :document
-  has_many :instances, class_name: "Section", foreign_key: "line_id", primary_key: "line_id" # if line_id IS NULL, then section does not have other instances
   has_many :paragraphs, order: 'id'
-  has_many :line_paragraphs, class_name: "Paragraph", primary_key: "line_id", order: 'id'
+  has_many :line_paragraphs, class_name: 'Paragraph', primary_key: 'line_id', order: 'id'
   
+
   # Image
+  include Upload
   attr_accessible :image, :image_cache, :remove_image
   mount_uploader :image, ImageUploader
 
@@ -31,33 +32,81 @@ class Section < ActiveRecord::Base
   # Paragraphs behaviour
   attr_accessible :writable_by, :sort_by
 
-  enum :writable_by, %w(public contributor document_poster)
-  enum :sort_by, %w(created_at paragraphs_order)
+  attr_enumerable :writable_by, %w[public contributor document_poster]
+  attr_enumerable :sort_by, %w[created_at paragraphs_order]
+  
+  validates :writable_by, presence: true, unless: :is_unsaved_instance_with_bad_prototype
+  validates :sort_by, presence: true, unless: :is_unsaved_instance_with_bad_prototype
 
 
   # Text attributes
   attr_accessible :title
   normalize_text :title
-  validates :title, length: { in: 1..columns_hash['title'].limit }
+  validates :title, length: { in: 1..columns_hash['title'].limit }, unless: :is_unsaved_instance_with_bad_prototype
 
 
   # Frame
-  attr_accessible :frame
+  attr_accessible :frame, as: [:default, :instance, :instance_update]
   attr_reader :frame
   def frame=(value); @frame = value.to_i end
 
 
-  # Cache
+  # Identity cache
   include Identity::Cache
 
 
   # Prototyping
   include Prototyping
-  self.copy_prototype_attrs = %w(writable_by sort_by title paragraphs_order)
+  attr_prototype_copied :writable_by, :sort_by, :title, :paragraphs_order
 
 
   # Deletion
   def deleted?
-    document.deleted?
+    deleted_mark? || document.deleted?
+  end
+
+  def deleted_mark?
+    deleted == true
+  end
+
+  def mark_as_deleted
+    self.deleted = true
+    self.deleted_at = Time.zone.now
+  end
+
+  def move_all_images_to_deleted
+    move_image_to_deleted
+    proto_or_self.paragraphs.each(&:move_image_to_deleted) unless any_other_existing_instances?
+  end
+
+  after_save :move_all_images_to_deleted, if: :deleted_mark?
+  
+
+  # Creation
+  module SectionCreator
+    def new(attributes = {}, options = {}, &block)
+      attributes = (attributes.kind_of?(Hash) ? attributes.dup : {}).with_indifferent_access
+
+      paragraphs = attributes.extract_array(:paragraphs).map {|paragraph| paragraph.is_a?(Paragraph) ? paragraph : Paragraph.new(paragraph) }
+      
+      created = super(attributes, options, &block)
+      
+      created.paragraphs = paragraphs
+      
+      created
+    end
+  end
+  extend SectionCreator
+
+  def assign_self_and_paragraphs_identity identity, remote_ip
+    raise 'Can only be called on new records' unless new_record?
+
+    ([self] + paragraphs).each {|i| i.assign_identity(identity, remote_ip) }
+  end
+
+
+  # Dirty checks
+  def save_needed?
+    new_record? || changed? || (image.cached? && !remove_image?) || (remove_image? && !image.cached?)
   end
 end
