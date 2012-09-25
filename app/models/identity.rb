@@ -19,9 +19,9 @@ class Identity < ActiveRecord::Base
   belongs_to :poster
   belongs_to :document
 
-  has_many :documents
-  has_many :sections
-  has_many :paragraphs
+  has_many :documents,  inverse_of: :identity, conditions: { deleted: false }
+  has_many :sections,   inverse_of: :identity, conditions: { deleted: false }
+  has_many :paragraphs, inverse_of: :identity, conditions: { deleted: false }
 
 
   NEXTVAL = "SELECT nextval('#{connection.pk_and_sequence_for(table_name).last}');"
@@ -33,6 +33,7 @@ class Identity < ActiveRecord::Base
   module Cache
     def assign_identity identity, addr
       self.identity            = identity
+      self.identity_poster     = identity.poster
       self.identity_name       = identity.name
       self.identity_board_slug = identity.document.board.slug
       self.identity_document   = identity.document

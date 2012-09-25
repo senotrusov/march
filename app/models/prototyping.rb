@@ -20,7 +20,8 @@ module Prototyping
         class_name: base.name,
         foreign_key: 'line_id',
         primary_key: 'line_id',
-        order: 'id'
+        order: 'id',
+        conditions: { deleted: false }
     end
   end
 
@@ -29,7 +30,7 @@ module Prototyping
   end
 
   def any_other_existing_instances?
-    line_id && self.class.where(line_id: line_id).where('id != ?', id).any? {|model| !model.deleted? }
+    line_id && instances.where('id != ?', id).any? {|model| !model.deleted? }
   end
 
   module ClassMethods
@@ -85,12 +86,14 @@ module Prototyping
 
   
   class ProtoCache
-    ATTRS = [ :created_at, 
+    ATTRS = [ :created_at,
               :updated_at,
               :identity_id,
+              :identity_poster_id,
               :identity_name,
               :identity_board_slug,
-              :identity_document_id ]
+              :identity_document_id,
+              :document_id ]
 
     def initialize model
       @model = model
@@ -102,6 +105,8 @@ module Prototyping
           @model.line_id
         when :paragraphs
           @model.line_paragraphs *args
+        when :document
+          @model.proto_document *args
         else
           @model.send (ATTRS.include?(name) ? "proto_#{name}" : name), *args, &block
       end
@@ -117,7 +122,7 @@ module Prototyping
   end
 
   def proto_cache= model
-    ProtoCache::ATTRS.each {|attr| self.send("proto_#{attr}=", model.send(attr)) }
+    ProtoCache::ATTRS.each {|attr| self.send("proto_#{attr}=", model.send(attr)) if model.respond_to?(attr) }
   end
 
 

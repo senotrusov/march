@@ -17,11 +17,17 @@
 class Section < ActiveRecord::Base
   # Associations
   belongs_to :identity
-  belongs_to :identity_document, class_name: "Document"
+  belongs_to :identity_poster, class_name: 'Poster'
+  belongs_to :identity_document, class_name: 'Document'
   belongs_to :document
-  has_many :paragraphs, order: 'id'
-  has_many :line_paragraphs, class_name: 'Paragraph', primary_key: 'line_id', order: 'id'
-  
+  belongs_to :proto_document, class_name: 'Document'
+  has_many :paragraphs, order: 'id', inverse_of: :section, conditions: { deleted: false }
+  has_many :line_paragraphs, class_name: 'Paragraph', primary_key: 'line_id', order: 'id', inverse_of: :section, conditions: { deleted: false }
+
+  def poster_ids
+    proto_or_self.paragraphs.map {|p| [p.identity_poster_id, p.proto_identity_poster_id] }.flatten.compact.uniq
+  end
+
 
   # Image
   include Upload
@@ -108,5 +114,18 @@ class Section < ActiveRecord::Base
   # Dirty checks
   def save_needed?
     new_record? || changed? || (image.cached? && !remove_image?) || (remove_image? && !image.cached?)
+  end
+
+
+  # Authorisation
+  def can_create_paragraphs? poster
+    case writable_by
+      when 'public'
+        true
+      when 'contributor'
+        poster_ids.include?(poster.id)
+      when 'document_poster'
+        proto_or_self.document.poster_id == poster.id
+    end
   end
 end

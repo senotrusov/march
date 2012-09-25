@@ -5,7 +5,7 @@ body > article.paragraph
   margin: 75px auto
 
 article.paragraph
-  padding-top: 15px
+  padding-bottom: 25px
   clear: both
 
   .identity
@@ -19,37 +19,37 @@ article.paragraph
       font-size: $base
 
       color: #fff
-      background: $paragraph
+      background: $pastel_paragraph
 
       padding: 1px 3px
       margin: 0px 5px
 
     .id:hover
-      background: $highlighted_paragraph
+      background: $paragraph
 
     .identity_name
       display: inline
       font-size: $base
 
       color: #fff
-      background: $poster
+      background: $pastel_poster
 
       padding: 1px 3px
 
     .identity_name:hover
-      background: $highlighted_poster
+      background: $poster
 
     .identity_document_id
       display: inline
       font-size: $base
 
       color: #fff
-      background: $bgcolor
+      background: $pastel_bgcolor
 
       padding: 1px 3px
 
     .identity_document_id:hover
-      background: $highlighted_bgcolor
+      background: $bgcolor
 
   .identity.small div
     font-size: $small
@@ -85,3 +85,20 @@ article.paragraph
   .details
     font-size: $mini
     color: $bgcolor
+
+  .paragraph_destroy
+    float: right
+    clear: right
+    background: $pastel_paragraph
+    margin-left: 5px
+    text-decoration: none
+
+    i
+      display: block
+      padding: 3px 4px 0px 4px
+      color: #fff
+      font-size: $base
+      line-height: $base_icon_line_height
+
+  .paragraph_destroy:hover
+    background: $paragraph

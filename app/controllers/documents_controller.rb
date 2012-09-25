@@ -1,7 +1,6 @@
 
 class DocumentsController < ApplicationController
-  # GET /documents
-  # GET /documents.json
+  # GET /board
   def index
     # TODO: include sections?
     @documents = Document.alive.ordered.where(board_id: @board.id).includes(:sections)
@@ -11,8 +10,7 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/1
-  # GET /documents/1.json
+  # GET /board/1
   def show
     @document = Document.alive.find(params[:id]) # TODO: eager load
 
@@ -21,8 +19,7 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/new
-  # GET /documents/new.json
+  # GET /board/new
   def new
     @document = Document.new sections: [Section.new(title: 'Comments', frame: 0)]
 
@@ -31,15 +28,13 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/1/edit
+  # GET /board/1/edit
   def edit
     @document = Document.alive.find(params[:id])
-    
-    authorize! :edit, @document
+    authorize :update, @document
   end
 
-  # POST /documents
-  # POST /documents.json
+  # POST /board
   def create
     @document = Document.new params[:document]
 
@@ -79,12 +74,11 @@ class DocumentsController < ApplicationController
 
   end
 
-  # PUT /documents/1
-  # PUT /documents/1.json
+  # PUT /board/1
   def update
     @document = Document.alive.find(params[:id]) # TODO eager load
 
-    authorize! :update, @document
+    authorize :update, @document
 
     
     sections = (document_attrs = params.required_hash(:document)).extract_array(:sections)
@@ -94,7 +88,7 @@ class DocumentsController < ApplicationController
 
     section_ids = sections.map {|section_attrs| section_attrs[:id].to_i} - [0]
     @document.sections.each do |section|
-      section.mark_as_deleted if !section_ids.include?(section.id) && !section.deleted_mark?
+      section.mark_as_deleted unless section_ids.include?(section.id)
     end
 
 
@@ -151,12 +145,11 @@ class DocumentsController < ApplicationController
 
   end
 
-  # DELETE /documents/1
-  # DELETE /documents/1.json
+  # DELETE /board/1
   def destroy
     @document = Document.alive.find(params[:id])
 
-    authorize! :destroy, @document
+    authorize :destroy, @document
 
     @document.mark_as_deleted
     @document.save!

@@ -28,6 +28,12 @@ $(document).ready ->
 
   $('.map').initMap()
 
+  $('.paragraph_destroy').bind 'ajax:success', (event, data, status, xhr) ->
+    $(this).parent().slideUp('fast')
+
+  $('.paragraph_destroy').bind 'ajax:error', (event, xhr, status, error) ->
+    alert("Error: #{xhr.status} #{error}")
+
   $('.button.add_form_template').live 'click', ->
     button = $(this)
     template = $(button.attr 'data-template').children().clone().hide()

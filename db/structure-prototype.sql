@@ -122,17 +122,22 @@ CREATE TABLE sections (
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   identity_id          bigint  NOT NULL references identities(id),
+  identity_poster_id   bigint  NOT NULL references posters(id),   -- redundant data
   identity_name        integer NOT NULL,                          -- redundant data
   identity_board_slug  character varying(64) NOT NULL,            -- redundant data
   identity_document_id bigint  NOT NULL references documents(id), -- redundant data
+
 
   proto_created_at timestamp with time zone,
   proto_updated_at timestamp with time zone,
 
   proto_identity_id          bigint references identities(id),
-  proto_identity_name        integer,                          -- redundant data
-  proto_identity_board_slug  character varying(64),            -- redundant data
-  proto_identity_document_id bigint references documents(id),  -- redundant data
+  proto_identity_poster_id   bigint references posters(id),   -- redundant data
+  proto_identity_name        integer,                         -- redundant data
+  proto_identity_board_slug  character varying(64),           -- redundant data
+  proto_identity_document_id bigint references documents(id), -- redundant data
+
+  proto_document_id bigint references documents(id), -- redundant data
 
   writable_by character varying(64) DEFAULT 'public'     NOT NULL, -- public, contributor, document_poster
   sort_by     character varying(64) DEFAULT 'created_at' NOT NULL, -- created_at, paragraphs_order
@@ -165,6 +170,7 @@ CREATE TABLE paragraphs (
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   identity_id          bigint  NOT NULL references identities(id),
+  identity_poster_id   bigint  NOT NULL references posters(id),   -- redundant data
   identity_name        integer NOT NULL,                          -- redundant data
   identity_board_slug  character varying(64) NOT NULL,            -- redundant data
   identity_document_id bigint  NOT NULL references documents(id), -- redundant data
@@ -174,6 +180,7 @@ CREATE TABLE paragraphs (
   proto_updated_at timestamp with time zone,
 
   proto_identity_id          bigint references identities(id),
+  proto_identity_poster_id   bigint references posters(id),   -- redundant data
   proto_identity_name        integer,                         -- redundant data
   proto_identity_board_slug  character varying(64),           -- redundant data
   proto_identity_document_id bigint references documents(id), -- redundant data
@@ -191,8 +198,7 @@ CREATE TABLE paragraphs (
   line_id    bigint references paragraphs(id), -- if line_id IS NULL, then there are no other line elements expected to be there
 
   deleted    boolean NOT NULL DEFAULT false,
-  deleted_at timestamp with time zone,
-  deleted_by bigint references identities(id)
+  deleted_at timestamp with time zone
 );
 
 CREATE INDEX paragraphs_section_id_idx ON paragraphs USING btree (section_id);

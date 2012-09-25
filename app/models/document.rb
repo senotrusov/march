@@ -19,8 +19,8 @@ class Document < ActiveRecord::Base
   belongs_to :poster
   belongs_to :identity
   belongs_to :board
-  has_many :identities
-  has_many :sections, autosave: false
+  has_many :identities, inverse_of: :document
+  has_many :sections,   inverse_of: :document, autosave: false, conditions: { deleted: false }
 
 
   # Image
@@ -142,5 +142,15 @@ class Document < ActiveRecord::Base
   # Dirty checks
   def save_needed?
     changed? || sections.any? {|section| section.save_needed? } || (image.cached? && !remove_image?) || (remove_image? && !image.cached?)
+  end
+
+
+  # Authorisation
+  def can_update? poster
+    poster_id == poster.id
+  end
+
+  def can_destroy? poster
+    poster_id == poster.id
   end
 end

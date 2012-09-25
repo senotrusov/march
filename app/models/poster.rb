@@ -16,6 +16,6 @@
 
 class Poster < ActiveRecord::Base
   # Associations
-  has_many :documents
-  has_many :identities
+  has_many :documents, inverse_of: :poster, conditions: { deleted: false }
+  has_many :identities, inverse_of: :poster
 end

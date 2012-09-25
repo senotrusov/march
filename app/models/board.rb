@@ -16,7 +16,7 @@
 
 class Board < ActiveRecord::Base
   # Associations
-  has_many :documents
+  has_many :documents, inverse_of: :board, conditions: { deleted: false }
 
 
   # Attributes

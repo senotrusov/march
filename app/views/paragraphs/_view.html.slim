@@ -10,6 +10,9 @@ article.paragraph
       .identity_name
         = "#{paragraph.identity_name}@"
 
+  - if can :destroy, paragraph
+    = link_to icon('remove-sign'), paragraph, method: :delete, remote: true, class: 'paragraph_destroy', confirm: 'Confirm paragraph deletion'
+
   - if paragraph.title?
     h3.title
       = paragraph.title

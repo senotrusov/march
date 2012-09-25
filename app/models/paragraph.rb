@@ -17,6 +17,7 @@
 class Paragraph < ActiveRecord::Base
   # Associations
   belongs_to :identity
+  belongs_to :identity_poster, class_name: 'Poster'
   belongs_to :identity_document, class_name: 'Document'
   belongs_to :section
 
@@ -58,11 +59,16 @@ class Paragraph < ActiveRecord::Base
     deleted == true
   end
 
-  def mark_as_deleted deleted_by
+  def mark_as_deleted
     self.deleted = true
     self.deleted_at = Time.zone.now
-    self.deleted_by = deleted_by
   end
 
   after_save :move_image_to_deleted, if: :deleted_mark?
+
+  
+  # Authorisation
+  def can_destroy? poster
+    identity_poster_id == poster.id || section.proto_or_self.identity_poster_id == poster.id
+  end
 end

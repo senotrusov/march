@@ -160,12 +160,14 @@ CREATE TABLE paragraphs (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     identity_id bigint NOT NULL,
+    identity_poster_id bigint NOT NULL,
     identity_name integer NOT NULL,
     identity_board_slug character varying(64) NOT NULL,
     identity_document_id bigint NOT NULL,
     proto_created_at timestamp with time zone,
     proto_updated_at timestamp with time zone,
     proto_identity_id bigint,
+    proto_identity_poster_id bigint,
     proto_identity_name integer,
     proto_identity_board_slug character varying(64),
     proto_identity_document_id bigint,
@@ -179,8 +181,7 @@ CREATE TABLE paragraphs (
     section_id bigint NOT NULL,
     line_id bigint,
     deleted boolean DEFAULT false NOT NULL,
-    deleted_at timestamp with time zone,
-    deleted_by bigint
+    deleted_at timestamp with time zone
 );
 
 
@@ -259,15 +260,18 @@ CREATE TABLE sections (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     identity_id bigint NOT NULL,
+    identity_poster_id bigint NOT NULL,
     identity_name integer NOT NULL,
     identity_board_slug character varying(64) NOT NULL,
     identity_document_id bigint NOT NULL,
     proto_created_at timestamp with time zone,
     proto_updated_at timestamp with time zone,
     proto_identity_id bigint,
+    proto_identity_poster_id bigint,
     proto_identity_name integer,
     proto_identity_board_slug character varying(64),
     proto_identity_document_id bigint,
+    proto_document_id bigint,
     writable_by character varying(64) DEFAULT 'public'::character varying NOT NULL,
     sort_by character varying(64) DEFAULT 'created_at'::character varying NOT NULL,
     image character varying(128),
@@ -511,14 +515,6 @@ ALTER TABLE ONLY identities
 
 
 --
--- Name: paragraphs_deleted_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
---
-
-ALTER TABLE ONLY paragraphs
-    ADD CONSTRAINT paragraphs_deleted_by_fkey FOREIGN KEY (deleted_by) REFERENCES identities(id);
-
-
---
 -- Name: paragraphs_identity_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
@@ -532,6 +528,14 @@ ALTER TABLE ONLY paragraphs
 
 ALTER TABLE ONLY paragraphs
     ADD CONSTRAINT paragraphs_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES identities(id);
+
+
+--
+-- Name: paragraphs_identity_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_identity_poster_id_fkey FOREIGN KEY (identity_poster_id) REFERENCES posters(id);
 
 
 --
@@ -556,6 +560,14 @@ ALTER TABLE ONLY paragraphs
 
 ALTER TABLE ONLY paragraphs
     ADD CONSTRAINT paragraphs_proto_identity_id_fkey FOREIGN KEY (proto_identity_id) REFERENCES identities(id);
+
+
+--
+-- Name: paragraphs_proto_identity_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY paragraphs
+    ADD CONSTRAINT paragraphs_proto_identity_poster_id_fkey FOREIGN KEY (proto_identity_poster_id) REFERENCES posters(id);
 
 
 --
@@ -591,11 +603,27 @@ ALTER TABLE ONLY sections
 
 
 --
+-- Name: sections_identity_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_identity_poster_id_fkey FOREIGN KEY (identity_poster_id) REFERENCES posters(id);
+
+
+--
 -- Name: sections_line_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
 --
 
 ALTER TABLE ONLY sections
     ADD CONSTRAINT sections_line_id_fkey FOREIGN KEY (line_id) REFERENCES sections(id);
+
+
+--
+-- Name: sections_proto_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_proto_document_id_fkey FOREIGN KEY (proto_document_id) REFERENCES documents(id);
 
 
 --
@@ -612,6 +640,14 @@ ALTER TABLE ONLY sections
 
 ALTER TABLE ONLY sections
     ADD CONSTRAINT sections_proto_identity_id_fkey FOREIGN KEY (proto_identity_id) REFERENCES identities(id);
+
+
+--
+-- Name: sections_proto_identity_poster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: march
+--
+
+ALTER TABLE ONLY sections
+    ADD CONSTRAINT sections_proto_identity_poster_id_fkey FOREIGN KEY (proto_identity_poster_id) REFERENCES posters(id);
 
 
 --

@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   protect_from_forgery
 
   RESPONSE_403 = File.read(Rails.root + 'public' + '403.html')
@@ -11,6 +12,18 @@ class ApplicationController < ActionController::Base
   def not_found
     render :text => RESPONSE_404, :layout => false, :status => 404
   end
+
+  class Unauthorized < StandardError
+  end
+
+  rescue_from Unauthorized, with: :forbidden
+
+  def authorize action, model
+    unless @poster && model.__send__("can_#{action}?", @poster)
+      raise(Unauthorized, "Unauthorized action #{action} on #{model.class} ##{model.id}")
+    end
+  end
+
 
   before_filter do
     @boards = Board.ordered
@@ -43,11 +56,4 @@ class ApplicationController < ActionController::Base
     { board_slug: @board.slug }
   end
 
-  enable_authorization do |exception|
-    forbidden
-  end
-
-  def current_user
-    @poster
-  end
 end
