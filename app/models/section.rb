@@ -128,7 +128,7 @@ class Section < ActiveRecord::Base
       when 'public'
         true
       when 'contributor'
-        poster && poster_ids.include?(poster.id)
+        poster && (poster_ids.include?(poster.id) || poster.id == proto_or_self.document.poster_id)
       when 'document_poster'
         poster && poster.id == proto_or_self.document.poster_id
     end
