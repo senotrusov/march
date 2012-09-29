@@ -32,6 +32,10 @@ $.fn.slideUpRemove = (callback = null) ->
       callback() if callback
 
 
+clipboardGetPrototype = ->
+  (match = document.cookie.match(/prototype_id=(.+);?/)) && match[1]
+
+
 $(document).ready ->
 
   $('.document')
@@ -48,6 +52,10 @@ $(document).ready ->
       template = button.children('.template').children().clone().hide()
       collection = button.closest('.header').siblings('.paragraphs')
       template.prependTo(collection).initLocationInput().slideDown('fast')
+
+      if (prototype_id = clipboardGetPrototype()) && prototype_id.match(/^\s*¶/)
+        template.find('.paste-prototype-id').trigger('click')
+
 
     .on 'click', '.delete_form_item, .discard-add-paragraph', ->
       $(this).closest('form').slideUpRemove()
@@ -79,8 +87,7 @@ $(document).ready ->
       document.cookie = "prototype_id=#{$(this).text()}; path=/"
   
     .on 'click', '.paste-prototype-id', ->
-      if match = document.cookie.match(/prototype_id=(.+);?/)
-        prototype_id = match[1]
+      if prototype_id = clipboardGetPrototype()
         $(this).closest('.field').find('input').val(prototype_id).trigger('change')
 
     .on 'keyup paste cut change', '.prototype-input', ->
@@ -111,6 +118,10 @@ $(document).ready ->
       template = $(button.data 'template').children().clone().hide()
       collection = button.closest('.buttons').siblings(button.data 'append-to')
       template.appendTo(collection).initLocationInput().slideDown('fast')
+
+      if (prototype_id = clipboardGetPrototype()) && ((button.data('append-to') == '.sections' && prototype_id.match(/^\s*§/)) || (button.data('append-to') == '.paragraphs' && prototype_id.match(/^\s*¶/)))
+        template.find('.paste-prototype-id').trigger('click')
+
 
     .on 'click', '.delete_form_item', ->
       button = $(this)
