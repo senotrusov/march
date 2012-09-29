@@ -1,16 +1,16 @@
 
 = form.fields_for :sections, section, :index => "" do |f|
-  .section
+  .section_form
     = f.hidden_field :id
     = f.hidden_field :frame
     = f.hidden_field :is_instance
 
     .abstract
 
-    h2
+    h2.form-title
       | § section instance
       .buttons
-        .delete_form_item data-selector=".section"
+        .delete_form_item data-selector=".section_form"
           i.icon-remove-sign
 
     - if section.errors.any?
@@ -26,8 +26,8 @@
         table.field_with_button
           tbody
             tr
-              td.field
-                = f.text_field :prototype_id, 'data-prototype-source' => sections_path, 'data-item-type' => '.section'
+              td.wide
+                = f.text_field :prototype_id, 'data-source' => sections_path, class: 'prototype-input'
               td
                 .button.paste-prototype-id
                   i.icon-link
@@ -35,7 +35,7 @@
 
     .prototype
       - if !section.new_record?
-        = render partial: 'sections/view', locals: { section: section }
+        = render partial: 'sections/view', locals: { section: section, without_edit_controls: true }
         
       - elsif section.prototype
-        = render partial: 'sections/view', locals: { section: section.prototype }
+        = render partial: 'sections/view', locals: { section: section.prototype, without_edit_controls: true }

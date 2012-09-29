@@ -9,7 +9,7 @@ body
   margin: 0px
   font-family: sans-serif
 
-body > header
+body > .header
   background: $bgcolor
   color: #fff
   padding: 8px
@@ -34,16 +34,16 @@ body > header
       padding: 0px 1px
       font-size: $navigation
   
-aside.sidebar
+.sidebar
   float: right
   width: 30%
   padding: 0px 20px
 
-body > footer
+body > .footer
   clear: both
   padding-top: 20px
 
-body > .templates
+.templates, .template
   display: none
 
 
@@ -65,11 +65,11 @@ body > .templates
 
 @media print
 
-  body > header
+  body > .header
     display: none
 
-  aside.sidebar
+  .sidebar
     display: none
 
-  body > footer
+  body > .footer
     display: none

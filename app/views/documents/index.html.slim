@@ -1,7 +1,7 @@
 = content_for :title do
   | /#{@board.slug}
 
-aside.sidebar
+.sidebar
 
   h1 This week most significant /#{@board.slug}
   
@@ -14,8 +14,8 @@ aside.sidebar
   .list
     = render :partial => "overview", :collection => @documents, :as => :document
 
-section.document_index
-  header
+.document_index
+  .header
     .board
       = content_for :title
 

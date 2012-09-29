@@ -1,8 +1,11 @@
 
 @import 'style'
 
-form.new_document, form.edit_document
+form.edit_section
+  margin-bottom: 30px
 
+form.new_document, form.edit_document, form.edit_section
+  clear: both
 
   // Form elements
   label
@@ -39,8 +42,8 @@ form.new_document, form.edit_document
 
   input[type="submit"]
     font-size: $base
-    padding: 5px 15px 5px 15px
-    margin: 50px 10px 50px 20px
+    padding: 5px 15px
+    margin: 0px 10px 0px 0px
 
   input[type="text"], input[type="file"], textarea, select
     margin: 0px 0px 10px 0px
@@ -50,7 +53,7 @@ form.new_document, form.edit_document
     border-collapse: collapse
     td
       vertical-align: top
-    td.field
+    td.wide
       width: 100%
 
   .map_input
@@ -97,98 +100,126 @@ form.new_document, form.edit_document
   .alert
     background: $error
 
+  h2.form-title, h3.form-title
+    color: #fff
+    padding: 3px 10px
+    margin-top: 0px
+
+    .buttons
+      float: right
+      div
+        cursor: default
+
+  h2.form-title
+    background: $section
+
+  h3.form-title
+    background: $paragraph
 
 
-  // Document, sections, paragraphs structure
+// Submit
+form.new_document, form.edit_document, form.edit_section
+  .field.submit
+    padding: 10px 20px
+    background: $bgcolor
+    color: #fff
+    a
+      color: #fff
+
+form.new_document, form.edit_document
+  .field.submit
+    margin: 30px 20px
+
+form.edit_section
+  .field.submit
+    margin: 10px 0px
+
+  .discard-add-paragraph
+    display: inline
+    text-decoration: underline
+    cursor: pointer
+
+
+// Document, sections, paragraphs structure
+form.edit_section
+
+  .paragraph_form
+    clear: both
+    padding-bottom: 10px
+
+
+form.new_document, form.edit_document
+  
   > h1
     padding: 0px 20px
 
-  > .document
+  > .base_document_form
     width: $block
     padding: 0px 20px
   
-  td.frame > .sections
-    > .section
-      clear: both
-      margin-bottom: 30px
-
-      > h2
-        background: $section
-        color: #fff
-        padding: 3px 10px
-        margin-top: 0px
-
-        .buttons
-          float: right
-          div
-            cursor: default
-
-      > .paragraphs
-        > .paragraph
-          clear: both
-          padding-top: 30px
-
-          > h3
-            background: $paragraph
-            color: #fff
-            padding: 3px 10px
-            margin-top: 0px
-
-            .buttons
-              float: right
-              div
-                cursor: default
-
-      > .paragraphs_summary
-        display: inline-block
-        background: $grey
-        color: $paragraph
-        padding: 10px 15px
-        margin: 10px 0px
-
-        i
-          padding-right: 5px
-
-
-      > .buttons
+  td.frame
+    > .sections
+      > .section_form
         clear: both
-        padding: 30px 0px
-        text-align: right
+        margin-bottom: 30px
+
+        > .paragraphs
+          > .paragraph_form
+            clear: both
+            padding-top: 30px
+
+        > .paragraphs_summary
+          display: inline-block
+          background: $grey
+          color: $paragraph
+          padding: 10px 15px
+          margin: 10px 0px
+
+          i
+            padding-right: 5px
+
+        > .buttons
+          clear: both
+          padding: 30px 0px
+          text-align: right
+
+    > .buttons
+      clear: both
 
 
   // Sortable
-  .section   > .abstract,
-  .paragraph > .abstract,
+  .section_form   > .abstract,
+  .paragraph_form > .abstract,
     display: none
 
   .sortable
 
     .frame > .buttons,
-    .section > h2,
-    .section > .error_explanation,
-    .section > .field,
-    .section > .prototype,
-    .section > .buttons,
-    .paragraph > h3,
-    .paragraph > .error_explanation,
-    .paragraph > .field,
-    .paragraph > .prototype
+    .section_form > h2,
+    .section_form > .error_explanation,
+    .section_form > .field,
+    .section_form > .prototype,
+    .section_form > .buttons,
+    .paragraph_form > h3,
+    .paragraph_form > .error_explanation,
+    .paragraph_form > .field,
+    .paragraph_form > .prototype
       display: none
 
-    .section > .abstract,
-    .paragraph > .abstract
+    .section_form > .abstract,
+    .paragraph_form > .abstract
       cursor: default
       display: block
       padding: 5px 10px
       color: #fff
 
-    .section > .abstract
+    .section_form > .abstract
       margin: 10px 0px 0px 0px
       background: $section
       font-size: $h3
       font-weight: bold
 
-    .paragraph > .abstract
+    .paragraph_form > .abstract
       margin: 10px 0px
       background: $paragraph
       font-size: $base
@@ -199,14 +230,14 @@ form.new_document, form.edit_document
         padding: 15px 20px
         background: $pearl
 
-        > .section
+        > .section_form
 
           > .paragraphs
             margin: 0px
             padding: 15px 20px
             background: $grey
 
-            > .paragraph
+            > .paragraph_form
               padding: 0px
 
           > .paragraphs_summary
@@ -238,8 +269,9 @@ form.new_document, form.edit_document
       width: 30%
 
   
+// Buttons
+form.new_document, form.edit_document, form.edit_section
 
-  // Buttons
   .button
     display: inline-block
     padding: 5px 10px
@@ -251,13 +283,7 @@ form.new_document, form.edit_document
 
     .title
       display: inline-block
-
   
-  .button.sort
-    background: $bgcolor
-    margin: 20px
-
-    float: left
 
   .button.paste-prototype-id
     background: $bgcolor
@@ -273,10 +299,19 @@ form.new_document, form.edit_document
     width: 70px
     text-align: center
 
-  .button.add_form_template[data-append-to=".sections"]
+
+form.new_document, form.edit_document
+
+  .button.sort
+    background: $bgcolor
+    margin: 20px
+
+    float: left
+
+  .button.add_template[data-append-to=".sections"]
     background: $section
     margin: 10px 10px 10px 0px
 
-  .button.add_form_template[data-append-to=".paragraphs"]
+  .button.add_template[data-append-to=".paragraphs"]
     background: $paragraph
     margin: 10px 0px 10px 10px

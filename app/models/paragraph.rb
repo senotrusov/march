@@ -1,17 +1,17 @@
 
- # Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
- #
- # Licensed under the Apache License, Version 2.0 (the "License");
- # you may not use this file except in compliance with the License.
- # You may obtain a copy of the License at
- #
- #     http://www.apache.org/licenses/LICENSE-2.0
- #
- # Unless required by applicable law or agreed to in writing, software
- # distributed under the License is distributed on an "AS IS" BASIS,
- # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- # See the License for the specific language governing permissions and
- # limitations under the License.
+#  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 
 
 class Paragraph < ActiveRecord::Base
@@ -66,9 +66,14 @@ class Paragraph < ActiveRecord::Base
 
   after_save :move_image_to_deleted, if: :deleted_mark?
 
+  def ensure_not_deleted
+    raise(ActiveRecord::RecordNotFound, "Couldn't find #{self.class} with id=#{id}") if deleted?
+    self
+  end
+
   
   # Authorisation
   def can_destroy? poster
-    identity_poster_id == poster.id || section.proto_or_self.identity_poster_id == poster.id
+    poster && (poster.id == identity_poster_id || poster.id == section.proto_or_self.identity_poster_id)
   end
 end

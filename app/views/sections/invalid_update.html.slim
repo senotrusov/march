@@ -1,0 +1,3 @@
+- @updated_paragraphs.each do |paragraph|
+  = render :partial => "paragraphs/single_#{paragraph.is_instance ? 'instance_form' : 'form'}", locals: { section: @section, paragraph: paragraph }
+

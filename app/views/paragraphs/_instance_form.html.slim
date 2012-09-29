@@ -1,14 +1,14 @@
 
 = form.fields_for :paragraphs, paragraph, :index => "" do |f|
-  .paragraph
+  .paragraph_form
     = f.hidden_field :is_instance
 
     .abstract
     
-    h3
-      | ¶ paragraph instance
+    h3.form-title
+      | ¶ instance
       .buttons
-        .delete_form_item data-selector=".paragraph"
+        .delete_form_item data-selector=".paragraph_form"
           i.icon-remove-sign
 
     - if paragraph.errors.any?
@@ -24,8 +24,8 @@
         table.field_with_button
           tbody
             tr
-              td.field
-                = f.text_field :prototype_id, 'data-prototype-source' => paragraphs_path, 'data-item-type' => '.paragraph'
+              td.wide
+                = f.text_field :prototype_id, 'data-source' => paragraphs_path, class: 'prototype-input'
               td
                 .button.paste-prototype-id
                   i.icon-link
@@ -33,7 +33,7 @@
 
     .prototype
       - if !paragraph.new_record?
-        = render partial: 'paragraphs/view', locals: { paragraph: paragraph }
+        = render partial: 'paragraphs/view', locals: { paragraph: paragraph, without_edit_controls: true }
         
       - elsif paragraph.prototype
-        = render partial: 'paragraphs/view', locals: { paragraph: paragraph.prototype }
+        = render partial: 'paragraphs/view', locals: { paragraph: paragraph.prototype, without_edit_controls: true }

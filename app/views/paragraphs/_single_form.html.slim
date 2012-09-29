@@ -1,0 +1,9 @@
+- paragraph = local_assigns[:paragraph] || Paragraph.new
+
+= form_for(section) do |f|
+  = render :partial => 'paragraphs/form', locals: { form: f, paragraph: paragraph }
+
+  .field.submit
+    = f.submit 'Update'
+    | or 
+    .discard-add-paragraph discard editing

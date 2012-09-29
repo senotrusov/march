@@ -1,15 +1,15 @@
 
 = form.fields_for :sections, section, :index => "" do |f|
-  .section
+  .section_form
     = f.hidden_field :id
     = f.hidden_field :frame
 
     .abstract
 
-    h2
+    h2.form-title
       | § section
       .buttons
-        .delete_form_item data-selector=".section"
+        .delete_form_item data-selector=".section_form"
           i.icon-remove-sign
 
     - if section.errors.any?
@@ -50,11 +50,11 @@
               locals: { form: f, paragraph: paragraph }
 
       .buttons
-        .button.add_form_template data-template="#paragraph_template" data-append-to=".paragraphs" data-item-type=".section"
+        .button.add_template data-template="#paragraph_template" data-append-to=".paragraphs"
           i.icon-plus-sign
           .title Add ¶ paragraph
 
-        .button.add_form_template data-template="#paragraph_instance_template" data-append-to=".paragraphs" data-item-type=".section"
+        .button.add_template data-template="#paragraph_instance_template" data-append-to=".paragraphs"
           i.icon-copy
           .title Instance ¶ paragraph
 

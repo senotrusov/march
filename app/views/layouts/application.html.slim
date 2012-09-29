@@ -8,11 +8,10 @@ html
     = javascript_include_tag 'application'
     = csrf_meta_tags
   body
-    header
-      nav
-        ul
-          - @boards.each do |board|
-            li = link_to board.slug, documents_path(board_slug: board.slug)
+    .header
+      ul
+        - @boards.each do |board|
+          li = link_to board.slug, documents_path(board_slug: board.slug)
 
     - if alert
       #alert
@@ -26,4 +25,4 @@ html
     
     = yield
 
-    footer
+    .footer

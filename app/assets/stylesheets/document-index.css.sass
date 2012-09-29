@@ -1,10 +1,10 @@
 
 @import 'style'
 
-section.document_index
+.document_index
   padding: 0px 20px
 
-  header
+  > .header
     .board
       font-size: $huge
       font-weight: bold
@@ -36,7 +36,7 @@ section.document_index
     clear: left
 
 
-article.document_overview
+.document_overview
   margin-bottom: 15px
   clear: left
 
@@ -44,6 +44,7 @@ article.document_overview
     float: left
     display: block
     margin: 0px 10px 25px 0px
+    border: 0px
 
   h2.title
     font-size: $h2
@@ -64,7 +65,7 @@ article.document_overview
     color: $bgcolor
 
 
-aside.sidebar
+.sidebar
   h1
     font-size: $h1side
     font-weight: normal
@@ -75,7 +76,7 @@ aside.sidebar
   h1:first-child
     padding-top: 0px
 
-  article.document_overview
+  .document_overview
     .title
       font-size: $base
 

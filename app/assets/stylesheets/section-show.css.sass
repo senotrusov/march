@@ -1,10 +1,10 @@
 @import 'style'
 
-body > section.section
+body > .section
   width: $block
   margin: 75px auto
 
-section.section
+.section
   width: 100%
   clear: both
   padding-bottom: 50px
@@ -15,6 +15,7 @@ section.section
     img
       float: left
       padding: 0px 10px 20px 0px
+      border: 0px
 
     h2
       padding: 0px
@@ -25,12 +26,32 @@ section.section
       .title
         display: inline
 
-      .id
+      .section-id
         display: inline
         color: #fff
         background: $pastel_section
         padding: 2px 4px
         margin-right: 8px
 
-      .id:hover
+      .section-id:hover
         background: $section
+
+    .button
+      display: inline-block
+      padding: 5px 10px
+      color: #fff
+      cursor: default
+
+      i
+        padding-right: 5px
+
+      .title
+        display: inline-block
+  
+
+    .button.add_paragraph_form
+      background: $pastel_paragraph
+      margin: 10px 10px 10px 0px
+
+    .button.add_paragraph_form:hover
+      background: $paragraph

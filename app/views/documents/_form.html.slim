@@ -22,7 +22,7 @@
 
   h1 = content_for :title
   
-  .document
+  .base_document_form
     - if @document.errors.any?
       .error_explanation
         h2 = "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
@@ -35,7 +35,7 @@
       table.field_with_button
         tbody
           tr
-            td.field
+            td.wide
               = f.text_field :location, 'data-show-map' => true, 'data-force-locate' => false
             td
               .zoom_field
@@ -87,15 +87,15 @@
                     locals: { form: f, section: section }
 
             .buttons
-              .button.add_form_template data-template="#section_template" data-append-to=".sections" data-item-type=".frame"
+              .button.add_template data-template="#section_template" data-append-to=".sections"
                 i.icon-plus-sign
                 .title Add § section
 
-              .button.add_form_template data-template="#section_instance_template" data-append-to=".sections" data-item-type=".frame"
+              .button.add_template data-template="#section_instance_template" data-append-to=".sections"
                 i.icon-copy
                 .title Instance § section
 
-  .field
+  .field.submit
     = f.submit @document.new_record? ? 'Publish' : 'Save'
 
     - unless @document.new_record?

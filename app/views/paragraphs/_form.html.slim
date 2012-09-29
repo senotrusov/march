@@ -1,14 +1,14 @@
 
 = form.fields_for :paragraphs, paragraph, :index => "" do |f|
-  .paragraph
+  .paragraph_form
     = f.hidden_field :is_instance
 
     .abstract
     
-    h3
-      | ¶ paragraph
+    h3.form-title
+      | New ¶
       .buttons
-        .delete_form_item data-selector=".paragraph"
+        .delete_form_item data-selector=".paragraph_form"
           i.icon-remove-sign
 
     - if paragraph.errors.any?
@@ -45,7 +45,7 @@
       table.field_with_button
         tbody
           tr
-            td.field
+            td.wide
               = f.text_field :location, 'data-show-map' => false, 'data-force-locate' => false
             td
               .zoom_field

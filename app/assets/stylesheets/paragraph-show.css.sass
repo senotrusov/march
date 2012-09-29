@@ -1,31 +1,62 @@
 @import 'style'
 
-body > article.paragraph
+body > .paragraph
   width: $block
   margin: 75px auto
 
-article.paragraph
+.paragraph
   padding-bottom: 25px
   clear: both
+
+  img
+    float: left
+    padding: 0px 10px 0px 0px
+    border: 0px
+
+  .paragraph_destroy
+    float: right
+    clear: right
+
+    display: inline
+    font-size: $base
+
+    background: $pastel_paragraph
+    
+    margin: 0px 0px 4px 4px
+    
+    text-decoration: none
+    cursor: default
+
+    i
+      display: block
+      padding: 4px 4px 0px 4px
+      color: #fff
+      font-size: $base
+      line-height: $base_icon_line_height
+
+  .paragraph_destroy:hover
+    background: $paragraph
+
+  .paragraph-id
+    float: right
+
+    display: inline
+    font-size: $base
+
+    color: #fff
+    background: $pastel_paragraph
+
+    padding: 1px 3px
+    margin: 0px 0px 4px 4px
+
+  .paragraph-id:hover
+    background: $paragraph
 
   .identity
     float: right
     clear: right
-    font-size: 0px
+    xfont-size: 0px
     margin-bottom: 4px
-
-    .id
-      display: inline
-      font-size: $base
-
-      color: #fff
-      background: $pastel_paragraph
-
-      padding: 1px 3px
-      margin: 0px 5px
-
-    .id:hover
-      background: $paragraph
 
     .identity_name
       display: inline
@@ -48,16 +79,14 @@ article.paragraph
 
       padding: 1px 3px
 
+      a
+        color: #fff
+
     .identity_document_id:hover
       background: $bgcolor
 
-  .identity.small div
+  .small .identity div
     font-size: $small
-
-
-  img
-    float: left
-    padding: 0px 10px 0px 0px
 
   h3.title
     font-size: $h3
@@ -85,20 +114,3 @@ article.paragraph
   .details
     font-size: $mini
     color: $bgcolor
-
-  .paragraph_destroy
-    float: right
-    clear: right
-    background: $pastel_paragraph
-    margin-left: 5px
-    text-decoration: none
-
-    i
-      display: block
-      padding: 3px 4px 0px 4px
-      color: #fff
-      font-size: $base
-      line-height: $base_icon_line_height
-
-  .paragraph_destroy:hover
-    background: $paragraph

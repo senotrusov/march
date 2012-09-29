@@ -24,137 +24,170 @@ buildAbstract = (callback) ->
   abstract
 
 
+$.fn.slideUpRemove = (callback = null) ->
+  this.each ->
+    element = $(this)
+    element.slideUp 'fast', ->
+      element.remove()
+      callback() if callback
+
+
 $(document).ready ->
 
-  $('.map').initMap()
+  $('.document')
+    
+    .on 'ajax:success', '.paragraph_destroy', (event, data, status, xhr) ->
+      $(this).parent().slideUpRemove()
 
-  $('.paragraph_destroy').bind 'ajax:success', (event, data, status, xhr) ->
-    $(this).parent().slideUp('fast')
-
-  $('.paragraph_destroy').bind 'ajax:error', (event, xhr, status, error) ->
-    alert("Error: #{xhr.status} #{error}")
-
-  $('.button.add_form_template').live 'click', ->
-    button = $(this)
-    template = $(button.attr 'data-template').children().clone().hide()
-    collection = button.closest(button.attr 'data-item-type').children(button.attr 'data-append-to')
-    template.appendTo(collection).initLocationInput().slideDown('fast')
+    .on 'ajax:error', '.paragraph_destroy', (event, xhr, status, error) ->
+      alert("Error: #{xhr.status} #{error}")
 
 
-  $('.delete_form_item').live 'click', ->
-    button = $(this)
-    button.closest(button.attr 'data-selector').slideUp 'fast', -> $(this).remove()
+    .on 'click', '.add_paragraph_form', ->
+      button = $(this)
+      template = button.children('.template').children().clone().hide()
+      collection = button.closest('.header').siblings('.paragraphs')
+      template.prependTo(collection).initLocationInput().slideDown('fast')
+
+    .on 'click', '.delete_form_item, .discard-add-paragraph', ->
+      $(this).closest('form').slideUpRemove()
 
 
-  $('label').live 'click', -> return false # TODO
+    .on 'ajax:success', 'form.edit_section', (event, data, status, xhr) ->
+      form = $(this)
+      response = $(xhr.responseText).hide().insertAfter(form.parent().children('form:last'))
+      form.slideUpRemove ->
+        response.slideDown 'fast', ->
+          response.initMap()
+
+    .on 'ajax:error', 'form.edit_section', (event, xhr, status, error) ->
+      if xhr.status == 422 # Unprocessable Entity
+        $(xhr.responseText).replaceAll($(this)).initLocationInput()
+      else
+        alert("Error: #{xhr.status} #{error}")
+
+    .iframeUpload('form.edit_section')
 
 
+  $('form.new_document, form.edit_document, .document')
+
+    .initMap()
+    
+    .on('click', 'label', false)
+
+    .on 'click', '.section-id, .paragraph-id', ->
+      document.cookie = "prototype_id=#{$(this).text()}; path=/"
+  
+    .on 'click', '.paste-prototype-id', ->
+      if match = document.cookie.match(/prototype_id=(.+);?/)
+        prototype_id = match[1]
+        $(this).closest('.field').find('input').val(prototype_id).trigger('change')
+
+    .on 'keyup paste cut change', '.prototype-input', ->
+      input = $(this)
+
+      nextTick ->
+        prototype_id = input.val().replace(/\D/g, '')
+        
+        if input.data('handled-prototype') != prototype_id
+          input.data 'handled-prototype', prototype_id
+
+          placeholder = input.closest('.field').siblings('.prototype')
+
+          $.get(url = "#{input.data('source')}/#{prototype_id}")
+            .success (data, statusText, jqXHR) ->
+              placeholder.html(data).initMap()
+
+            .error (jqXHR, statusText, error) ->
+              placeholder.html(
+                "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{url}</div>")
+
+  
   $('form.new_document, form.edit_document')
-    .submit ->
-      $(this).find('.frame').each ->
-        frame = $(this).attr('data-frame')
-
-        $(this).find('input[name="document[sections][][frame]"]').each -> $(this).val(frame)
-
     .initLocationInput()
 
+    .on 'click', '.add_template', ->
+      button = $(this)
+      template = $(button.data 'template').children().clone().hide()
+      collection = button.closest('.buttons').siblings(button.data 'append-to')
+      template.appendTo(collection).initLocationInput().slideDown('fast')
 
-  $('.button.sort').click ->
-    button = $(this)
-    button.nextAll('.section_frames').each ->
-      frames = $(this)
+    .on 'click', '.delete_form_item', ->
+      button = $(this)
+      button.closest(button.data 'selector').slideUpRemove()
 
-      if frames.is('.sortable')
+    .on 'submit', ->
+      $(this).find('.frame').each ->
+        frame = $(this).data('frame')
+        $(this).find('input[name="document[sections][][frame]"]').each -> $(this).val(frame)
 
-        frames.find('.sections').each -> $(this).sortable 'destroy'
-        frames.find('.paragraphs').each -> $(this).sortable 'destroy'
+    .find('.button.sort').on 'click', ->
+      button = $(this)
+      button.nextAll('.section_frames').each ->
+        frames = $(this)
 
-        frames.removeClass('sortable')
+        if frames.is('.sortable')
 
-        button.children('.title').text('Sort')
+          frames.find('.sections').each -> $(this).sortable 'destroy'
+          frames.find('.paragraphs').each -> $(this).sortable 'destroy'
 
-      else
-        frames.addClass('sortable')
+          frames.removeClass('sortable')
 
-        frames.find('.sections').each ->
-          sections = $(this)
-        
-          # Create abstract for each section
-          sections.children('.section').each ->
-            section = $(this)
+          button.children('.title').text('Sort')
 
-            abstract = buildAbstract (abstract) ->
+        else
+          frames.addClass('sortable')
 
-              section.find('input[name="document[sections][][title]"]').each -> abstract.push $(this).val()
-              section.find('> .prototype > section.section > .header > h2 > .title').each -> abstract.push $(this).text()
+          frames.find('.sections').each ->
+            sections = $(this)
+          
+            # Create abstract for each section
+            sections.children('.section_form').each ->
+              section = $(this)
 
-            section.children('.abstract').each -> $(this).html("§ #{abstract}")
+              abstract = buildAbstract (abstract) ->
 
-          sections.sortable()
-        
-        .each ->
-          sections = $(this)
-          sections.sortable('option', 'connectWith', frames.find('.sections').not(sections))
-        
+                section.find('input[name="document[sections][][title]"]').each -> abstract.push $(this).val()
+                section.find('> .prototype > .section > .header > h2 > .title').each -> abstract.push $(this).text()
 
-        frames.find('.paragraphs').each ->
-          paragraphs = $(this)
-        
-          # Create abstract for each paragraph
-          paragraphs.children('.paragraph').each ->
-            paragraph = $(this)
+              section.children('.abstract').each -> $(this).html("§ #{abstract}")
 
-            abstract = buildAbstract (abstract) ->
-              input = (field) -> "[name=\"document[sections][][paragraphs][][#{field}]\"]"
+            sections.sortable()
+          
+          .each ->
+            sections = $(this)
+            sections.sortable('option', 'connectWith', frames.find('.sections').not(sections))
+          
 
-              push = -> abstract.push $(this).val()
-              paragraph.find(input 'title').each(push)
-              paragraph.find(input 'message').each(push)
-              paragraph.find(input 'location').each(push)
-              paragraph.find(input 'url').each(push)
+          frames.find('.paragraphs').each ->
+            paragraphs = $(this)
+          
+            # Create abstract for each paragraph
+            paragraphs.children('.paragraph_form').each ->
+              paragraph = $(this)
 
-              push = -> abstract.push $(this).text()
-              paragraph.find('> .prototype .title').each(push)
-              paragraph.find('> .prototype .message').each(push)
-              paragraph.find('> .prototype .map').each -> abstract.push("#{$(this).attr('data-lat')} #{$(this).attr('data-lng')}")
-              paragraph.find('> .prototype .url a').each(push)
+              abstract = buildAbstract (abstract) ->
+                input = (field) -> "[name=\"document[sections][][paragraphs][][#{field}]\"]"
 
-            paragraph.children('.abstract').each -> $(this).html("¶ #{abstract}")
+                push = -> abstract.push $(this).val()
+                paragraph.find(input 'title').each(push)
+                paragraph.find(input 'message').each(push)
+                paragraph.find(input 'location').each(push)
+                paragraph.find(input 'url').each(push)
 
-          paragraphs.sortable()
-        
-        .each ->
-          paragraphs = $(this)
-          paragraphs.sortable('option', 'connectWith', frames.find('.paragraphs').not(paragraphs))
+                push = -> abstract.push $(this).text()
+                paragraph.find('> .prototype .title').each(push)
+                paragraph.find('> .prototype .message').each(push)
+                paragraph.find('> .prototype .map').each -> abstract.push("#{$(this).attr('data-lat')} #{$(this).attr('data-lng')}")
+                paragraph.find('> .prototype .url a').each(push)
 
-        button.children('.title').text('Done sorting')
+              paragraph.children('.abstract').each -> $(this).html("¶ #{abstract}")
 
+            paragraphs.sortable()
+          
+          .each ->
+            paragraphs = $(this)
+            paragraphs.sortable('option', 'connectWith', frames.find('.paragraphs').not(paragraphs))
 
-  $('section.section .id, article.paragraph .id').live 'click', ->
-    document.cookie = "prototype_id=#{$(this).text()}; path=/"
+          button.children('.title').text('Done sorting')
 
-  
-  $('.button.paste-prototype-id').live 'click', ->
-    if match = document.cookie.match(/prototype_id=(.+);?/)
-      prototype_id = match[1]
-      $(this).closest('.field').find('input').val(prototype_id).trigger('change')
-
-  
-  $('input[data-prototype-source]').live 'keyup paste cut change', ->
-    input = $(this)
-
-    nextTick ->
-      prototype_id = input.val().replace(/\D/g, '')
-      
-      if input.attr(state = 'data-value-change-handled') != prototype_id
-        input.attr state, prototype_id
-
-        placeholder = input.closest(input.attr('data-item-type')).children('.prototype')
-
-        $.get(url = "#{input.attr('data-prototype-source')}/#{prototype_id}")
-          .success (data, statusText, jqXHR) ->
-            placeholder.html(data).find('.map').initMap()
-
-          .error (jqXHR, statusText, error) ->
-            placeholder.html(
-              "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{url}</div>")

@@ -105,7 +105,8 @@ CREATE TABLE identities (
 );
 
 CREATE INDEX        identities_poster_id_idx ON identities USING btree (poster_id);
-CREATE UNIQUE INDEX identities_unique_idx    ON identities USING btree (document_id, name);
+CREATE UNIQUE INDEX identities_document_id_name_unique_idx ON identities USING btree (document_id, name);
+CREATE UNIQUE INDEX identities_document_id_poster_id_unique_idx ON identities USING btree (document_id, poster_id);
 
 ALTER TABLE documents ADD CONSTRAINT documents_identity_id_fk FOREIGN KEY (identity_id) REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
 

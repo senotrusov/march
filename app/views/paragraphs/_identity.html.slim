@@ -1,10 +1,9 @@
 .identity
-
-  .id = "¶#{object.id}"
-
+  
   .identity_name
-    = "#{object.identity_name}@"
+    = "#{paragraph.identity_name}@"
 
-  - unless @document && @document.id == object.identity_document_id
+  - unless @document && @document.id == paragraph.identity_document_id
     .identity_document_id
-      = "#{object.identity_board_slug}/#{object.identity_document_id}"
+      = link_to "#{paragraph.identity_board_slug}/#{paragraph.identity_document_id}",
+        document_path(paragraph.identity_document_id, board_slug: paragraph.identity_board_slug)

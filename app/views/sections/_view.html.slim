@@ -1,11 +1,28 @@
-section.section
+.section
 
   .header
     - if section.image?
       = link_to image_tag(section.image_url(:small), alt: nil), section.image_url
 
     h2
-      .id = "§#{section.proto_or_self.id}"
+      .section-id = "§#{section.proto_or_self.id}"
       .title = section.title
 
-  = render collection: section.proto_or_self.paragraphs, partial: 'paragraphs/view', as: 'paragraph'
+    - if edit_controls?(local_assigns) && (can :create_paragraphs, section)
+      .buttons
+
+        .button.add_paragraph_form data-append-to=".paragraphs"
+          i.icon-plus-sign
+          .title ¶
+          .template
+            = render :partial => 'paragraphs/single_form', locals: { section: section }
+
+        .button.add_paragraph_form data-append-to=".paragraphs"
+          i.icon-copy
+          .title ¶
+          .template
+            = render :partial => 'paragraphs/single_instance_form', locals: { section: section }
+  
+  .paragraphs
+    = render collection: section.proto_or_self.paragraphs.reverse, partial: 'paragraphs/view', as: 'paragraph',
+      locals: local_assigns.slice(:with_edit_controls, :without_edit_controls)
