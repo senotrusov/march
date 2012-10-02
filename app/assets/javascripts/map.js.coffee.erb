@@ -107,6 +107,7 @@ $.fn.createOverviewMap = (documents) ->
 
         location = $(this)
         point = L.latLng(location.data('lat'), location.data('lng'))
+        point.zoom = location.data('zoom')
 
         unless $.detect(points, (i) -> i.equals(point))
 
@@ -125,8 +126,12 @@ $.fn.createOverviewMap = (documents) ->
 
           map.addLayer marker
 
-    if points.length
+    if points.length == 1
+      map.setView(points[0], points[0].zoom)
+
+    else if points.length
       map.fitBounds(L.latLngBounds(points).pad(0.2))
+      
     else
       map.fitWorld()
 
