@@ -5,8 +5,25 @@
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
 
-file = Rails.root+'config'+'cookie.key'
+file = Rails.root + 'config' + 'cookie.key'
 
-March::Application.config.secret_token =
-  File.exists?(file) && (key = File.read(file).strip) && key.present? && key ||
-  Digest::SHA2.hexdigest("#{Time.now.to_f}#{rand}")
+key = File.exists?(file) && (key = File.read(file).strip) && key.present? && key
+
+unless key
+  log = proc do |m|
+    STDERR.puts m
+    Rails.logger.warn m
+  end
+
+  key = Digest::SHA2.hexdigest("#{Time.now.to_f}#{rand}")
+
+  File.open(file, 'w') {|f| f.write(key) }
+
+  log[""]
+  log["WARNING!"]
+  log["Unable to load secret key for verifying the integrity of signed cookies from #{file}"]
+  log["The new key is generated and saved. Make sure to keep it secret."]
+  log[""]
+end
+
+March::Application.config.secret_token = key
