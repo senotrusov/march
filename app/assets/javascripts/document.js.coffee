@@ -38,8 +38,10 @@ clipboardGetPrototype = ->
 
 $(document).ready ->
 
+  $('.overview_map').createOverviewMap($('.document_overview:has(> .locations)'))
+
   $('.document')
-    
+
     .on 'ajax:success', '.paragraph_destroy', (event, data, status, xhr) ->
       $(this).parent().slideUpRemove()
 

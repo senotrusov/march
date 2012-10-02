@@ -68,7 +68,7 @@ $.fn.initMap = ->
     map.addLayer marker
 
   .end()
-  
+
 
 $.fn.initLocationInput = ->
   this.find('input[name*="[location]"]').each ->
@@ -89,6 +89,46 @@ $.fn.initLocationInput = ->
       locateButton.one 'click', -> callCreateMapInput(true)
 
   .end()
+
+
+$.fn.createOverviewMap = (documents) ->
+  this.each ->
+    map = contructMap(this)
+
+    map.on 'popupclose', (event) ->
+      if document = event.popup.document
+        document.toggleClass('highlight')
+
+    points = []
+
+    documents.each ->
+      
+      (document = $(this)).find('> .locations > .location').each ->
+
+        location = $(this)
+        point = L.latLng(location.data('lat'), location.data('lng'))
+
+        unless $.detect(points, (i) -> i.equals(point))
+
+          points.push(point)
+
+          marker = L.marker(point)
+
+          marker.bindPopup(document.clone().get(0), {maxWidth: 500, minWidth: 350, autoPanPadding: L.point(20, 20)})
+          marker._popup.document = document
+
+          marker.off 'click'
+          marker.on 'mouseover click', ->
+            unless map.hasLayer(marker._popup)
+              marker.openPopup()
+              document.toggleClass('highlight')
+
+          map.addLayer marker
+
+    if points.length
+      map.fitBounds(L.latLngBounds(points).pad(0.2))
+    else
+      map.fitWorld()
 
 
 createMapInput = (input, zoomInput, locateButton, forceLocate) ->

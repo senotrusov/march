@@ -95,6 +95,10 @@ class Document < ActiveRecord::Base
   include Geo::Model
   validates :location, presence: true
 
+  def paragraphs_with_location
+    @paragraphs_with_location ||= sections.map {|s| s.proto_or_self.paragraphs.select {|p| p.location?} }.flatten
+  end
+
 
   # Creation
   module DocumentCreator

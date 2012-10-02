@@ -1,18 +1,22 @@
 = content_for :title do
   | /#{@board.slug}
 
+.overview_map
+
+
 .sidebar
 
   h1 This week most significant /#{@board.slug}
   
-  .list
+  .overview_list
     = render :partial => "overview", :collection => @documents, :as => :document
 
 
   h1 This month most significant /#{@board.slug}
   
-  .list
+  .overview_list
     = render :partial => "overview", :collection => @documents, :as => :document
+
 
 .document_index
   .header
@@ -26,5 +30,5 @@
     .actions
       = link_to "New /#{@board.slug}", new_document_path
 
-  .list
+  .overview_list
     = render :partial => "overview", :collection => @documents, :as => :document

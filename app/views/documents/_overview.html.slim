@@ -18,3 +18,10 @@
     | Updated 
     = timeago_tag document.updated_at
     = ", #{document.identities_count} posters"
+
+  - if document.location? || document.paragraphs_with_location.present?
+    .locations
+      .location data-lat=document.lat data-lng=document.lng data-zoom=document.zoom
+
+      - document.paragraphs_with_location.each do |paragraph|
+        .location data-lat=paragraph.lat data-lng=paragraph.lng data-zoom=paragraph.zoom

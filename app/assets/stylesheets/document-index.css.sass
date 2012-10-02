@@ -1,6 +1,65 @@
 
 @import 'style'
 
+.overview_map
+  width: 100%
+  height: 296px
+
+// http://www.quirksmode.org/css/clearing.html
+// http://css-tricks.com/snippets/css/clear-fix/
+.document_overview:after
+  content: ""
+  display: table
+  clear: left
+
+.document_overview
+  margin-bottom: 15px
+  clear: left
+
+  img
+    float: left
+    display: block
+    margin: 0px 10px 0px 0px
+    border: 0px
+
+  h2.title
+    font-size: $h2
+    font-weight: normal
+    margin: 0px
+    padding: 0px
+
+  p.message
+    font-size: $base
+    margin: 0px
+    padding: 0px
+
+  .url
+    font-size: $small
+
+  .details
+    font-size: $mini
+    color: $bgcolor
+
+
+.sidebar .document_overview
+  .title
+    font-size: $base
+
+  .message, .url
+    font-size: $mini
+
+
+.document_overview.highlight
+  background: $bgcolor
+  border: 10px solid $bgcolor
+
+  h2.title a, p.message, .url a
+    color: #fff
+
+  .details
+    color: $grey
+
+
 .document_index
   padding: 0px 20px
 
@@ -32,56 +91,12 @@
         background: #fff
 
 
-  .list
-    clear: left
-
-
-.document_overview
-  margin-bottom: 15px
-  clear: left
-
-  img
-    float: left
-    display: block
-    margin: 0px 10px 25px 0px
-    border: 0px
-
-  h2.title
-    font-size: $h2
-    font-weight: normal
-    margin: 0px
-    padding: 0px
-
-  p.message
-    font-size: $base
-    margin: 0px
-    padding: 0px
-
-  .url
-    font-size: $small
-
-  .details
-    font-size: $mini
-    color: $bgcolor
-
-
 .sidebar
   h1
     font-size: $h1side
     font-weight: normal
     font-style: italic
-    padding-top: 20px
-    clear: both
+    clear: left
 
-  h1:first-child
-    padding-top: 0px
-
-  .document_overview
-    .title
-      font-size: $base
-
-    .message
-      font-size: $mini
-
-    .url
-      font-size: $mini
+.overview_list
+  margin-bottom: 40px

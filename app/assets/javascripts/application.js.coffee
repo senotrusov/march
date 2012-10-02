@@ -44,3 +44,9 @@ $(document).ready ->
   $('#notice, #alert').each ->
     message = $(this)
     setTimeout (-> message.slideUp 'fast'), 10000
+
+
+$.detect = (array, callback) ->
+  for element in array
+    return element if callback(element)
+  false
