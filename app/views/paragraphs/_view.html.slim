@@ -18,8 +18,9 @@
     h3.title
       = paragraph.title
 
-  p.message
-    = paragraph.message
+  - if paragraph.message
+    .message
+      = markdown paragraph.message
 
   - if paragraph.location?
     .map_container

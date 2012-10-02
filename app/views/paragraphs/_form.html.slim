@@ -29,19 +29,12 @@
           = f.label :remove_image
 
       - else
-          = f.label :image
           = f.file_field :image
 
     .field
-      = f.label :title
-      = f.text_field :title
-
-    .field
-      = f.label :message
       = f.text_area :message
 
     .field
-      = f.label :location
       table.field_with_button
         tbody
           tr
@@ -55,8 +48,3 @@
               .button.locate
                 i.icon-map-marker
                 .title Locate
-
-    .field
-      = f.label :url
-      = f.text_field :url
-

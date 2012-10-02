@@ -84,3 +84,6 @@ gem 'carrierwave-processing' # MIT
 
 # JSON
 gem 'oj' # 3-clause BSD
+
+# Markdown
+gem 'redcarpet' # ISC license
