@@ -15,8 +15,8 @@
 
 BEGIN;
 
-INSERT INTO boards(id, slug)
-     VALUES (1, 'a');
+INSERT INTO boards(id, slug, root)
+     VALUES (1, 'a', true);
 
 INSERT INTO boards(id, slug)
      VALUES (2, 'b');
