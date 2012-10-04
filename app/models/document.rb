@@ -86,6 +86,10 @@ class Document < ActiveRecord::Base
   # Scopes
   scope :eager,
     includes(:identities).
+    includes(:sections => [:paragraphs, :line_paragraphs])
+
+  scope :eager_with_instances,
+    includes(:identities).
     includes(:sections => [:instances, {:paragraphs => :instances}])
 
   scope :ordered, order(ORDER = "id DESC")

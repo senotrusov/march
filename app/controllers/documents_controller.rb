@@ -19,7 +19,7 @@ class DocumentsController < ApplicationController
   # GET /board
   def index
     # TODO: include sections?
-    @documents = Document.alive.ordered.where(board_id: @board.id).includes(:sections)
+    @documents = Document.eager.alive.ordered.where(board_id: @board.id).includes(:sections)
 
     respond_to do |format|
       format.html
@@ -28,7 +28,7 @@ class DocumentsController < ApplicationController
 
   # GET /board/1
   def show
-    @document = Document.alive.find(params[:id]) # TODO: eager load
+    @document = Document.eager.alive.find(params[:id])
 
     respond_to do |format|
       format.html
