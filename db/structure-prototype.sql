@@ -51,7 +51,8 @@ CREATE TABLE boards (
   created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  slug character varying(64) NOT NULL
+  slug character varying(64) NOT NULL,
+  root boolean NOT NULL DEFAULT false
 );
 
 CREATE UNIQUE INDEX boards_slug_idx ON boards USING btree (slug);
