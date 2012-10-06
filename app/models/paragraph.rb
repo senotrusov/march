@@ -1,3 +1,4 @@
+#  encoding: UTF-8
 
 #  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
 #
@@ -30,11 +31,26 @@ class Paragraph < ActiveRecord::Base
   # Text attributes
   attr_accessible :title, :url, :message
 
-  normalize_text :title, :url, :message
+  normalize_text :title, :url
+  normalize_newline :message
 
   validates :title,   length: { in: 0..columns_hash['title'].limit }
   validates :url,     length: { in: 0..columns_hash['url'].limit }
   validates :message, length: { in: 0..columns_hash['message'].limit }
+
+  validate :reserved_chars
+
+  def reserved_chars
+    if message
+      if message.match(/^[#][^#]/) || message.match(/^=+\s*$/)
+        errors.add(:message, "level 1 headings is reserved for future use")
+        
+      elsif message.match(/^#*\s*([§¶]|\(\s*[pп]\s*[0-9a-f]*\s*\))/)
+        errors.add(:message, "lines and headings, started with § or ¶ or (p) are reserved for future use")
+
+      end
+    end
+  end
 
   
   # Location
@@ -71,7 +87,7 @@ class Paragraph < ActiveRecord::Base
     self
   end
 
-  
+
   # Authorisation
   def can_destroy? poster
     poster && (poster.id == identity_poster_id || poster.id == section.proto_or_self.identity_poster_id)

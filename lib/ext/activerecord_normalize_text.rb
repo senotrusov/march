@@ -16,8 +16,8 @@
 
 class ActiveRecord::Base
   class << self
-    def normalize_text *attrs
 
+    def normalize_text *attrs
       before_validation do |model|
         attrs.each do |attr|
           if string = model.__send__(attr)
@@ -29,7 +29,20 @@ class ActiveRecord::Base
           end
         end
       end
-
     end
+    
+    # \r CR
+    # \n LF
+    # \r\n CRLF
+    def normalize_newline *attrs
+      before_validation do |model|
+        attrs.each do |attr|
+          if string = model.__send__(attr)
+            model.__send__(:write_attribute, attr, string.gsub(/\r\n?/, "\n"))
+          end
+        end
+      end
+    end
+
   end
 end
