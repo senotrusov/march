@@ -45,8 +45,8 @@ class Paragraph < ActiveRecord::Base
       if message.match(/^[#][^#]/) || message.match(/^=+\s*$/)
         errors.add(:message, "level 1 headings is reserved for future use")
         
-      elsif message.match(/^#*\s*([§¶]|\(\s*[pп]\s*[0-9a-f]*\s*\))/)
-        errors.add(:message, "lines and headings, started with § or ¶ or (p) are reserved for future use")
+      elsif message.match(/^#*\s*[§¶:]/)
+        errors.add(:message, "lines and headings, started with §, ¶ or : are reserved for future use")
 
       end
     end
