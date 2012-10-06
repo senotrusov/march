@@ -33,7 +33,10 @@ $.fn.slideUpRemove = (callback = null) ->
 
 
 clipboardGetPrototype = ->
-  (match = document.cookie.match(/prototype_id=(.+);?/)) && match[1]
+  (match = document.cookie.match(/prototype_id=(.+);?/)) && match[1].replace(/s/g, '§').replace(/p/g, '¶')
+
+clipboardSetPrototype = (id) ->
+  document.cookie = "prototype_id=#{id.replace(/§/g, 's').replace(/¶/g, 'p')}; path=/"
 
 
 $(document).ready ->
@@ -86,7 +89,7 @@ $(document).ready ->
     .on('click', 'label', false)
 
     .on 'click', '.section-id, .paragraph-id', ->
-      document.cookie = "prototype_id=#{$(this).text()}; path=/"
+      clipboardSetPrototype($(this).text())
   
     .on 'click', '.paste-prototype-id', ->
       if prototype_id = clipboardGetPrototype()
