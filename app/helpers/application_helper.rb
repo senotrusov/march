@@ -18,7 +18,7 @@ module ApplicationHelper
         no_links: false,
         no_styles: true,
         safe_links_only: true,
-        with_toc_data: true,
+        with_toc_data: false,
         hard_wrap: true),
       no_intra_emphasis: true,
       tables: false,
