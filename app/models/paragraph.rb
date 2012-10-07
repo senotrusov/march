@@ -43,7 +43,7 @@ class Paragraph < ActiveRecord::Base
   def reserved_chars
     if message
       if message.match(/^[#][^#]/) || message.match(/^=+\s*$/)
-        errors.add(:message, "level 1 headings is reserved for future use")
+        errors.add(:message, "level 1 headings are reserved for future use")
         
       elsif message.match(/^#*\s*[§¶:]/)
         errors.add(:message, "lines and headings, started with §, ¶ or : are reserved for future use")
