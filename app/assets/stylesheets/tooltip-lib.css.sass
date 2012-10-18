@@ -53,6 +53,46 @@ $tooltip-z-index: 30000
   display: block
 
 
+%tooltip_left:after
+  position: absolute
+
+  top: 50%
+  margin-top: $tooltip-arrow-size * (-2)
+
+  right: 100%
+  margin-right: $tooltip-arrow-size
+
+%tooltip_left:before
+  border-left: $tooltip-arrow-size solid $darkgrey
+  border-top: $tooltip-arrow-size solid transparent
+  border-bottom: $tooltip-arrow-size solid transparent
+
+  top: 50%
+  margin-top: $tooltip-arrow-size * (-1)
+
+  right: 100%
+
+
+%tooltip_right:after
+  position: absolute
+
+  top: 50%
+  margin-top: $tooltip-arrow-size * (-2)
+
+  left: 100%
+  margin-left: $tooltip-arrow-size
+
+%tooltip_right:before
+  border-right: $tooltip-arrow-size solid $darkgrey
+  border-top: $tooltip-arrow-size solid transparent
+  border-bottom: $tooltip-arrow-size solid transparent
+
+  top: 50%
+  margin-top: $tooltip-arrow-size * (-1)
+
+  left: 100%
+
+
 %tooltip_top_left:after
   position: absolute
 
