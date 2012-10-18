@@ -52,7 +52,7 @@ $(document).ready ->
       alert("Error: #{xhr.status} #{error}")
 
 
-    .on 'click', '.add_paragraph_form', ->
+    .on 'click', '.add_paragraph_form, .add_paragraph_instance_form', ->
       button = $(this)
       template = button.children('.template').children().clone().hide()
       collection = button.closest('.header').siblings('.paragraphs')
@@ -90,6 +90,8 @@ $(document).ready ->
 
     .on 'click', '.section-id, .paragraph-id', ->
       clipboardSetPrototype($(this).text())
+      $(this).addClass('clicked').one 'mouseout', ->
+        $(this).removeClass('clicked')
   
     .on 'click', '.paste-prototype-id', ->
       if prototype_id = clipboardGetPrototype()

@@ -1,0 +1,133 @@
+
+//  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
+
+@import style
+
+$tooltip-arrow-size: 5px
+$tooltip-z-index: 30000
+
+%tooltip
+  position: relative
+
+%tooltip:after
+  display: none
+
+  font-size: 12px
+  font-weight: normal
+  white-space: nowrap
+  color: #fff
+  padding: 5px 7px
+  background-color: $darkgrey
+  @include border-radius
+
+  position: absolute
+  z-index: $tooltip-z-index
+
+%tooltip.clicked:after
+  content: "Copied!"
+
+%tooltip:before
+  display: none
+
+  content: ""
+  position: absolute
+  z-index: $tooltip-z-index
+  width: 0px
+  height: 0px
+
+%tooltip:hover:after,
+%tooltip:hover:before
+  display: block
+
+
+%tooltip_top_left:after
+  position: absolute
+
+  right: 50%
+  margin-right: $tooltip-arrow-size * (-2)
+
+  bottom: 100%
+  margin-bottom: $tooltip-arrow-size
+
+%tooltip_top_left:before
+  border-top: $tooltip-arrow-size solid $darkgrey
+  border-left: $tooltip-arrow-size solid transparent
+  border-right: $tooltip-arrow-size solid transparent
+
+  right: 50%
+  margin-right: $tooltip-arrow-size * (-1)
+
+  bottom: 100%
+
+
+%tooltip_top_right:after
+  position: absolute
+
+  left: 50%
+  margin-left: $tooltip-arrow-size * (-2)
+
+  bottom: 100%
+  margin-bottom: $tooltip-arrow-size
+
+%tooltip_top_right:before
+  border-top: $tooltip-arrow-size solid $darkgrey
+  border-left: $tooltip-arrow-size solid transparent
+  border-right: $tooltip-arrow-size solid transparent
+
+  left: 50%
+  margin-left: $tooltip-arrow-size * (-1)
+
+  bottom: 100%
+
+
+%tooltip_bottom_left:after
+  position: absolute
+
+  right: 50%
+  margin-right: $tooltip-arrow-size * (-2)
+
+  top: 100%
+  margin-top: $tooltip-arrow-size
+
+%tooltip_bottom_left:before
+  border-bottom: $tooltip-arrow-size solid $darkgrey
+  border-left: $tooltip-arrow-size solid transparent
+  border-right: $tooltip-arrow-size solid transparent
+
+  right: 50%
+  margin-right: $tooltip-arrow-size * (-1)
+
+  top: 100%
+
+
+%tooltip_bottom_right:after
+  position: absolute
+
+  left: 50%
+  margin-left: $tooltip-arrow-size * (-2)
+
+  top: 100%
+  margin-top: $tooltip-arrow-size
+
+%tooltip_bottom_right:before
+  border-bottom: $tooltip-arrow-size solid $darkgrey
+  border-left: $tooltip-arrow-size solid transparent
+  border-right: $tooltip-arrow-size solid transparent
+
+  left: 50%
+  margin-left: $tooltip-arrow-size * (-1)
+
+  top: 100%

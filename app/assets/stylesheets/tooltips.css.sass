@@ -1,0 +1,52 @@
+@import tooltip-lib
+
+.section > .header
+
+  .section-id
+    @extend %tooltip
+    @extend %tooltip_top_right
+    &:after
+      content: "Section number, click to copy"
+
+  .button.add_paragraph_form
+    @extend %tooltip
+    @extend %tooltip_top_right
+    &:after
+      content: "Add new paragraph"
+
+  .button.add_paragraph_instance_form
+    @extend %tooltip
+    @extend %tooltip_top_right
+    &:after
+      content: "Add paragraph instance"
+
+
+.paragraph
+
+  .paragraph-id
+    @extend %tooltip
+    @extend %tooltip_top_left
+    &:after
+      content: "Paragraph number, click to copy"
+
+  .paragraph_destroy
+    @extend %tooltip
+    @extend %tooltip_top_left
+    &:after
+      content: "Remove paragraph"
+
+  .identity .identity_name
+    @extend %tooltip
+    @extend %tooltip_bottom_left
+    &:after
+      content: "Poster identity"
+
+  .small .identity .identity_name
+    &:after
+      content: "Instance poster identity"
+
+  .identity .identity_document_id
+    @extend %tooltip
+    @extend %tooltip_bottom_left
+    &:after
+      content: "Origin"

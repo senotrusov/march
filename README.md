@@ -35,9 +35,9 @@ Apache License, Version 2.0, see LICENSE file.
 
 3rd party code
 ==============
-1. Gemfile
+* See Gemfile for list
   * Font Awesome - http://fortawesome.github.com/Font-Awesome, licensed under CC BY 3.0
-2. Leaflet in vendor/assets (see vendor/assets/Leaflet-LICENCE)
+* Leaflet in vendor/assets - http://leaflet.cloudmade.com/, see vendor/assets/Leaflet-LICENCE
 
 
 Documentation

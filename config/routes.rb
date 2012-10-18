@@ -31,6 +31,7 @@ March::Application.routes.draw do
     end
   end
 
+
   if root_board = Board.where(root: true).first.slug
     root :to => redirect("/#{root_board}")
   end
