@@ -10,7 +10,7 @@ html
   body
     .header
       ul
-        - @boards.each do |board|
+        - boards.each do |board|
           li = link_to board.slug, documents_path(board_slug: board.slug)
 
     - if alert

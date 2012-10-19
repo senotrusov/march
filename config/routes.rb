@@ -19,6 +19,9 @@ March::Application.routes.draw do
   # /n/paragraphs/700
   # /n/paragraphs/700/edit
 
+  resources :paragraphs, only: [:show], as: 'single_paragraph'
+  resources :sections, only: [:show], as: 'single_section'
+
   scope ':board_slug' do
     resources :paragraphs, except: [:index, :new]
 

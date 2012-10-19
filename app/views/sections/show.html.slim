@@ -1,4 +1,4 @@
 = content_for :title do
   | Section #{@section.title}
 
-= render partial: 'view', locals: {section: @section}
+= render partial: 'view', locals: { section: @section, without_edit_controls: true }

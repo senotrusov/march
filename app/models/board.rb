@@ -29,4 +29,11 @@ class Board < ActiveRecord::Base
 
   # Scopes
   scope :ordered, order(ORDER = "slug")
+
+
+  module Cache
+    def boards
+      @boards ||= Board.ordered
+    end
+  end
 end

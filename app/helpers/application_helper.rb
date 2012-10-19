@@ -46,4 +46,6 @@ module ApplicationHelper
       space_after_headers: true,
       superscript: true)).render(text).html_safe
   end
+
+  include Board::Cache
 end

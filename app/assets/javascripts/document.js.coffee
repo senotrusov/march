@@ -43,7 +43,7 @@ $(document).ready ->
 
   $('.overview_map').createOverviewMap($('.document_overview:has(> .locations)'))
 
-  $('.document')
+  $('body > .document')
 
     .on 'ajax:success', '.paragraph_destroy', (event, data, status, xhr) ->
       $(this).parent().slideUpRemove()
@@ -82,7 +82,7 @@ $(document).ready ->
     .iframeUpload('form.edit_section')
 
 
-  $('form.new_document, form.edit_document, .document')
+  $('form.new_document, form.edit_document, body > .document, body > .section, body > .paragraph')
 
     .initMap()
     

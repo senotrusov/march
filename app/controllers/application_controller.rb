@@ -16,6 +16,8 @@
 
 class ApplicationController < ActionController::Base
 
+  after_filter :iframe_upload_response
+
   protect_from_forgery
 
   RESPONSE_403 = File.read(Rails.root + 'public' + '403.html')
@@ -40,20 +42,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :load_poster
 
-  before_filter do
-    @boards = Board.ordered
-    @board = @boards.detect {|board| board.slug == params[:board_slug]}
-    
-    unless @board
-      respond_to do |format|
-        format.html { render text: "Board not found", status: :not_found }
-      end
-    end
-
-    if session[:poster]
-      @poster = Poster.find_by_session_key(session[:poster])
-    end
+  def load_poster
+    @poster = Poster.find_by_session_key(session[:poster]) if session[:poster]
   end
 
   def require_poster
@@ -68,9 +60,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def default_url_options options = nil
-    { board_slug: @board.slug }
+
+  before_filter :load_board
+  
+  def load_board
+    if params.has_key?(:board_slug)
+      @board = Board.find_by_slug(params[:board_slug])
+
+      not_found unless @board
+    end
   end
 
-  after_filter :iframe_upload_response
+  def default_url_options options = nil
+    { board_slug: @board && @board.slug }
+  end
+
 end
