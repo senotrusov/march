@@ -14,27 +14,14 @@
 #  limitations under the License.
 
 
-class Board < ActiveRecord::Base
-  # Associations
-  has_many :documents, inverse_of: :board, conditions: { deleted: false }
+class Nokogiri::XML::Node
+  def closest name
+    node = self
 
-  SLUG_CHARS = '[a-zA-Z0-9\-]'
-
-  # Attributes
-  attr_accessible :slug
-
-  validates :slug,
-    length: { in: 1..columns_hash['slug'].limit },
-    format: { with: /\A#{SLUG_CHARS}+\z/, message: "Only characters a-z, A-Z, 0-9 and '-' allowed" }
-
-
-  # Scopes
-  scope :ordered, order(ORDER = "slug")
-
-
-  module Cache
-    def boards
-      @boards ||= Board.ordered
+    while node = node.parent
+      return node if node.name == name
     end
+
+    false
   end
 end

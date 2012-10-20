@@ -44,5 +44,15 @@ class ActiveRecord::Base
       end
     end
 
+    def strip *attrs
+      before_validation do |model|
+        attrs.each do |attr|
+          if string = model.__send__(attr)
+            model.__send__(:write_attribute, attr, string.strip)
+          end
+        end
+      end
+    end
+
   end
 end

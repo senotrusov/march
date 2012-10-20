@@ -33,6 +33,7 @@ class Paragraph < ActiveRecord::Base
 
   normalize_text :title, :url
   normalize_newline :message
+  strip :message
 
   validates :title,   length: { in: 0..columns_hash['title'].limit }
   validates :url,     length: { in: 0..columns_hash['url'].limit }
@@ -52,7 +53,7 @@ class Paragraph < ActiveRecord::Base
     end
   end
 
-  
+
   # Location
   include Geo::Model
 

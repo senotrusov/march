@@ -87,3 +87,9 @@ gem 'oj' # 3-clause BSD
 
 # Markdown
 gem 'redcarpet' # ISC license
+
+# HTML sanitizer
+gem 'sanitize' # MIT
+
+# HTML parser
+gem 'nokogiri' # MIT

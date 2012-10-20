@@ -29,7 +29,13 @@ module ApplicationHelper
   end
 
   def markdown text
-    (@markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(
+    (@markdown ||= markdown_processor).render(text).html_safe
+  end
+
+  def markdown_processor
+    Redcarpet::Markdown.new(
+      
+      MarkdownRender.new(
         filter_html: false,
         no_images: true,
         no_links: false,
@@ -37,14 +43,15 @@ module ApplicationHelper
         safe_links_only: true,
         with_toc_data: false,
         hard_wrap: true),
+
       no_intra_emphasis: true,
-      tables: false,
+      tables: true,
       fenced_code_blocks: true,
       autolink: true,
       strikethrough: true,
       lax_html_blocks: true,
       space_after_headers: true,
-      superscript: true)).render(text).html_safe
+      superscript: true)
   end
 
   include Board::Cache
