@@ -36,7 +36,8 @@ CREATE TABLE boards (
     id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    slug character varying(64) NOT NULL
+    slug character varying(64) NOT NULL,
+    root boolean DEFAULT false NOT NULL
 );
 
 
