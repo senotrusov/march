@@ -1,4 +1,4 @@
 = content_for :title do
-  | Paragraph #{@paragraph.title}
+  | ¶#{@paragraph.id}
 
 = render partial: 'view', locals: { paragraph: @paragraph, without_edit_controls: true }

@@ -29,14 +29,9 @@ class Paragraph < ActiveRecord::Base
 
 
   # Text attributes
-  attr_accessible :title, :url, :message
-
-  normalize_text :title, :url
+  attr_accessible :message
   normalize_newline :message
   strip :message
-
-  validates :title,   length: { in: 0..columns_hash['title'].limit }
-  validates :url,     length: { in: 0..columns_hash['url'].limit }
   validates :message, length: { in: 0..columns_hash['message'].limit }
 
   validate :reserved_chars
@@ -64,7 +59,7 @@ class Paragraph < ActiveRecord::Base
 
   # Prototyping
   include Prototyping
-  attr_prototype_copied :title, :url, :message, :lat, :lng, :zoom
+  attr_prototype_copied :message, :lat, :lng, :zoom
 
 
   # Deletion

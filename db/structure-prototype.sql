@@ -188,9 +188,7 @@ CREATE TABLE paragraphs (
   proto_identity_document_id bigint references documents(id), -- redundant data
   
   image   character varying(128),
-  title   character varying(256),
-  url     character varying(1024),
-  message character varying(1024),
+  message character varying(4096),
 
   lat  double precision,
   lng  double precision,

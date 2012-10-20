@@ -14,10 +14,6 @@
     .small
       = render partial: "paragraphs/identity", locals: { paragraph: paragraph }
 
-  - if paragraph.title?
-    h3.title
-      = paragraph.title
-
   - if paragraph.message
     .message
       = markdown paragraph.message
@@ -25,10 +21,6 @@
   - if paragraph.location?
     .map_container
       .map data-lat=paragraph.lat data-lng=paragraph.lng data-zoom=paragraph.zoom
-
-  - if paragraph.url?
-    .url
-      = link_to paragraph.url, paragraph.url
 
   .details
     | Updated 

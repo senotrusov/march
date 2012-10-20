@@ -188,16 +188,12 @@ $(document).ready ->
                 input = (field) -> "[name=\"document[sections][][paragraphs][][#{field}]\"]"
 
                 push = -> abstract.push $(this).val()
-                paragraph.find(input 'title').each(push)
                 paragraph.find(input 'message').each(push)
                 paragraph.find(input 'location').each(push)
-                paragraph.find(input 'url').each(push)
 
                 push = -> abstract.push $(this).text()
-                paragraph.find('> .prototype .title').each(push)
                 paragraph.find('> .prototype .message').each(push)
                 paragraph.find('> .prototype .map').each -> abstract.push("#{$(this).attr('data-lat')} #{$(this).attr('data-lng')}")
-                paragraph.find('> .prototype .url a').each(push)
 
               paragraph.children('.abstract').each -> $(this).html("¶ #{abstract}")
 
