@@ -418,6 +418,13 @@ CREATE INDEX documents_poster_id_idx ON documents USING btree (poster_id);
 
 
 --
+-- Name: identities_document_id_name_unique_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
+--
+
+CREATE UNIQUE INDEX identities_document_id_name_unique_idx ON identities USING btree (document_id, name);
+
+
+--
 -- Name: identities_document_id_poster_id_unique_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
 --
 
@@ -429,13 +436,6 @@ CREATE UNIQUE INDEX identities_document_id_poster_id_unique_idx ON identities US
 --
 
 CREATE INDEX identities_poster_id_idx ON identities USING btree (poster_id);
-
-
---
--- Name: identities_unique_idx; Type: INDEX; Schema: public; Owner: march; Tablespace: 
---
-
-CREATE UNIQUE INDEX identities_unique_idx ON identities USING btree (document_id, name);
 
 
 --
