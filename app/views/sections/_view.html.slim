@@ -1,4 +1,5 @@
-.section
+.section data-id=section.proto_or_self.id
+  a name="s#{section.proto_or_self.id}"
 
   .header
     - if section.image?
@@ -8,20 +9,20 @@
       .section-id = "§#{section.proto_or_self.id}"
       .title = section.title
 
-    - if edit_controls?(local_assigns) && (can :create_paragraphs, section)
-      .buttons
+  - if edit_controls?(local_assigns) && (can :create_paragraphs, section)
+    .edit_controls
 
-        .button.add_paragraph_form data-append-to=".paragraphs"
-          i.icon-plus-sign
-          .title ¶
-          .template
-            = render :partial => 'paragraphs/single_form', locals: { section: section }
+      .button.add_paragraph_form data-append-to=".paragraphs"
+        i.icon-plus-sign
+        .title ¶
+        .template
+          = render :partial => 'paragraphs/single_form', locals: { section: section }
 
-        .button.add_paragraph_instance_form data-append-to=".paragraphs"
-          i.icon-copy
-          .title ¶
-          .template
-            = render :partial => 'paragraphs/single_instance_form', locals: { section: section }
+      .button.add_paragraph_instance_form data-append-to=".paragraphs"
+        i.icon-copy
+        .title ¶
+        .template
+          = render :partial => 'paragraphs/single_instance_form', locals: { section: section }
   
   .paragraphs
     = render collection: section.proto_or_self.paragraphs.reverse, partial: 'paragraphs/view', as: 'paragraph',

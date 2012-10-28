@@ -39,6 +39,7 @@ String.prototype.truncate = (min = 30, max = 35) ->
 # TODO: oninput, onpropertychange
 @nextTick = (func) -> setTimeout func, 0
 
+@timeoutSet = (timeout, func) -> setTimeout func, timeout
 
 $(document).ready ->
   $('#notice, #alert').each ->

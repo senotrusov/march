@@ -55,19 +55,13 @@ contructMap = (placeholder, options = {}) ->
   map
 
 
-$.fn.initMap = ->
-  this.find('.map').each ->
-    container = $(this)
-    center = new L.LatLng(container.attr('data-lat'), container.attr('data-lng'))
-    zoom = container.attr('data-zoom')
-
+$.fn.initSingleMarkerMap = (center, zoom) ->
+  this.each ->
     map = contructMap(this, zoomControl: false)
     map.setView center, zoom
 
     marker = new L.Marker(center)
     map.addLayer marker
-
-  .end()
 
 
 $.fn.initLocationInput = ->

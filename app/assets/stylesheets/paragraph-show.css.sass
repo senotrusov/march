@@ -7,13 +7,14 @@ body > .paragraph
 .paragraph
   padding-bottom: 25px
   clear: both
+  position: relative
 
-  img
+  > a > img
     float: left
     padding: 0px 10px 0px 0px
     border: 0px
 
-  .paragraph_destroy
+  > .paragraph_destroy
     float: right
     clear: right
 
@@ -27,17 +28,17 @@ body > .paragraph
     text-decoration: none
     cursor: default
 
-    i
+    > i
       display: block
       padding: 4px 4px 0px 4px
       color: #fff
       font-size: $base
       line-height: $base_icon_line_height
 
-  .paragraph_destroy:hover
+  > .paragraph_destroy:hover
     background: $paragraph
 
-  .paragraph-id
+  > .paragraph-id
     float: right
 
     display: inline
@@ -49,15 +50,15 @@ body > .paragraph
     padding: 1px 3px
     margin: 0px 0px 4px 4px
 
-  .paragraph-id:hover
+  > .paragraph-id:hover
     background: $paragraph
 
-  .identity
+  > .identity
     float: right
     clear: right
     margin-bottom: 4px
 
-    .identity_name
+    > .identity_name
       display: inline
       font-size: $base
 
@@ -66,10 +67,10 @@ body > .paragraph
 
       padding: 1px 3px
 
-    .identity_name:hover
+    > .identity_name:hover
       background: $poster
 
-    .identity_document_id
+    > .identity_document_id
       display: inline
       font-size: $base
 
@@ -78,28 +79,89 @@ body > .paragraph
 
       padding: 1px 3px
 
-      a
+      > a
         color: #fff
 
-    .identity_document_id:hover
+    > .identity_document_id:hover
       background: $bgcolor
 
-  .small .identity div
+  > .identity.small div
     font-size: $small
 
-  .message
+  > .message
     font-size: $base
     margin: 0px
     padding: 0px
 
-  .map_container
+  > .media
     clear: both
-    padding: 7px 0px 4px 0px
+    
+    > .map_container
+      padding: 7px 0px 4px 0px
 
-    .map
-      width: 100%
-      height: 220px
+      > .map
+        width: 100%
+        height: 220px
 
-  .details
+  > .details
     font-size: $mini
     color: $bgcolor
+
+
+  $preview-color: rgba(249,236,187,0.95)
+  $preview-arrow-size: 10px
+  $preview-z-index: 10000
+  $preview-border-radius: 6px
+  $preview-arrow-shadow-size: 3px
+
+  > .preview
+    position: absolute
+    z-index: $preview-z-index
+
+    @include border-radius($preview-border-radius)
+    padding: 10px
+    background: $preview-color
+    border: 2px solid $paragraph
+
+    > .arrow
+      position: absolute
+      z-index: $preview-z-index + 1
+      width: 0px
+      height: 0px
+
+      border-bottom: $preview-arrow-size solid #f9ecbe
+      border-left: $preview-arrow-size solid transparent
+      border-right: $preview-arrow-size solid transparent
+
+      bottom: 100%
+
+    > .arrow_shadow
+      position: absolute
+      z-index: $preview-z-index - 1
+      width: 0px
+      height: 0px
+
+      border-bottom: ($preview-arrow-size + $preview-arrow-shadow-size) solid $paragraph
+      border-left: ($preview-arrow-size + $preview-arrow-shadow-size) solid transparent
+      border-right: ($preview-arrow-size + $preview-arrow-shadow-size) solid transparent
+
+      bottom: 100%
+
+
+    > .load_indicator
+      text-align: center
+
+      > i
+        margin: 5px 5px
+        opacity: 0
+        color: $paragraph
+        font-size: $base
+
+    > .alert
+      font-size: $base
+      padding: 10px 15px
+      color: #fff
+      background: $error
+
+      > i
+        padding-right: 5px

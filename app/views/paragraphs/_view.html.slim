@@ -1,4 +1,5 @@
-.paragraph
+.paragraph data-id=paragraph.proto_or_self.id
+  a name=paragraph.proto_or_self.id
 
   - if paragraph.image?
     = link_to image_tag(paragraph.image_url(:mini), alt: nil), paragraph.image_url
@@ -11,16 +12,14 @@
   = render partial: "paragraphs/identity", locals: { paragraph: paragraph.proto_or_self }
 
   - if paragraph.is_instance
-    .small
-      = render partial: "paragraphs/identity", locals: { paragraph: paragraph }
+    = render partial: "paragraphs/identity", locals: { paragraph: paragraph, class_name: 'small' }
 
-  - if paragraph.message
+  - unless paragraph.message.empty?
     .message
       = markdown paragraph.message
 
   - if paragraph.location?
-    .map_container
-      .map data-lat=paragraph.lat data-lng=paragraph.lng data-zoom=paragraph.zoom
+    .map_marker data-lat=paragraph.lat data-lng=paragraph.lng data-zoom=paragraph.zoom
 
   .details
     | Updated 

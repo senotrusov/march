@@ -24,6 +24,115 @@ buildAbstract = (callback) ->
   abstract
 
 
+ajaxError = (request, jqXHR) ->
+  "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{request.url}</div>"
+
+
+calculatePreviewPosition = (link, paragraph) ->
+  width = 450
+  margin = 30
+  offset = 15
+  arrow = 10
+  arrow_shadow = 3
+  border_radius = 6
+
+  left = link.position().left + (link.width() / 2) - (width / 2)
+  right = paragraph.width() - link.position().left - (link.width() / 2) - (width / 2)
+
+  space_left = paragraph.offset().left - margin
+  space_right = $(document).width() - paragraph.offset().left - paragraph.width() - margin
+
+  if (overflow_left = space_left + left) < 0
+    left = space_left * -1
+    right += overflow_left
+
+  if (overflow_right = space_right + right) < 0
+    right = space_right * -1
+
+    unless overflow_left < 0
+      left += overflow_right
+
+      if (space_left + left) < 0
+        left = space_left * -1
+
+
+  arrow_left = link.position().left + (link.width() / 2) - left - arrow
+
+  if arrow_left < border_radius
+    arrow_left = border_radius
+
+  else if arrow_left > (max_arrow_left = paragraph.width() - left - right - (arrow * 2) - border_radius - arrow_shadow - 1)
+    arrow_left = max_arrow_left
+
+  return {
+    arrow: {
+      left: arrow_left + 'px'
+      },
+    arrow_shadow: {
+      left: (arrow_left - arrow_shadow) + 'px'
+      },
+    preview: {
+      top: (link.position().top + link.height() + offset) + 'px',
+      left: left + 'px',
+      right: right + 'px'
+    }
+  }
+
+tooltipMouseHover = (current, dest, remove) ->
+  current.one 'mouseleave', ->
+    timeout_id = timeoutSet 200, ->
+      remove.remove()
+
+    dest.one 'mouseover', ->
+      clearTimeout(timeout_id)
+
+      tooltipMouseHover(dest, current, remove)
+
+$.fn.tooltipMouseHover = (tooltip) ->
+  tooltipMouseHover(this, tooltip, tooltip)
+
+
+$.fn.loading = (action) ->
+  switch action
+    when 'add'
+      $(this).append("<div class=load_indicator><i class=icon-cloud></i><i class=icon-cloud></i><i class=icon-cloud></i></div>")
+    when 'show'
+      $(this).children('.load_indicator').children().each (index) ->
+        icon = $(this)
+        timeoutSet index * 100, ->
+         icon.fadeTo('fast', 0.7 + 0.15 * index)
+    when 'hide'
+      $(this).children('.load_indicator').remove()
+  this
+
+
+cloneParagraph = (paragraph) ->
+  result = paragraph.cloneNode(false)
+  $(paragraph).children().not('.paragraph_destroy, .media, .preview').clone().appendTo(result)
+  result
+
+
+$.fn.cloneContent = ->
+  this.map ->
+    item = $(this)
+
+    if item.hasClass('paragraph')
+      cloneParagraph(this)
+
+    else if item.hasClass('section')
+      result = this.cloneNode(false)
+
+      item.children().not('.edit_controls, .paragraphs').clone().appendTo(result)
+
+      item.children('.paragraphs').each ->
+        paragraphs = $(this.cloneNode(false)).appendTo(result)
+
+        $(this).children('.paragraph').each ->
+          paragraphs.append cloneParagraph(this)
+
+      result
+
+
 $.fn.slideUpRemove = (callback = null) ->
   this.each ->
     element = $(this)
@@ -39,7 +148,37 @@ clipboardSetPrototype = (id) ->
   document.cookie = "prototype_id=#{id.replace(/§/g, 's').replace(/¶/g, 'p')}; path=/"
 
 
+$.fn.initParagraphSingleMarkerMap = ->
+  this.each ->
+    marker = $(this)
+    paragraph = marker.parent()
+
+    unless (media = paragraph.children('.media')).length
+      media = $('<div/>', class: 'media').insertBefore(paragraph.children('.details'))
+
+    map = $('<div/>', class: 'map')
+
+    $('<div/>', class: 'map_container').append(map).appendTo(media)
+
+    map.initSingleMarkerMap(L.latLng(marker.data('lat'), marker.data('lng')), marker.data('zoom'))
+
+
+$.fn.initMedia = ->
+  if this.hasClass('document')
+    this.find('> .header > .line > .map').each ->
+      map = $(this)
+      map.initSingleMarkerMap(L.latLng(map.data('lat'), map.data('lng')), map.data('zoom'))
+
+  if this.hasClass('paragraph')
+    this.children('.map_marker').initParagraphSingleMarkerMap()
+  else
+    this.find('.paragraph > .map_marker').initParagraphSingleMarkerMap()
+
+  this
+
+
 $(document).ready ->
+  cache = $('body > .cache')
 
   $('.overview_map').createOverviewMap($('.document_overview:has(> .locations)'))
 
@@ -71,7 +210,7 @@ $(document).ready ->
       response = $(xhr.responseText).hide().insertAfter(form.parent().children('form:last'))
       form.slideUpRemove ->
         response.slideDown 'fast', ->
-          response.initMap()
+          response.initMedia()
 
     .on 'ajax:error', 'form.edit_section', (event, xhr, status, error) ->
       if xhr.status == 422 # Unprocessable Entity
@@ -84,7 +223,7 @@ $(document).ready ->
 
   $('form.new_document, form.edit_document, body > .document, body > .section, body > .paragraph')
 
-    .initMap()
+    .initMedia()
     
     .on('click', 'label', false)
 
@@ -110,11 +249,48 @@ $(document).ready ->
 
           $.get(url = "#{input.data('source')}/#{prototype_id}")
             .success (data, statusText, jqXHR) ->
-              placeholder.html(data).initMap()
+              placeholder.html(data).initMedia()
 
             .error (jqXHR, statusText, error) ->
-              placeholder.html(
-                "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{url}</div>")
+              placeholder.html(ajaxError(this, jqXHR))
+
+
+    .on 'mouseover', 'a[href^="/paragraphs/"], a[href^="/sections/"]', ->
+
+      link = $(this)
+      paragraph = link.closest('.paragraph')
+
+      position = calculatePreviewPosition(link, paragraph)
+
+      preview =      $('<div/>', class: 'preview'     ).css(position.preview)
+      arrow =        $('<div/>', class: 'arrow'       ).css(position.arrow)
+      arrow_shadow = $('<div/>', class: 'arrow_shadow').css(position.arrow_shadow)
+      
+      link.tooltipMouseHover(preview)
+
+      show = (data = undefined) ->
+        preview.append(arrow, arrow_shadow)
+        if data then preview.append(data) else preview.loading('add')
+        preview.appendTo(paragraph).initMedia()
+        preview.loading('show') unless data
+
+
+      if (match = link.attr('href').match(/^\/(paragraph|section)s\/(\d+)/))
+        type = match[1]
+        id = match[2]
+
+        if (found = $(".#{type}[data-id=\"#{id}\"]")).length
+          show(found.first().cloneContent())
+        else
+          show()
+          $.get("/#{type}s/#{id}")
+            .success (data, statusText, jqXHR) ->
+              preview.loading('hide')
+              $(data).appendTo(cache).clone().appendTo(preview).initMedia()
+            .error (jqXHR, statusText, error) ->
+              preview.loading('hide')
+              preview.append(ajaxError(this, jqXHR))
+
 
   
   $('form.new_document, form.edit_document')
@@ -193,7 +369,7 @@ $(document).ready ->
 
                 push = -> abstract.push $(this).text()
                 paragraph.find('> .prototype .message').each(push)
-                paragraph.find('> .prototype .map').each -> abstract.push("#{$(this).attr('data-lat')} #{$(this).attr('data-lng')}")
+                paragraph.find('> .prototype .map_marker').each -> abstract.push("#{$(this).attr('data-lat')} #{$(this).attr('data-lng')}")
 
               paragraph.children('.abstract').each -> $(this).html("¶ #{abstract}")
 
