@@ -194,7 +194,7 @@ $(document).ready ->
     .on 'click', '.add_paragraph_form, .add_paragraph_instance_form', ->
       button = $(this)
       template = button.children('.template').children().clone().hide()
-      collection = button.closest('.header').siblings('.paragraphs')
+      collection = button.closest('.section').children('.paragraphs')
       template.prependTo(collection).initLocationInput().slideDown('fast')
 
       if (prototype_id = clipboardGetPrototype()) && prototype_id.match(/^\s*¶/)

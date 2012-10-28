@@ -14,7 +14,7 @@
   - if paragraph.is_instance
     = render partial: "paragraphs/identity", locals: { paragraph: paragraph, class_name: 'small' }
 
-  - unless paragraph.message.empty?
+  - if paragraph.message?
     .message
       = markdown paragraph.message
 

@@ -31,7 +31,6 @@ class Paragraph < ActiveRecord::Base
   # Text attributes
   attr_accessible :message
   normalize_newline :message
-  strip :message
   validates :message, length: { in: 0..columns_hash['message'].limit }
 
   validate :reserved_chars
