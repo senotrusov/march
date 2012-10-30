@@ -128,7 +128,7 @@ $.fn.cloneContent = ->
         paragraphs = $(this.cloneNode(false)).appendTo(result)
 
         $(this).children('.paragraph').each ->
-          paragraphs.append cloneParagraph(this)
+          paragraphs.append(cloneParagraph(this))
 
       result
 
@@ -148,13 +148,17 @@ clipboardSetPrototype = (id) ->
   document.cookie = "prototype_id=#{id.replace(/§/g, 's').replace(/¶/g, 'p')}; path=/"
 
 
+$.fn.paragraphMedia = ->
+  if (media = this.children('.media')).length
+    media
+  else
+    $('<div/>', class: 'media').insertBefore(this.children('.details'))
+
+
 $.fn.initParagraphSingleMarkerMap = ->
   this.each ->
     marker = $(this)
-    paragraph = marker.parent()
-
-    unless (media = paragraph.children('.media')).length
-      media = $('<div/>', class: 'media').insertBefore(paragraph.children('.details'))
+    media = marker.parent().paragraphMedia()
 
     map = $('<div/>', class: 'map')
 
@@ -163,22 +167,75 @@ $.fn.initParagraphSingleMarkerMap = ->
     map.initSingleMarkerMap(L.latLng(marker.data('lat'), marker.data('lng')), marker.data('zoom'))
 
 
+$.fn.setDimensions16x9 = ->
+  if this.parent().width() > 853
+    this.width(853)
+  else
+    this.width('100%')
+
+  this.height(Math.round(this.width() / 16 * 9))
+
+
+$.fn.monitorWidth = ->
+  this.find('> tbody > tr > td.frame').each ->
+    frame = $(this)
+    if (width = frame.width()) != frame.data('lastwidth')
+      frame.data('lastwidth', width)
+      frame.find('iframe').each ->
+        $(this).setDimensions16x9()
+
+  .end()
+
+
+$.fn.addMedia = (element) ->
+  media = this.closest('.paragraph').paragraphMedia()
+
+  if (frames = media.closest('.section_frames')).length
+    unless frames.data('width_monitor')
+      frames.monitorWidth()
+      frames.data('width_monitor', intervalSet(1000, -> frames.monitorWidth()))
+
+  $(element).appendTo(media).setDimensions16x9()
+
+  this
+
+
 $.fn.initMedia = ->
+
   if this.hasClass('document')
     this.find('> .header > .line > .map').each ->
       map = $(this)
       map.initSingleMarkerMap(L.latLng(map.data('lat'), map.data('lng')), map.data('zoom'))
+
 
   if this.hasClass('paragraph')
     this.children('.map_marker').initParagraphSingleMarkerMap()
   else
     this.find('.paragraph > .map_marker').initParagraphSingleMarkerMap()
 
+
+  this.find('a[href^="http://youtu.be/"], a[href^="https://youtu.be/"], a[href^="http://www.youtube.com/"], a[href^="https://www.youtube.com/"]').each ->
+    link = $(this)
+
+    if match = link.attr('href').match(/(?:https?:\/\/youtu.be\/|v=)([A-Za-z0-9-]+)/)
+      link.addMedia('<iframe width="100%" height="315" src="http://www.youtube-nocookie.com/embed/'+match[1]+'?rel=0&wmode=opaque" frameborder="0" allowfullscreen></iframe>')
+
+
+  this.find('a[href^="http://vimeo.com/"], a[href^="https://vimeo.com/"]').each ->
+    link = $(this)
+
+    if match = link.attr('href').match(/^(?:https?:\/\/vimeo.com\/)(?:groups\/[^\/]+\/videos\/)?([0-9]+)/)
+      link.addMedia('<iframe src="http://player.vimeo.com/video/'+match[1]+'" width="100%" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
+
   this
 
 
 $(document).ready ->
   cache = $('body > .cache')
+
+  $(window).on 'resize', ->
+    $('.section_frames').each ->
+      $(this).monitorWidth()
 
   $('.overview_map').createOverviewMap($('.document_overview:has(> .locations)'))
 
@@ -224,7 +281,7 @@ $(document).ready ->
   $('form.new_document, form.edit_document, body > .document, body > .section, body > .paragraph')
 
     .initMedia()
-    
+
     .on('click', 'label', false)
 
     .on 'click', '.section-id, .paragraph-id', ->

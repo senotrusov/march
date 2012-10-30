@@ -40,6 +40,7 @@ String.prototype.truncate = (min = 30, max = 35) ->
 @nextTick = (func) -> setTimeout func, 0
 
 @timeoutSet = (timeout, func) -> setTimeout func, timeout
+@intervalSet = (interval, func) -> setInterval func, interval
 
 $(document).ready ->
   $('#notice, #alert').each ->
