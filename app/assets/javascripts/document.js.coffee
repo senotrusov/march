@@ -213,18 +213,14 @@ $.fn.initMedia = ->
   else
     this.find('.paragraph > .map_marker').initParagraphSingleMarkerMap()
 
-
-  this.find('a[href^="http://youtu.be/"], a[href^="https://youtu.be/"], a[href^="http://www.youtube.com/"], a[href^="https://www.youtube.com/"]').each ->
+ 
+  this.find('a[href^="http://youtu.be/"], a[href^="https://youtu.be/"], a[href^="http://www.youtube.com/"], a[href^="https://www.youtube.com/"], a[href^="http://vimeo.com/"], a[href^="https://vimeo.com/"]').each ->
     link = $(this)
 
-    if match = link.attr('href').match(/(?:https?:\/\/youtu.be\/|v=)([A-Za-z0-9-]+)/)
+    if match = link.attr('href').match(/^(?:https?:\/\/youtu.be\/|https?:\/\/www.youtube.com\/.+v=)([A-Za-z0-9-]+)/)
       link.addMedia('<iframe width="100%" height="315" src="http://www.youtube-nocookie.com/embed/'+match[1]+'?rel=0&wmode=opaque" frameborder="0" allowfullscreen></iframe>')
 
-
-  this.find('a[href^="http://vimeo.com/"], a[href^="https://vimeo.com/"]').each ->
-    link = $(this)
-
-    if match = link.attr('href').match(/^(?:https?:\/\/vimeo.com\/)(?:groups\/[^\/]+\/videos\/)?([0-9]+)/)
+    else if match = link.attr('href').match(/^(?:https?:\/\/vimeo.com\/)(?:groups\/[^\/]+\/videos\/)?([0-9]+)/)
       link.addMedia('<iframe src="http://player.vimeo.com/video/'+match[1]+'" width="100%" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
   this
