@@ -94,9 +94,24 @@ body > .paragraph
     padding: 0px
 
     blockquote
+      display: inline-block
       border-left: 15px solid $quote-color
       margin: 10px 0px
       padding-left: 8px
+
+      p:first-child
+        margin-top: 0px
+
+      p:last-child
+        margin-bottom: 0px
+
+    ol, ul
+      display: inline-block
+      margin: 0px
+      padding-left: 30px
+
+    ol:last-child, ul:last-child
+      margin-bottom: 17px
 
   > .media
     clear: both
