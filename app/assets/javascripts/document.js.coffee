@@ -284,6 +284,23 @@ $(document).ready ->
       clipboardSetPrototype($(this).text())
       $(this).addClass('clicked').one 'mouseout', ->
         $(this).removeClass('clicked')
+
+    .on 'click', '.quote', ->
+      if prototype_id = clipboardGetPrototype()
+        $(this).closest('.field').find('textarea').val( (index, value) ->
+          if value.match(/^>\s[¶§]/)
+            "> #{prototype_id}, #{value.substring(2)}"
+          else
+            "> #{prototype_id}\n\n#{value}"
+          )
+  
+    .on 'click', '.link', ->
+      if prototype_id = clipboardGetPrototype()
+        if textarea = $(this).closest('.field').find('textarea').get(0)
+          if typeof textarea.selectionStart != undefined # HTML 5
+            $(textarea).val( (index, value) -> value.substring(0, textarea.selectionStart) + "(#{prototype_id})" + value.substring(textarea.selectionEnd, value.length))
+          else
+            $(textarea).val( (index, value) -> "#{value}(#{prototype_id})")
   
     .on 'click', '.paste-prototype-id', ->
       if prototype_id = clipboardGetPrototype()

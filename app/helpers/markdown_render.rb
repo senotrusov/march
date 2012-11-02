@@ -127,12 +127,12 @@ class MarkdownRender < Redcarpet::Render::HTML
   # "foo p123 bar".gsub(LINK_REGEXP) { "{identity:'#{$1}' board:'#{$2}' type:'#{$3}' id:'#{$4}'}" }
 
   LINK_REGEXP = /
-    (?: \A | \(\s* | (?<=\s) )
+    (?: \A | \(\s* | (?<=[\s\W]) )
     (?:
       (?:(\d+)@)? (#{Board::SLUG_CHARS}+)\/ |
       ([§s¶p:])
     ) (\d+)
-    (?: \z | \s*\) | (?=\s) )
+    (?: \z | \s*\) | (?=[\s\W]) )
     /x
   
   VALID_LINKS = Regexp.new("\\A(/|http://|https://|ftp://|mailto:)")

@@ -93,6 +93,11 @@ body > .paragraph
     margin: 0px
     padding: 0px
 
+    blockquote
+      border-left: 15px solid $quote-color
+      margin: 10px 0px
+      padding-left: 8px
+
   > .media
     clear: both
     
@@ -111,7 +116,7 @@ body > .paragraph
     color: $bgcolor
 
 
-  $preview-color: rgba(249,236,187,0.95)
+  $preview-color: rgba($quote-color, 0.95)
   $preview-arrow-size: 10px
   $preview-z-index: 10000
   $preview-border-radius: 6px

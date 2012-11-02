@@ -1,24 +1,28 @@
 @import tooltip-lib
 
-.section > .header
+.section
 
-  .section-id
-    @extend %tooltip
-    @extend %tooltip_top_right
-    &:after
-      content: "Section number, click to copy"
+  > .header
 
-  .button.add_paragraph_form
-    @extend %tooltip
-    @extend %tooltip_top_right
-    &:after
-      content: "Add new paragraph"
+    .section-id
+      @extend %tooltip
+      @extend %tooltip_top_right
+      &:after
+        content: "Section number, click to copy"
 
-  .button.add_paragraph_instance_form
-    @extend %tooltip
-    @extend %tooltip_top_right
-    &:after
-      content: "Add paragraph instance"
+  > .edit_controls
+
+    .add_paragraph_form
+      @extend %tooltip
+      @extend %tooltip_top_right
+      &:after
+        content: "Add new paragraph"
+
+    .add_paragraph_instance_form
+      @extend %tooltip
+      @extend %tooltip_top_right
+      &:after
+        content: "Add paragraph instance"
 
 
 .paragraph
