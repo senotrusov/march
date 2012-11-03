@@ -297,7 +297,7 @@ $(document).ready ->
     .on 'click', '.link', ->
       if prototype_id = clipboardGetPrototype()
         if textarea = $(this).closest('.field').find('textarea').get(0)
-          if typeof textarea.selectionStart != undefined # HTML 5
+          if typeof textarea.selectionStart == 'number' # HTML 5
             $(textarea).val( (index, value) -> value.substring(0, textarea.selectionStart) + "(#{prototype_id})" + value.substring(textarea.selectionEnd, value.length))
           else
             $(textarea).val( (index, value) -> "#{value}(#{prototype_id})")
