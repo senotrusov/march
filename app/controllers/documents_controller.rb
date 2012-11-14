@@ -41,10 +41,8 @@ class DocumentsController < ApplicationController
     @document = Document.new sections: [
       Section.new(title: 'Нас беспокоит', writable_by: 'document_poster', frame: 0),
       Section.new(title: 'Мы думаем', writable_by: 'contributor', frame: 0),
-      Section.new(title: 'Что вы думаете?', writable_by: 'public', frame: 0),
-      Section.new(title: 'Мы нашли', writable_by: 'public', frame: 1),
-      Section.new(title: 'Наши действия', writable_by: 'document_poster', frame: 2),
-      Section.new(title: 'Что делать?', writable_by: 'public', frame: 2)
+      Section.new(title: 'Что думаете вы?', writable_by: 'public', frame: 1),
+      Section.new(title: 'Мы нашли', writable_by: 'public', frame: 2),
     ]
 
     respond_to do |format|
