@@ -1,0 +1,12 @@
+= content_for :title do
+  | Editing ¶#{@paragraph.id}
+
+= form_for(@paragraph) do |f|
+  = render :partial => 'paragraphs/form', locals: { form: f, paragraph: @paragraph }
+
+  .field.submit
+    = f.submit 'Save'
+    | or 
+    .discard-edit-paragraph
+      i.icon-undo
+      | discard editing

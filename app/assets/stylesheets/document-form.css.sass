@@ -1,10 +1,12 @@
 
 @import 'style'
 
-form.edit_section
+form.edit_section, form.edit_paragraph
   margin-bottom: 30px
+  background: $quote-color
+  border: 10px solid $quote-color
 
-form.new_document, form.edit_document, form.edit_section
+form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   clear: both
 
   // Form elements
@@ -121,7 +123,7 @@ form.new_document, form.edit_document, form.edit_section
 
 
 // Submit
-form.new_document, form.edit_document, form.edit_section
+form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   .field.submit
     padding: 10px 20px
     background: $bgcolor
@@ -133,18 +135,22 @@ form.new_document, form.edit_document
   .field.submit
     margin: 30px 20px
 
-form.edit_section
+form.edit_section, form.edit_paragraph
   .field.submit
     margin: 10px 0px
 
-  .discard-add-paragraph
+  .discard-add-paragraph,
+  .discard-edit-paragraph
     display: inline
     text-decoration: underline
     cursor: pointer
 
+    > i
+      margin-right: 5px
+
 
 // Document, sections, paragraphs structure
-form.edit_section
+form.edit_section, form.edit_paragraph
 
   .paragraph_form
     clear: both
@@ -273,7 +279,7 @@ form.new_document, form.edit_document
 
   
 // Buttons
-form.new_document, form.edit_document, form.edit_section
+form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
 
   .button
     display: inline-block

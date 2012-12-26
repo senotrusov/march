@@ -13,7 +13,7 @@
 #= require jquery
 #= require jquery-ui
 #= require jquery_ujs
-#= require rails-timeago
+#= require jquery.timeago
 #= require leaflet-src
 #
 #= require_self

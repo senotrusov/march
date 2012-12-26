@@ -26,10 +26,9 @@ module Prototyping
 
       before_validation :copy_prototype,            if: :new_record?
       validate          :is_prototype_exists,       if: :new_record?
-      before_save       :copy_prototype_image_attr, if: :new_record?
-      after_save        :copy_prototype_image_file
-      after_save        :set_prototype_line_id
-      after_save        :propagate_prototype_changes
+      before_create     :copy_prototype_image_attr
+       after_create     :copy_prototype_image_file
+       after_create     :set_line_id_on_prototype
 
       # if line_id IS NULL, then model does not have other instances
       has_many :instances,
@@ -74,10 +73,14 @@ module Prototyping
   # Preventing modification of already existing instance, and existing model to became instance
   def assign_attributes(new_attributes, options = {})
     if is_instance || new_attributes[:is_instance].to_s == 'true'
-      options[:as] = new_record? ? :instance : :instance_update
+      options[:as] = (new_record?) ? :instance : :instance_update
     end
 
     super(new_attributes, options)
+  end
+
+  def is_prototype_and_have_instances
+    line_id == id
   end
 
   def is_instance= value
@@ -174,26 +177,30 @@ module Prototyping
     copy_image_file(prototype) if prototype
   end
 
-  def set_prototype_line_id
+  def set_line_id_on_prototype
     if prototype && !prototype.line_id
       prototype.line_id = prototype.id
       prototype.save!
     end
   end
 
-  def propagate_prototype_changes
-    if line_id == id
-      instances_without_self.each do |instance|
-        next if instance.deleted?
+  def propagate_changes_to_instances
+    instances_without_self.each do |instance|
+      next if instance.deleted?
 
-        copy_prototype_attrs.each {|attr| instance.send("#{attr}=", send(attr)) }
-        instance.proto_updated_at = updated_at
+      copy_prototype_attrs.each {|attr| instance.send("#{attr}=", send(attr)) }
 
-        instance.copy_image_attr self
-        instance.save!
-        instance.copy_image_file self
-      end
+      instance.updated_at = updated_at
+      instance.set_proto_updated_at
+
+      instance.copy_image_attr self
+      instance.save!
+      instance.copy_image_file self
     end
+  end
+
+  def set_proto_updated_at
+    self.proto_updated_at = updated_at if proto_updated_at?
   end
 
 end

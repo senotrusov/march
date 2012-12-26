@@ -15,6 +15,8 @@
 #  limitations under the License.
 
 
+# TODO: Ensure attr_accessible as: [:instance_update] does not add security and logical side-effects
+
 class Paragraph < ActiveRecord::Base
   # Associations
   belongs_to :identity
@@ -24,12 +26,12 @@ class Paragraph < ActiveRecord::Base
 
   # Image
   include Upload
-  attr_accessible :image, :image_cache, :remove_image
+  attr_accessible :image, :image_cache, :remove_image, as: [:default, :instance_update]
   mount_uploader :image, ImageUploader
 
 
   # Text attributes
-  attr_accessible :message
+  attr_accessible :message, as: [:default, :instance_update]
   normalize_newline :message
   validates :message, length: { in: 0..columns_hash['message'].limit }
 
@@ -50,6 +52,7 @@ class Paragraph < ActiveRecord::Base
 
   # Location
   include Geo::Model
+  attr_accessible :location, :zoom, as: [:default, :instance_update]
 
 
   # Identity cache
@@ -86,5 +89,11 @@ class Paragraph < ActiveRecord::Base
   # Authorisation
   def can_destroy? poster
     poster && (poster.id == identity_poster_id || poster.id == section.proto_or_self.identity_poster_id)
+  end
+
+  def can_update? poster
+    # Check if current poster is a paragraph original author
+    # He can edit an original paragraph or any instance of that paragraph
+    poster && poster.id == proto_or_self.identity_poster_id
   end
 end

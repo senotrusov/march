@@ -27,6 +27,8 @@ buildAbstract = (callback) ->
 ajaxError = (request, jqXHR) ->
   "<div class=alert><i class=icon-warning-sign></i>#{jqXHR.status} #{jqXHR.statusText} requesting #{request.url}</div>"
 
+ajaxErrorAlert = (event, xhr, status, error) ->
+  alert("Error: #{xhr.status} #{error}")
 
 calculatePreviewPosition = (link, paragraph) ->
   width = 450
@@ -108,7 +110,7 @@ $.fn.loading = (action) ->
 
 cloneParagraph = (paragraph) ->
   result = paragraph.cloneNode(false)
-  $(paragraph).children().not('.paragraph_destroy, .media, .preview').clone().appendTo(result)
+  $(paragraph).children().not('.action_icon, .media, .preview').clone().appendTo(result)
   result
 
 
@@ -139,6 +141,19 @@ $.fn.slideUpRemove = (callback = null) ->
     element.slideUp 'fast', ->
       element.remove()
       callback() if callback
+
+
+$.fn.scrollToTop = ->
+
+  offset = this.offset().top - 100
+  offset = 0 if offset < 0
+
+  body = $('body')
+
+  if body.scrollTop() > offset
+    body.animate({scrollTop: offset}, 'fast')
+  
+  this
 
 
 clipboardGetPrototype = ->
@@ -223,6 +238,10 @@ $.fn.initMedia = ->
     else if match = link.attr('href').match(/^(?:https?:\/\/vimeo.com\/)(?:groups\/[^\/]+\/videos\/)?([0-9]+)/)
       link.addMedia('<iframe src="http://player.vimeo.com/video/'+match[1]+'" width="100%" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
+  
+  this.find('time[data-time-ago]').timeago()
+
+
   this
 
 
@@ -237,12 +256,14 @@ $(document).ready ->
 
   $('body > .document')
 
-    .on 'ajax:success', '.paragraph_destroy', (event, data, status, xhr) ->
-      $(this).parent().slideUpRemove()
+    .iframeUpload('form.edit_section')
+    .iframeUpload('form.edit_paragraph')
 
-    .on 'ajax:error', '.paragraph_destroy', (event, xhr, status, error) ->
-      alert("Error: #{xhr.status} #{error}")
-
+    # Don't use slideUp/Down effect in in-place paragraph edit
+    # In cases when paragraph happens to be near the document bottom,
+    # after the effect was complete, expected elements may fall over the edge of the viewport
+    #
+    # Here, the carefully selected call order of show()/hide() is intended to prevent that case.
 
     .on 'click', '.add_paragraph_form, .add_paragraph_instance_form', ->
       button = $(this)
@@ -253,9 +274,29 @@ $(document).ready ->
       if (prototype_id = clipboardGetPrototype()) && prototype_id.match(/^\s*¶/)
         template.find('.paste-prototype-id').trigger('click')
 
-
     .on 'click', '.delete_form_item, .discard-add-paragraph', ->
-      $(this).closest('form').slideUpRemove()
+      $(this).closest('form').scrollToTop().slideUpRemove()
+
+    .on 'click', '.discard-edit-paragraph, .discard-edit-paragraph-button', ->
+      form = $(this).closest('form')
+      paragraph = form.next()
+
+      paragraph.show()
+      form.remove()
+      paragraph.scrollToTop()
+
+
+    # Destroy action button
+    .on('ajax:error',   '.paragraph_destroy', ajaxErrorAlert)
+    .on 'ajax:success', '.paragraph_destroy', (event, data, status, xhr) ->
+      $(this).closest('.paragraph').slideUpRemove()
+
+    # Edit action button
+    .on('ajax:error',   '.paragraph_edit', ajaxErrorAlert)
+    .on 'ajax:success', '.paragraph_edit', (event, data, status, xhr) ->
+      paragraph = $(this).closest('.paragraph')
+      $(data).insertBefore(paragraph).initLocationInput()
+      paragraph.hide()
 
 
     .on 'ajax:success', 'form.edit_section', (event, data, status, xhr) ->
@@ -265,13 +306,20 @@ $(document).ready ->
         response.slideDown 'fast', ->
           response.initMedia()
 
-    .on 'ajax:error', 'form.edit_section', (event, xhr, status, error) ->
+    .on 'ajax:success', 'form.edit_paragraph', (event, data, status, xhr) ->
+      form = $(this)
+      form.next().remove() # Remove the old paragraph
+      paragraph = $(xhr.responseText).insertAfter(form).initMedia()
+      form.remove()
+      paragraph.scrollToTop()
+
+    .on 'ajax:error', 'form.edit_section, form.edit_paragraph', (event, xhr, status, error) ->
       if xhr.status == 422 # Unprocessable Entity
         $(xhr.responseText).replaceAll($(this)).initLocationInput()
       else
-        alert("Error: #{xhr.status} #{error}")
+        ajaxErrorAlert(event, xhr, status, error)
 
-    .iframeUpload('form.edit_section')
+
 
 
   $('form.new_document, form.edit_document, body > .document, body > .section, body > .paragraph')

@@ -14,9 +14,8 @@ body > .paragraph
     padding: 0px 10px 10px 0px
     border: 0px
 
-  > .paragraph_destroy
+  > .action_icon
     float: right
-    clear: right
 
     display: inline
     font-size: $base
@@ -35,8 +34,16 @@ body > .paragraph
       font-size: $base
       line-height: $base_icon_line_height
 
-  > .paragraph_destroy:hover
+  > .action_icon:hover
     background: $paragraph
+
+  > .paragraph_edit
+    > i
+      padding-left: 5px
+
+  > .paragraph_destroy
+    clear: right
+
 
   > .paragraph-id
     float: right
@@ -96,6 +103,7 @@ body > .paragraph
     blockquote
       display: inline-block
       border-left: 15px solid $quote-color
+      background: $quote-color
       margin: 10px 0px
       padding-left: 8px
 

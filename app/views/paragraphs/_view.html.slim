@@ -4,8 +4,12 @@
   - if paragraph.image?
     = link_to image_tag(paragraph.image_url(:mini), alt: nil), paragraph.image_url
 
-  - if edit_controls?(local_assigns) && (can :destroy, paragraph)
-    = link_to icon('remove-sign'), paragraph, method: :delete, remote: true, class: 'paragraph_destroy', confirm: 'Delete paragraph?'
+  - if edit_controls?(local_assigns)
+    - if can :destroy, paragraph
+      = link_to icon('remove-sign'), paragraph, method: :delete, remote: true, class: 'action_icon paragraph_destroy', confirm: 'Delete paragraph?'
+      
+    - if can :update, paragraph
+      = link_to icon('edit'), edit_paragraph_path(paragraph), remote: true, class: 'action_icon paragraph_edit'
 
   .paragraph-id = "¶#{paragraph.proto_or_self.id}"
 

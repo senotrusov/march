@@ -145,6 +145,7 @@ class DocumentsController < ApplicationController
           if section.save_needed?
             section.assign_self_and_paragraphs_identity(@document.identity, request.remote_ip) if section.new_record?
             section.save!
+            section.propagate_changes_to_instances if section.is_prototype_and_have_instances
           end
         end
         @document.save! if @document.save_needed?

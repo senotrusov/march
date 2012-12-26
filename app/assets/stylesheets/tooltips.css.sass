@@ -33,6 +33,12 @@
     &:after
       content: "Paragraph number, click to copy"
 
+  .paragraph_edit
+    @extend %tooltip
+    @extend %tooltip_top_left
+    &:after
+      content: "Edit paragraph"
+
   .paragraph_destroy
     @extend %tooltip
     @extend %tooltip_top_left

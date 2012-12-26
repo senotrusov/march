@@ -47,6 +47,12 @@ $block: 520px
   -ms-box-sizing: border-box
   -webkit-box-sizing: border-box
 
+@mixin content-box-sizing
+  box-sizing: content-box
+  -moz-box-sizing: content-box
+  -ms-box-sizing: content-box
+  -webkit-box-sizing: content-box
+
 @mixin border-radius($radius: 3px)
   border-radius: $radius
   -moz-border-radius: $radius

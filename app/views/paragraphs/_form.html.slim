@@ -6,10 +6,17 @@
     .abstract
     
     h3.form-title
-      | New ¶
-      .buttons
-        .delete_form_item data-selector=".paragraph_form"
-          i.icon-remove-sign
+      - if paragraph.new_record?
+        | New ¶
+        .buttons
+          .delete_form_item data-selector=".paragraph_form"
+            i.icon-remove-sign
+
+      - else
+        | Editing ¶#{@paragraph.id}
+        .buttons
+          .discard-edit-paragraph-button
+            i.icon-undo
 
     - if paragraph.errors.any?
       .error_explanation

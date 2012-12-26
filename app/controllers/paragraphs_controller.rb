@@ -25,6 +25,50 @@ class ParagraphsController < ApplicationController
     end
   end
 
+  
+  # GET /board/paragraphs/1/edit
+  def edit
+    @paragraph = Paragraph.find(params[:id]).ensure_not_deleted
+
+    authorize :update, @paragraph
+
+    respond_to do |format|
+      format.html { render :layout => !request.xhr? }
+    end
+  end
+
+
+  # PUT /board/paragraphs/1
+  def update
+    # TODO: Store poster addr on update
+
+    @paragraph = Paragraph.find(params[:id]).ensure_not_deleted
+
+    authorize :update, @paragraph
+
+    @paragraph.assign_attributes(params.required_hash(:paragraph).extract_array(:paragraphs).first)
+
+    
+    if @paragraph.valid?
+      Paragraph.transaction do
+        @paragraph.updated_at = Time.zone.now
+        @paragraph.set_proto_updated_at
+
+        @paragraph.save!
+        @paragraph.propagate_changes_to_instances if (@paragraph.is_prototype_and_have_instances || @paragraph.is_instance)
+      end
+      respond_to do |format|
+        # TODO: notice: 'Paragraph was successfully updated.'
+        format.html { render partial: 'view', locals: { paragraph: @paragraph, with_edit_controls: true }, layout: false }
+      end
+    else
+      respond_to do |format|
+        format.html { render action: 'edit', status: :unprocessable_entity, layout: !request.xhr? }
+      end
+    end
+  end
+
+
   # DELETE /board/paragraphs/1
   def destroy
     @paragraph = Paragraph.find(params[:id]).ensure_not_deleted
