@@ -141,11 +141,11 @@ class MarkdownRender < Redcarpet::Render::HTML
   def link link, title, content
     content = content.strip
 
-    if link.match LINK_REGEXP
-      build_link($1, $2, $3, $4, title, content)
-
-    elsif link.match VALID_LINKS
+    if link.match VALID_LINKS
       link_to content, link, title: title
+
+    elsif link.match LINK_REGEXP
+      build_link($1, $2, $3, $4, title, content)
 
     else
       "[#{content}](#{link}#{" \"#{title}\"" if title})"
