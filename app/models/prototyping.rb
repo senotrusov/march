@@ -165,7 +165,7 @@ module Prototyping
 
   def is_prototype_exists
     if @is_instance && !prototype
-      errors.add(:prototype_id, "must exist")
+      errors.add(:prototype_id, I18n.t('errors.messages.prototype_must_exists'))
     end
   end
 

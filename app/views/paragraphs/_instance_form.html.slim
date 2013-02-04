@@ -6,14 +6,16 @@
     .abstract
     
     h3.form-title
-      | ¶ instance
+      = t '.instance'
       .buttons
         .delete_form_item data-selector=".paragraph_form"
           i.icon-remove-sign
 
     - if paragraph.errors.any?
       .error_explanation
-        h2 = "#{pluralize(paragraph.errors.count, "error")} prohibited this paragraph from being saved:"
+        h2
+          =' t 'error_count', count: paragraph.errors.count
+          =  t '.error'
         ul
           - paragraph.errors.full_messages.each do |message|
             li = message
@@ -28,7 +30,8 @@
               td
                 .button.paste-prototype-id
                   i.icon-link
-                  .title Paste
+                  .title
+                    = t 'paste'
 
     .prototype
       - if !paragraph.new_record?

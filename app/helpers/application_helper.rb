@@ -55,4 +55,16 @@ module ApplicationHelper
   end
 
   include Board::Cache
+
+  def document_details document
+    safe_join([
+      t('poster_count', count: document.identities_count),
+      t('updated_html', updated: timeago_tag(document.updated_at))
+    ], ', ')
+  end
+
+  def paragraph_details paragraph
+    t('updated_html', updated: timeago_tag(paragraph.updated_at)).upcase_first
+  end
+
 end

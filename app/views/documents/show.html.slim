@@ -1,5 +1,5 @@
 = content_for :title do
-  | /#{@board.slug} - #{@document.title}
+  | /#{@board.title} - #{@document.title}
 
 .document
   .header
@@ -16,9 +16,7 @@
           = link_to @document.url, @document.url
 
       .details
-        | Updated 
-        = timeago_tag @document.updated_at
-        = ", #{@document.identities_count} posters"
+        = document_details @document
 
     .line
       - if @document.image?
@@ -30,10 +28,10 @@
 
   ul.actions
     - if can :update, @document
-      li = link_to 'Edit', edit_document_path(@document)
+      li = link_to t('edit'), edit_document_path(@document)
 
     - if can :destroy, @document
-      li = link_to 'Destroy', @document, :confirm => 'Are you sure?', :method => :delete
+      li = link_to t('destroy'), @document, :confirm => t('are_you_sure'), :method => :delete
 
   table.section_frames
     tbody

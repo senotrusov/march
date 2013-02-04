@@ -7,14 +7,16 @@
     .abstract
 
     h2.form-title
-      | § section
+      = t '.new'
       .buttons
         .delete_form_item data-selector=".section_form"
           i.icon-remove-sign
 
     - if section.errors.any?
       .error_explanation
-        h2 = "#{pluralize(section.errors.count, "error")} prohibited this section from being saved:"
+        h2
+          =' t 'error_count', count: section.errors.count
+          =  t '.error'
         ul
           - section.errors.full_messages.each do |message|
             li = message
@@ -50,13 +52,15 @@
       .buttons
         .button.add_template data-template="#paragraph_template" data-append-to=".paragraphs"
           i.icon-plus-sign
-          .title Add ¶
+          .title
+            = t '.new_paragraph'
 
         .button.add_template data-template="#paragraph_instance_template" data-append-to=".paragraphs"
           i.icon-copy
-          .title Instance ¶
+          .title
+            = t '.instance_paragraph'
 
     - else
       .paragraphs_summary
         i.icon-info-sign
-        = pluralize(section.paragraphs.length, 'paragraph')
+        = t 'paragraph_count', count: section.paragraphs.length

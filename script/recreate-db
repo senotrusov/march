@@ -33,6 +33,9 @@ $psql -d postgres -c "CREATE DATABASE \"$db\" OWNER $user ENCODING 'UTF8'"
 $psql -d $db < db/structure-prototype.sql
 $psql -d $db < db/seeds-prototype.sql
 
+if [ -f db/seeds-local.sql ]; then
+  $psql -d $db < db/seeds-local.sql
+fi
 
 # Dump schema to db/structure.sql
 pg_dump $db --username $user --host=$host --schema-only > db/structure.sql

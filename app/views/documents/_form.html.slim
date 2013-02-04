@@ -25,7 +25,9 @@
   .base_document_form
     - if @document.errors.any?
       .error_explanation
-        h2 = "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
+        h2
+          =' t 'error_count', count: @document.errors.count
+          =  t '.error'
         ul
           - @document.errors.full_messages.each do |message|
             li = message
@@ -44,7 +46,8 @@
             td
               .button.locate
                 i.icon-map-marker
-                .title Locate
+                .title
+                  = t 'locate'
 
     .field
       - if @document.image?
@@ -57,6 +60,7 @@
           = f.label :remove_image
 
       - else
+          = f.label :image
           = f.file_field :image
 
     .field
@@ -73,7 +77,7 @@
 
   .button.sort
     i.icon-sort
-    .title Sort
+    .title data-done-sorting-title=t('done_sorting') = t 'sort'
 
   table.section_frames
     tbody
@@ -88,18 +92,23 @@
             .buttons
               .button.add_template data-template="#section_template" data-append-to=".sections"
                 i.icon-plus-sign
-                .title Add §
+                .title
+                  = t '.add_section'
 
               .button.add_template data-template="#section_instance_template" data-append-to=".sections"
                 i.icon-copy
-                .title Instance §
+                .title
+                  = t '.instance_section'
 
   .field.submit
-    = f.submit @document.new_record? ? 'Publish' : 'Save'
+    .accept_terms
+      = t 'must_accept_terms_html'
+      
+    = f.submit @document.new_record? ? t('publish') : t('save')
 
     - unless @document.new_record?
-      | or 
-      = link_to 'discard editing', document_path(@document)
+      =' t('or')
+      =  link_to t('discard_editing'), document_path(@document)
 
 
 - if content_for? :templates

@@ -84,7 +84,7 @@ class DocumentsController < ApplicationController
       end # of transaction
 
       respond_to do |format|
-        format.html { redirect_to @document, notice: 'Document was successfully created.' }
+        format.html { redirect_to @document, notice: t('documents.created', board: @board.title) }
       end
 
     else
@@ -138,7 +138,10 @@ class DocumentsController < ApplicationController
     
     # TODO: When editing existing records, their validations does not called by @document.valid?
     # See activerecord-3.2.5/lib/active_record/autosave_association.rb
-    if @document.valid? && (sections_is_valid = @document.sections.all? {|section| section.valid? })
+
+    sections_is_valid = @document.sections.all? {|section| section.valid? }
+
+    if @document.valid? && sections_is_valid
 
       Document.transaction do
         @document.sections.each do |section|
@@ -152,7 +155,7 @@ class DocumentsController < ApplicationController
       end
 
       respond_to do |format|
-        format.html { redirect_to @document, notice: 'Document was successfully updated.' }
+        format.html { redirect_to @document, notice: t('documents.updated', board: @board.title) }
       end
 
     else

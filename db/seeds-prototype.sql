@@ -15,13 +15,8 @@
 
 BEGIN;
 
-INSERT INTO boards(id, slug, root)
-     VALUES (1, 'a', true);
-
-INSERT INTO boards(id, slug)
-     VALUES (2, 'b');
-
-INSERT INTO boards(id, slug)
-     VALUES (3, 'c');
+INSERT INTO boards (position, slug, name) VALUES (0, 'fo', 'Foo');
+INSERT INTO boards (position, slug, name) VALUES (1, 'ba', 'Bar');
+INSERT INTO boards (position, slug, name) VALUES (2, 'qu', 'Qux');
 
 COMMIT;

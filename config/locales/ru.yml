@@ -1,0 +1,153 @@
+
+#  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+
+ru:
+
+  edit: Редактировать
+  destroy: Удалить
+  are_you_sure: Вы уверены?
+  locate: Где я?
+  sort: Сортировать
+  done_sorting: Завершить сортировку
+  publish: Опубликовать
+  save: Сохранить
+  or: или
+  discard_editing: отменить редактирование
+  paste: Вставить
+  must_accept_terms_html: "Содержимое сайта предоставляется вам по свободной лицензии <a href=\"http://creativecommons.org/licenses/by/3.0/deed.ru\">Creative Commons Attribution 3.0 Unported</a>, далее именуемой CC-BY-3.0, отправкой этой формы вы подтверждаете: 1) ваше согласие на распространение на условиях лицензии CC-BY-3.0 переданного посредством формы содержимого включая текст и изображения, автором которого являетесь вы; 2) что переданое посредством формы содержимое включая текст и изображения, автором которого вы не являетесь, распространяется и вами было получено на условиях лицензии CC-BY-3.0."
+
+  # https://github.com/svenfuchs/rails-i18n/blob/master/lib/rails_i18n/common_pluralizations/east_slavic.rb
+  poster_count:
+    one: "%{count} постер"
+    few: "%{count} постера"
+    many: "%{count} постеров"
+    other: "%{count} постера"
+
+  paragraph_count:
+    one: "%{count} параграф"
+    few: "%{count} параграфа"
+    many: "%{count} параграфов"
+    other: "%{count} параграафа"
+
+  error_count:
+    one: "%{count} ошибка препятствует"
+    few: "%{count} ошибки препятствуют"
+    many: "%{count} ошибок препятствуют"
+    other: "%{count} ошибки препятствуют"
+
+  updated_html: "обновлен %{updated}"
+
+  documents:
+    index:
+      since: Выходит с %{date}
+      new: Написать в /%{board}
+    new:
+      title: Написать в /%{board}
+    edit:
+      title: Редактировать /%{board} - %{document}
+    form:
+      error: "этому документу быть сохранённым:"
+      add_section: Новая секция
+      instance_section: Экземпляр секции
+
+    created: "Создан документ в /%{board}"
+    updated: "Обновлён документ в /%{board}"
+
+  sections:
+    view:
+      new: Новый параграф
+      instance: Экземпляр параграфа
+    form:
+      new: Новая секция
+      new_paragraph: Новый параграф
+      instance_paragraph: Экземпляр параграфа
+      error: "этой секции быть сохранённым:"
+    instance_form:
+      instance: Экземпляр секции
+      error: "экземпляру этой секции быть сохранённым:"
+
+  paragraphs:
+    view:
+      confirm_remove: "Убрать параграф?"
+    edit:
+      title: Редактировать ¶%{paragraph}
+    form:
+      new: Новый параграф
+      edit: "Редактировать ¶%{paragraph}"
+      error: "этому параграфу быть сохранённым:"
+    instance_form:
+      instance: Экземпляр параграфа
+      error: "экземпляру этого параграфа быть сохранённым:"
+
+  tooltips:
+    copied:                      "Скопировано!"
+    section_id:                  "Номер секции, нажмите чтобы скопировать"
+    add_paragraph_form:          "Добавить новый параграф"
+    add_paragraph_instance_form: "Добавить экземпляр существующего параграфа"
+    paragraph_id:                "Номер параграфа, нажмите чтобы скопировать"
+    paragraph_edit:              "Редактировать параграф"
+    paragraph_destroy:           "Убрать параграф"
+    poster_identity:             "Индивидуальность постера"
+    instance_poster_identity:    "Индивидуальность постера экземпляра"
+    identity_document_id:        "Документ-происхождение индивидуальности"
+
+  textarea:
+    quote: Цитата
+    link: Ссылка
+
+  activerecord:
+    models:
+
+    attributes:
+
+      document:
+        location: Точка на карте
+        image: Картинка
+        remove_image: Убрать картинку
+        title: Заголовок
+        url: Гиперссылка
+        message: Сообщение
+        sections: Секции
+
+      section:
+        writable_by_values:
+          public:          "Кто угодно может добавить параграф"
+          contributor:     "Участники, параграф которых уже есть в секции могут добавить ещё"
+          document_poster: "Только автор записи может добавить параграф"
+        sort_by_values:
+          created_at:       "Показывать новые сверху"
+          paragraphs_order: "Ручная сортировка"
+        image: Картинка
+        remove_image: Убрать картинку
+        prototype_id: Прототип
+        paragraphs: Параграфы
+        title: Заголовок
+
+      paragraph:
+        image: Картинка
+        remove_image: Убрать картинку
+        prototype_id: Прототип
+        message: Содержание
+        location: Точка на карте
+
+
+  errors:
+    messages:
+      carrierwave_processing_error: "Ошибка при обработке изображения, попробуйте другой файл"
+      carrierwave_integrity_error: "Ошибка целостности изображения, попробуйте другой файл"
+      carrierwave_download_error: "Ошибка загрузки изображения, проверьте адрес и его доступность"
+
+      prototype_must_exists: "должен существовать"

@@ -1,12 +1,12 @@
 
 #  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
-#
+# 
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-#
+# 
 #      http://www.apache.org/licenses/LICENSE-2.0
-#
+# 
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,31 +14,10 @@
 #  limitations under the License.
 
 
-class Board < ActiveRecord::Base
-  # Associations
-  has_many :documents, inverse_of: :board, conditions: { deleted: false }
-
-  SLUG_CHARS = '[a-zA-Z0-9\-]'
-
-  # Attributes
-  attr_accessible :slug
-
-  validates :slug,
-    length: { in: 1..columns_hash['slug'].limit },
-    format: { with: /\A#{SLUG_CHARS}+\z/, message: "Only characters a-z, A-Z, 0-9 and '-' allowed" }
-
-
-  # Scopes
-  scope :ordered, order(ORDER = "position")
-
-  def title
-    name || slug
-  end
-
-
-  module Cache
-    def boards
-      @boards ||= Board.ordered
-    end
+class String
+  def upcase_first
+    str = self.mb_chars
+    str[0] = str.first.upcase
+    str.to_s
   end
 end

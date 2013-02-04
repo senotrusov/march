@@ -1,4 +1,4 @@
 = content_for :title do
-  | New /#{@board.slug}
+  = t '.title', board: @board.title
 
 == render 'form'

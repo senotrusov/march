@@ -93,3 +93,6 @@ gem 'sanitize' # MIT
 
 # HTML parser
 gem 'nokogiri' # MIT
+
+# Locales
+gem 'rails-i18n' # MIT

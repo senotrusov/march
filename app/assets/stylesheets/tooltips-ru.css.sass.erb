@@ -15,45 +15,48 @@
 //  limitations under the License.
 
 
-@import tooltip-lib
 
 .section
 
   > .header
 
     .section-id
-      @extend %tooltip
-      @extend %tooltip_top_right
+      &:after
+        content: "<%=I18n.t "tooltips.section_id" %>"
 
   > .edit_controls
 
     .add_paragraph_form
-      @extend %tooltip
-      @extend %tooltip_top_right
+      &:after
+        content: "<%=I18n.t "tooltips.add_paragraph_form" %>"
 
     .add_paragraph_instance_form
-      @extend %tooltip
-      @extend %tooltip_top_right
+      &:after
+        content: "<%=I18n.t "tooltips.add_paragraph_instance_form" %>"
 
 
 .paragraph
 
   .paragraph-id
-    @extend %tooltip
-    @extend %tooltip_top_left
+    &:after
+      content: "<%=I18n.t "tooltips.paragraph_id" %>"
 
   .paragraph_edit
-    @extend %tooltip
-    @extend %tooltip_top_left
+    &:after
+      content: "<%=I18n.t "tooltips.paragraph_edit" %>"
 
   .paragraph_destroy
-    @extend %tooltip
-    @extend %tooltip_top_left
+    &:after
+      content: "<%=I18n.t "tooltips.paragraph_destroy" %>"
 
   .identity .identity_name
-    @extend %tooltip
-    @extend %tooltip_left
+    &:after
+      content: "<%=I18n.t "tooltips.poster_identity" %>"
+
+  .identity.small .identity_name
+    &:after
+      content: "<%=I18n.t "tooltips.instance_poster_identity" %>"
 
   .identity .identity_document_id
-    @extend %tooltip
-    @extend %tooltip_bottom_left
+    &:after
+      content: "<%=I18n.t "tooltips.identity_document_id" %>"

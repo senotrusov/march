@@ -61,34 +61,39 @@
 
 
 .document_index
-  padding: 0px 20px
 
   > .header
+
     .board
       font-size: $huge
       font-weight: bold
-      margin: 0px
-      padding: 0px 15px 10px 0px
-      float: left
+      padding: 0px 15px
+      margin-top: -15px
 
     .details
       font-size: $mini
+      padding: 0px 15px
+
+    ul.actions
       margin: 0px
-      padding-top: 10px
+      padding: 20px 15px
+      font-size: 0px
 
-    .actions
-      margin: 0px
-      padding-top: 10px
+      li
+        list-style: none
+        display: inline-block
+        padding: 0px 5px
+        font-size: $base
 
-      a
-        color: #fff
-        background: $bgcolor
-        border: 1px solid $bgcolor
-        padding: 1px 3px
+        a
+          color: #fff
+          background: $bgcolor
+          border: 1px solid $bgcolor
+          padding: 1px 3px
 
-      a:hover
-        color: #000
-        background: #fff
+        a:hover
+          color: #000
+          background: #fff
 
 
 .sidebar
@@ -99,4 +104,4 @@
     clear: left
 
 .overview_list
-  margin-bottom: 40px
+  padding: 20px 15px 40px 15px

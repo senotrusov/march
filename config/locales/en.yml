@@ -2,7 +2,6 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
 
   activerecord:
     models:
@@ -21,6 +20,19 @@ en:
           paragraphs_order: Sort manually
 
       paragraph:
+
+
+  tooltips:
+    copied:                      "Copied!"
+    section_id:                  "Section number, click to copy"
+    add_paragraph_form:          "Add new paragraph"
+    add_paragraph_instance_form: "Add paragraph instance"
+    paragraph_id:                "Paragraph number, click to copy"
+    paragraph_edit:              "Edit paragraph"
+    paragraph_destroy:           "Remove paragraph"
+    poster_identity:             "Poster identity"
+    instance_poster_identity:    "Instance poster identity"
+    identity_document_id:        "Origin"
 
 
   errors:

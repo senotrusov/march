@@ -1,34 +1,22 @@
 = content_for :title do
-  | /#{@board.slug}
+  | /#{@board.title}
 
 .overview_map
 
 
 .sidebar
 
-  h1 This week most significant /#{@board.slug}
-  
-  .overview_list
-    = render :partial => "overview", :collection => @documents, :as => :document
-
-
-  h1 This month most significant /#{@board.slug}
-  
-  .overview_list
-    = render :partial => "overview", :collection => @documents, :as => :document
-
-
 .document_index
   .header
+    ul.actions
+      li = link_to t('.new', board: @board.title), new_document_path
+
     .board
       = content_for :title
 
     .details
-      | Since 
-      = @board.created_at.strftime("%B %Y").downcase
+      = t '.since', date: l(@board.created_at, format: "%B %Y")
 
-    .actions
-      = link_to "New /#{@board.slug}", new_document_path
 
   .overview_list
     = render :partial => "overview", :collection => @documents, :as => :document

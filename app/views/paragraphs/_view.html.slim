@@ -6,7 +6,7 @@
 
   - if edit_controls?(local_assigns)
     - if can :destroy, paragraph
-      = link_to icon('remove-sign'), paragraph, method: :delete, remote: true, class: 'action_icon paragraph_destroy', confirm: 'Delete paragraph?'
+      = link_to icon('remove-sign'), paragraph, method: :delete, remote: true, class: 'action_icon paragraph_destroy', confirm: t('.confirm_remove')
       
     - if can :update, paragraph
       = link_to icon('edit'), edit_paragraph_path(paragraph), remote: true, class: 'action_icon paragraph_edit'
@@ -26,5 +26,4 @@
     .map_marker data-lat=paragraph.lat data-lng=paragraph.lng data-zoom=paragraph.zoom
 
   .details
-    | Updated 
-    = timeago_tag paragraph.proto_or_self.updated_at
+    = paragraph_details paragraph.proto_or_self

@@ -1,3 +1,4 @@
+@charset "UTF-8"
 
 //  Copyright 2012 Stanislav Senotrusov <stan@senotrusov.com>
 //
@@ -38,7 +39,8 @@ $tooltip-z-index: 30000
   z-index: $tooltip-z-index
 
 %tooltip.clicked:after
-  content: "Copied!"
+  // TODO I18n.t
+  content: "Скопировано!"
 
 %tooltip:before
   display: none

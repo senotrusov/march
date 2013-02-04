@@ -4,6 +4,10 @@
   = render :partial => 'paragraphs/form', locals: { form: f, paragraph: paragraph }
 
   .field.submit
-    = f.submit 'Save'
-    | or 
-    .discard-add-paragraph discard editing
+    .accept_terms
+      = t 'must_accept_terms_html'
+      
+    = f.submit t('save')
+    =' t('or')
+    .discard-add-paragraph
+      = t('discard_editing')

@@ -320,6 +320,9 @@ $(document).ready ->
         ajaxErrorAlert(event, xhr, status, error)
 
 
+  $('.document_index')
+
+    .initMedia()
 
 
   $('form.new_document, form.edit_document, body > .document, body > .section, body > .paragraph')
@@ -435,6 +438,8 @@ $(document).ready ->
 
     .find('.button.sort').on 'click', ->
       button = $(this)
+      button_title = button.children('.title')
+
       button.nextAll('.section_frames').each ->
         frames = $(this)
 
@@ -445,7 +450,7 @@ $(document).ready ->
 
           frames.removeClass('sortable')
 
-          button.children('.title').text('Sort')
+          button_title.text button_title.data('sort-title')
 
         else
           frames.addClass('sortable')
@@ -497,5 +502,6 @@ $(document).ready ->
             paragraphs = $(this)
             paragraphs.sortable('option', 'connectWith', frames.find('.paragraphs').not(paragraphs))
 
-          button.children('.title').text('Done sorting')
+          button_title.data 'sort-title', button_title.text()
+          button_title.text button_title.data('done-sorting-title')
 

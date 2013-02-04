@@ -14,31 +14,5 @@
 #  limitations under the License.
 
 
-class Board < ActiveRecord::Base
-  # Associations
-  has_many :documents, inverse_of: :board, conditions: { deleted: false }
-
-  SLUG_CHARS = '[a-zA-Z0-9\-]'
-
-  # Attributes
-  attr_accessible :slug
-
-  validates :slug,
-    length: { in: 1..columns_hash['slug'].limit },
-    format: { with: /\A#{SLUG_CHARS}+\z/, message: "Only characters a-z, A-Z, 0-9 and '-' allowed" }
-
-
-  # Scopes
-  scope :ordered, order(ORDER = "position")
-
-  def title
-    name || slug
-  end
-
-
-  module Cache
-    def boards
-      @boards ||= Board.ordered
-    end
-  end
-end
+March::Application.config.i18n.default_locale = :ru
+March::Application.config.i18n.available_locales = [:en, :ru]

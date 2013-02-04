@@ -8,14 +8,16 @@
     .abstract
 
     h2.form-title
-      | § section instance
+      = t '.instance'
       .buttons
         .delete_form_item data-selector=".section_form"
           i.icon-remove-sign
 
     - if section.errors.any?
       .error_explanation
-        h2 = "#{pluralize(section.errors.count, "error")} prohibited this section from being saved:"
+        h2
+          =' t 'error_count', count: section.errors.count
+          =  t '.error'
         ul
           - section.errors.full_messages.each do |message|
             li = message
@@ -30,7 +32,8 @@
               td
                 .button.paste-prototype-id
                   i.icon-link
-                  .title Paste
+                  .title
+                    = t 'paste'
 
     .prototype
       - if !section.new_record?

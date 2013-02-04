@@ -13,11 +13,9 @@
   - if document.url?
     .url
       = link_to document.url, document.url
-
+ 
   .details
-    | Updated 
-    = timeago_tag document.updated_at
-    = ", #{document.identities_count} posters"
+    = document_details document
 
   - if document.location? || document.paragraphs_with_location.present?
     .locations

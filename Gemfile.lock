@@ -95,6 +95,8 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
+    rails-i18n (0.7.2)
+      i18n (~> 0.5)
     rails-timeago (1.4.2)
       actionpack (>= 3.1)
       activesupport (>= 3.1)
@@ -160,6 +162,7 @@ DEPENDENCIES
   oj
   pg
   rails (~> 3.2.0)
+  rails-i18n
   rails-timeago
   redcarpet
   sanitize

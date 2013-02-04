@@ -38,6 +38,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   input[type="file"]
     font-size: $base
     @include border-box-sizing
+    width: 100%
 
   textarea
     height: 200px
@@ -130,6 +131,11 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
     color: #fff
     a
       color: #fff
+
+  .accept_terms
+    margin-bottom: 10px
+    font-size: $mini
+    color: $pearl
 
 form.new_document, form.edit_document
   .field.submit
@@ -277,6 +283,9 @@ form.new_document, form.edit_document
     > tbody > tr > td[data-frame="2"]
       width: 30%
 
+  select#document_sections__writable_by,
+  select#document_sections__sort_by
+    min-width: 200px
   
 // Buttons
 form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
@@ -298,13 +307,15 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
     background: $bgcolor
     margin-left: 5px
 
-    width: 70px
+    // TODO: remove fixed width
+    width: 90px
     text-align: center
 
   .button.locate
     background: $bgcolor
     margin-left: 5px
 
+    // TODO: remove fixed width
     width: 70px
     text-align: center
 

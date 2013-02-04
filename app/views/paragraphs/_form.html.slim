@@ -7,20 +7,22 @@
     
     h3.form-title
       - if paragraph.new_record?
-        | New ¶
+        = t '.new'
         .buttons
           .delete_form_item data-selector=".paragraph_form"
             i.icon-remove-sign
 
       - else
-        | Editing ¶#{@paragraph.id}
+        = t '.edit', paragraph: @paragraph.id
         .buttons
           .discard-edit-paragraph-button
             i.icon-undo
 
     - if paragraph.errors.any?
       .error_explanation
-        h2 = "#{pluralize(paragraph.errors.count, "error")} prohibited this paragraph from being saved:"
+        h2
+          =' t 'error_count', count: paragraph.errors.count
+          =  t '.error'
         ul
           - paragraph.errors.full_messages.each do |message|
             li = message
@@ -43,11 +45,13 @@
 
         .button.quote
           i.icon-comments-alt
-          .title Quote
+          .title
+            = t 'textarea.quote'
 
         .button.link
           i.icon-link
-          .title Link
+          .title
+            = t 'textarea.link'
 
       = f.text_area :message
 
@@ -64,4 +68,5 @@
             td
               .button.locate
                 i.icon-map-marker
-                .title Locate
+                .title
+                  = t 'locate'

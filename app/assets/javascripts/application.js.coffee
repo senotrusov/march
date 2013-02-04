@@ -14,6 +14,10 @@
 #= require jquery-ui
 #= require jquery_ujs
 #= require jquery.timeago
+
+# TODO: More than one language
+#= require locales/jquery.timeago.ru.js
+
 #= require leaflet-src
 #
 #= require_self
