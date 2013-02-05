@@ -30,13 +30,12 @@ class Document < ActiveRecord::Base
 
 
   # Text attributes
-  attr_accessible :title, :url, :message
+  attr_accessible :title, :url
 
-  normalize_text :title, :url, :message
+  normalize_text :title, :url
 
   validates :title,   length: { in: 3..columns_hash['title'].limit }
   validates :url,     length: { in: 0..columns_hash['url'].limit }
-  validates :message, length: { in: 0..columns_hash['message'].limit }
 
   
   # Sections framing

@@ -74,7 +74,6 @@ CREATE TABLE documents (
   image   character varying(128),
   title   character varying(256),
   url     character varying(1024),
-  message character varying(1024),
 
   lat  double precision,
   lng  double precision,

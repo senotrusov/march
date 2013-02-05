@@ -7,10 +7,6 @@
       h1
         = @document.title
 
-      - if @document.message?
-        .message
-          = @document.message
-
       - if @document.url?
         .url
           = link_to @document.url, @document.url

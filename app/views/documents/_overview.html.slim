@@ -6,10 +6,6 @@
   h2.title
     = link_to document.title, document_path(document)
 
-  - if document.message?
-    .message
-      = document.message
-
   - if document.url?
     .url
       = link_to document.url, document.url
