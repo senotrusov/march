@@ -13,6 +13,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   label
     display: block
     font-size: $base
+    line-height: $base_line_height
     font-weight: bold
     color: $bgcolor
 
@@ -25,6 +26,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   input[type="text"], textarea
     border: 2px solid #bbb
     font-size: $base
+    line-height: $base_line_height
     width: 100%
     @include border-box-sizing
     padding: 5px
@@ -32,11 +34,13 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   select
     border: 2px solid #bbb
     font-size: $base
+    line-height: $base_line_height
     @include border-box-sizing
     padding: 2px
 
   input[type="file"]
     font-size: $base
+    line-height: $base_line_height
     @include border-box-sizing
     width: 100%
 
@@ -48,6 +52,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
 
   input[type="submit"]
     font-size: $base
+    line-height: $base_line_height
     padding: 5px 15px
     margin: 0px 10px 0px 0px
 
@@ -69,6 +74,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
 
   .zoom_field
     font-size: $base
+    line-height: $base_line_height
     width: 70px
     i
       color: $bgcolor
@@ -94,6 +100,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
 
   .notice, .alert
     font-size: $base
+    line-height: $base_line_height
     padding: 10px 15px
     color: #fff
 
@@ -135,6 +142,7 @@ form.new_document, form.edit_document, form.edit_section, form.edit_paragraph
   .accept_terms
     margin-bottom: 10px
     font-size: $mini
+    line-height: $mini_line_height
     color: $pearl
 
 form.new_document, form.edit_document
@@ -232,12 +240,14 @@ form.new_document, form.edit_document
       margin: 10px 0px 0px 0px
       background: $section
       font-size: $h3
+      line-height: $h3_line_height
       font-weight: bold
 
     .paragraph_form > .abstract
       margin: 10px 0px
       background: $paragraph
       font-size: $base
+      line-height: $base_line_height
 
     td.frame
       > .sections
