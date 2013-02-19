@@ -27,3 +27,8 @@ db/deleted/*
 
 # Ignore secret key
 /config/cookie.key
+
+# Ignore local developer stuff
+db/seeds-local.sql
+TODO-local
+SNIPPETS-local
