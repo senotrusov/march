@@ -22,8 +22,11 @@ pgpass=~/.pgpass
 
 
 # Define psql arguments
-psql="sudo -u postgres -i psql --dbname postgres --username postgres --set ON_ERROR_STOP=on"
-
+if [ `uname` == 'Darwin' ]; then
+  psql="psql --set ON_ERROR_STOP=on"
+else
+  psql="sudo -u postgres -i psql --dbname postgres --username postgres --set ON_ERROR_STOP=on"
+fi
 
 # Read password
 cat <<EOT

@@ -38,7 +38,8 @@ group :development do
   gem 'webrick', '>= 1.3.1' # Ruby
 
   # Debugger, compartible with 1.9.3, https://github.com/cldwalker/debugger
-  gem 'debugger' # 2-clause BSD
+  # Disabled - unable to install on Mac OS
+  # gem 'debugger' # 2-clause BSD
 end
 
 

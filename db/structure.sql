@@ -657,12 +657,12 @@ ALTER TABLE ONLY sections
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: postgres
+-- Name: public; Type: ACL; Schema: -; Owner: stan
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
+REVOKE ALL ON SCHEMA public FROM stan;
+GRANT ALL ON SCHEMA public TO stan;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 

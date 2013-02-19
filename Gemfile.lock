@@ -43,14 +43,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.3.3)
-    columnize (0.3.6)
-    debugger (1.2.1)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.1.1)
-      debugger-ruby_core_source (~> 1.1.4)
-    debugger-linecache (1.1.2)
-      debugger-ruby_core_source (>= 1.1.1)
-    debugger-ruby_core_source (1.1.4)
     erubis (2.7.0)
     exceptional (2.0.33)
       rack
@@ -153,7 +145,6 @@ DEPENDENCIES
   carrierwave
   carrierwave-processing
   coffee-rails
-  debugger
   exceptional
   font-awesome-sass-rails
   jquery-rails
