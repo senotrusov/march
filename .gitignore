@@ -32,3 +32,6 @@ db/deleted/*
 db/seeds-local.sql
 TODO-local
 SNIPPETS-local
+
+# Ignore Mac OS stuff
+.DS_Store
