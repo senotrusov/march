@@ -5,27 +5,50 @@ Here be dragons
 
 Install
 =======
-I'm using Ubuntu 12.04 for development, hope it will run under your environment.
 
-You need to install ruby 1.9 and postgresql first.
+Step 1a (on Mac OS X)
+---------------------
+# Install PostgreSQL
+http://postgresapp.com
 
 
-    # graphicsmagick packaged with ubuntu 12.04 version does not yet have 'strip' function, so using imagemagick
-    sudo apt-get install graphicsmagick
-    sudo apt-get install imagemagick
+Step 1b (on Ubuntu)
+-------------------
+# Install PostgreSQL
+apt-get install postgresql postgresql-doc postgresql-server-dev-9.1
 
-    # Create db user and store the password in ~/.pgpass
-    # thus you don't need to specify the password in config/database.yml
-    script/create-db-user
+# Install required packages for ruby and for gems
+apt-get install \
+  build-essential \
+  libreadline-dev \
+  libssl-dev \
+  zlib1g-dev \
+  libyaml-dev \
+  libxslt-dev libxml2-dev
 
-    # Drop database if exists then create new database with structure
-    script/recreate-db
+# Install image processing tools
+# graphicsmagick packaged with ubuntu 12.04 version does not yet have 'strip' function, so using imagemagick
+sudo apt-get install imagemagick # graphicsmagick
 
-    # Install gems
-    bundle install
 
-    # run
-    rails s
+Step 2
+------
+
+# Install rbenv
+https://github.com/sstephenson/rbenv/
+
+# Create db user and store the password in ~/.pgpass
+# thus you don't need to specify the password in config/database.yml
+script/create-db-user
+
+# Drop database if exists then create new database with structure
+script/recreate-db
+
+# Install gems
+bundle install
+
+# run
+bundle exec rails s
 
 
 Licence
