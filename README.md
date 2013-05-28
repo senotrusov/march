@@ -6,13 +6,13 @@ Here be dragons
 Install
 =======
 
-Step 1a (on Mac OS X)
----------------------
+Mac OS X, step 1
+----------------
 Install PostgreSQL from http://postgresapp.com
 
 
-Step 1b (on Ubuntu)
--------------------
+Ubuntu, step 1
+--------------
 Install PostgreSQL
 
     apt-get install postgresql postgresql-doc postgresql-server-dev-9.1
