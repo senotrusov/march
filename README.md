@@ -51,7 +51,7 @@ run
 
 Licence
 =======
-Apache License, Version 2.0, see LICENSE file.
+Apache License, Version 2.0, see LICENSE file for details.
 
 
 3rd party code
