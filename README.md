@@ -59,13 +59,3 @@ Apache License, Version 2.0, see LICENSE file.
 * See Gemfile for list
   * Font Awesome - http://fortawesome.github.com/Font-Awesome, licensed under CC BY 3.0
 * Leaflet in vendor/assets - http://leaflet.cloudmade.com/, see vendor/assets/Leaflet-LICENCE
-
-
-Documentation
-=============
-* Rails Guides: http://guides.rubyonrails.org
-* Rails API: http://api.rubyonrails.org
-* Ruby core: http://www.ruby-doc.org/core
-* Ruby standard library: http://www.ruby-doc.org/stdlib
-
-* HTML5 differences from HTML4: http://www.w3.org/TR/html5-diff
