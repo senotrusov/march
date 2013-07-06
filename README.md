@@ -9,7 +9,7 @@ Open source knowledge base with cartography.
 * Document consist of sections, sections contains paragraphs.
 
 * One single paragraph may have many instances across different documents.
-  A kind of repost or retweet, with the difference that when the original author updates the paragraph then that update 
+  A kind of repost or retweet, with the difference that when the original author updates the paragraph that update 
   propagates to all the instances.
 
 * Similar, one section may simultaneously exists in different documents.
