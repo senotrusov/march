@@ -6,7 +6,7 @@ Open source knowledge base with cartography.
 
 ### The idea
 
-* Document consist of sections, sections contain paragraphs.
+* A document consist of sections, sections contain paragraphs.
 
 * One single paragraph may have many instances across different documents.
   A kind of repost or retweet, with the difference that when the original author updates the paragraph that update 
@@ -19,12 +19,12 @@ Open source knowledge base with cartography.
 
 * Markdown markup may be used.
 * Youtube or Vimeo links turns into embedded video.
-* A single image may be uploaded and linked to single paragraph.
-* Paragraph may contain geographic coordinates, in that case the map with pointer on it is shown.
+* A single image may be uploaded and linked to a single paragraph.
+* A paragraph may contain geographic coordinates, in that case the map with pointer on it is shown.
 
 ### User identity
 
-* User are forced to be anonymous, but with per-document identity.
+* A user are forced to be anonymous, but with per-document identity.
 
 
 ### What does it look like?
