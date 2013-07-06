@@ -27,7 +27,7 @@ Open source knowledge base with cartography.
 * User are forced to be anonymous, but with per-document identity.
 
 
-### In the wild
+### What does it look like?
 
 These are nice examples:
 
