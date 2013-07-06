@@ -1,6 +1,38 @@
 About
 =====
-Here be dragons
+
+Open source knowledge base with cartography.
+
+
+### The idea
+
+* Document consist of sections, sections contains paragraphs.
+
+* One single paragraph may have many instances across different documents.
+  A kind of repost or retweet, with the difference that when the original author updates the paragraph then that update 
+  propagates to all the instances.
+
+* Similar, one section may simultaneously exists in different documents.
+  Any changes in that section are visible in all that documents.
+
+### Paragraph
+
+* Markdown markup may be used.
+* Youtube or Vimeo links turns into embedded video.
+* A single image may be uploaded and linked to single paragraph.
+* Paragraph may contain geographic coordinates, in that case the map with pointer on it is shown.
+
+### User identity
+
+* User are forced to be anonymous, but with per-document identity.
+
+
+### In the wild
+
+These are nice examples:
+
+* http://vokrug.org/sr/20
+* http://vokrug.org/sr/15
 
 
 Install
