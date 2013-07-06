@@ -6,7 +6,7 @@ Open source knowledge base with cartography.
 
 ### The idea
 
-* Document consist of sections, sections contains paragraphs.
+* Document consist of sections, sections contain paragraphs.
 
 * One single paragraph may have many instances across different documents.
   A kind of repost or retweet, with the difference that when the original author updates the paragraph that update 
