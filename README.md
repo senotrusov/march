@@ -20,7 +20,7 @@ Open source knowledge base with cartography.
 * Markdown markup may be used.
 * Youtube or Vimeo links turns into embedded video.
 * A single image may be uploaded and linked to a single paragraph.
-* A paragraph may contain geographic coordinates, in that case the map with pointer on it is shown.
+* A paragraph may contain geographic coordinates, in that case the map with a pointer on it is shown.
 
 ### User identity
 
