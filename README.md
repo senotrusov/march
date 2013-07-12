@@ -1,7 +1,7 @@
 About
 =====
 
-Open source knowledge base with cartography.
+Open source knowledge base with cartography features.
 
 
 ### The idea
