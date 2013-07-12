@@ -34,6 +34,12 @@ These are nice examples:
 * http://vokrug.org/sr/20
 * http://vokrug.org/sr/15
 
+### Used technologies
+
+* Rails, PostgreSQL
+* Slim, Sass, CoffeScript
+* jQuery, Leaflet
+* Markdown with extension for linking pages, sections and documents ([markdown_render.rb](https://github.com/senotrusov/march/blob/master/app/helpers/markdown_render.rb))
 
 Install
 =======
@@ -88,6 +94,6 @@ Apache License, Version 2.0, see LICENSE file for details.
 
 3rd party code
 ==============
-* See Gemfile for list
-  * Font Awesome - http://fortawesome.github.com/Font-Awesome, licensed under CC BY 3.0
-* Leaflet in vendor/assets - http://leaflet.cloudmade.com/, see vendor/assets/Leaflet-LICENCE
+* Listed in [Gemfile](https://github.com/senotrusov/march/blob/master/Gemfile)
+* Font Awesome - http://fortawesome.github.com/Font-Awesome, licensed under CC BY 3.0
+* Leaflet - http://leaflet.cloudmade.com/, see [vendor/assets/Leaflet-LICENCE](https://github.com/senotrusov/march/blob/master/vendor/assets/Leaflet-LICENCE)
