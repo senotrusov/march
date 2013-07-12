@@ -29,10 +29,11 @@ Open source knowledge base with cartography features.
 
 ### What does it look like?
 
-These are nice examples:
+There is one deployment of this code with some nice documents to look at:
 
 * http://vokrug.org/sr/20
 * http://vokrug.org/sr/15
+
 
 ### Technologies used
 
