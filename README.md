@@ -34,7 +34,7 @@ These are nice examples:
 * http://vokrug.org/sr/20
 * http://vokrug.org/sr/15
 
-### Used technologies
+### Technologies used
 
 * Rails, PostgreSQL
 * Slim, Sass, CoffeScript
