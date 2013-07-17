@@ -40,7 +40,7 @@ There is one deployment of this code with some nice documents to look at:
 * Rails, PostgreSQL
 * Slim, Sass, CoffeScript
 * jQuery, Leaflet
-* Markdown with extension for linking pages, sections and documents ([markdown_render.rb](https://github.com/senotrusov/march/blob/master/app/helpers/markdown_render.rb))
+* [Redcarpet](https://github.com/vmg/redcarpet) (Markdown processing library) extended for linking pages, sections and documents ([markdown_render.rb](https://github.com/senotrusov/march/blob/master/app/helpers/markdown_render.rb))
 
 Install
 =======
