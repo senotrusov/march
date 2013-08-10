@@ -1,7 +1,7 @@
 About
 =====
 
-Social authoring tool with cartography features.
+A social authoring tool with cartography features.
 
 ### What does it look like?
 
