@@ -1,8 +1,14 @@
 About
 =====
 
-Open source knowledge base with cartography.
+Social authoring tool with cartography features.
 
+### What does it look like?
+
+These are nice examples:
+
+* http://vokrug.org/sr/20
+* http://vokrug.org/sr/15
 
 ### The idea
 
@@ -26,13 +32,6 @@ Open source knowledge base with cartography.
 
 * A user are forced to be anonymous, but with per-document identity.
 
-
-### What does it look like?
-
-These are nice examples:
-
-* http://vokrug.org/sr/20
-* http://vokrug.org/sr/15
 
 
 Install
