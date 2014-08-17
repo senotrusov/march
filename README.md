@@ -15,8 +15,7 @@ These are nice examples:
 * A document consist of sections, sections contain paragraphs.
 
 * One single paragraph may have many instances across different documents.
-  A kind of repost or retweet, with the difference that when the original author updates the paragraph that update 
-  propagates to all the instances.
+  Users can repost paragraphs, createdby someone else. When the original author updates the paragraph then that update propagates to all the instances.
 
 * Similar, one section may simultaneously exists in different documents.
   Any changes in that section are visible in all that documents.
