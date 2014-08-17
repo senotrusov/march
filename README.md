@@ -30,7 +30,7 @@ These are nice examples:
 
 ### User identity
 
-* A user are forced to be anonymous, but with per-document identity.
+* A user is forced to be anonymous, but with per-document identity.
 
 ### Technologies used
 
