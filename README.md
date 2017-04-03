@@ -3,13 +3,6 @@ About
 
 A social content creation tool with cartography features.
 
-### What does it look like?
-
-These are nice examples:
-
-* http://vokrug.org/sr/20
-* http://vokrug.org/sr/15
-
 ### The idea
 
 * A document consist of sections, sections contain paragraphs.
