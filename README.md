@@ -1,6 +1,6 @@
 # A social content creation tool with cartography features
 
-## The idea
+## An idea
 
 * A document consist of sections, sections contain paragraphs.
 
