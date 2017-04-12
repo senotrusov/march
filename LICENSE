@@ -205,7 +205,7 @@
 
 --------------------------------------------------------------------------------
 
-For the file:
+For the file (from rubyonrails.org):
 
     lib/ext/activerecord_association_null_primary_key_check.rb
 
@@ -232,7 +232,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-For the file:
+For the file (from github.com/carrierwaveuploader/carrierwave):
 
     lib/ext/carrierwave_version_naming.rb
 
