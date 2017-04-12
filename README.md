@@ -26,7 +26,7 @@
 * Rails, PostgreSQL
 * Slim, Sass, CoffeScript
 * jQuery, Leaflet
-* [Redcarpet](https://github.com/vmg/redcarpet) (Markdown processing library) extended for linking pages, sections and documents ([markdown_render.rb](https://github.com/senotrusov/march/blob/master/app/helpers/markdown_render.rb))
+* [Redcarpet](https://github.com/vmg/redcarpet) (Markdown processing library) extended for linking pages, sections and documents ([markdown_render.rb](app/helpers/markdown_render.rb))
 
 
 ## Install
@@ -75,23 +75,6 @@ run
 
 ## Copyright and License
 
-Copyright 2012 Stanislav Senotrusov \<stan@senotrusov.com\>
+Please see the [LICENSE](LICENSE) file.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-## 3rd party code
-
-* Listed in [Gemfile](https://github.com/senotrusov/march/blob/master/Gemfile)
-* Font Awesome - http://fortawesome.github.com/Font-Awesome, licensed under CC BY 3.0
-* Leaflet - http://leaflet.cloudmade.com/, see [vendor/assets/Leaflet-LICENCE](https://github.com/senotrusov/march/blob/master/vendor/assets/Leaflet-LICENCE)
+For the list of dependencies please see the [Gemfile](Gemfile) file.

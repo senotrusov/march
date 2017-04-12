@@ -1,14 +1,4 @@
 
-# ~ operator
-# ----------
-#
-# The operator will drop the final digit of a version,
-# then increment the remaining final digit to get the upper limit version number.
-# Therefore ‘~> 2.2’ is equivalent to: [‘>= 2.2’, ‘< 3.0’].
-# Had we said ‘~> 2.2.0’, it would have been equivalent to: [‘>= 2.2.0’, ‘< 2.3.0’].
-#
-#   From http://docs.rubygems.org/read/chapter/16
-
 source 'http://rubygems.org' # TODO: https, http://railsapps.github.com/openssl-certificate-verify-failed.html
 
 gem 'rails', '~> 3.2.0' # MIT
